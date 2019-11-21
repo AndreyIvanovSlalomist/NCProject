@@ -2,7 +2,7 @@ package ru.nc.musiclib.controller;
 
 /**
  * Класс контроллера
- * Для использование со стороны View используется метод
+ * Для использование со стороны View используется методы валидации validAppend, validUpdate, validDelete
  *
  *
  *
