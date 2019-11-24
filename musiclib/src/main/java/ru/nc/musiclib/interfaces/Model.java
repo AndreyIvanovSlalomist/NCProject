@@ -1,5 +1,9 @@
 package ru.nc.musiclib.interfaces;
 
+import ru.nc.musiclib.classes.Track;
+
+import java.util.List;
+
 /**Интерфейс для моделей
  * может не знать ни о въюшке ни о контроллере
  * имплиментирует Observable
@@ -15,4 +19,9 @@ package ru.nc.musiclib.interfaces;
  *
  */
 public interface Model {
+    List<Track> getAll();
+    boolean append(Object ... objects);
+    boolean update(Object ... objects);
+    boolean delete(Object ... objects);
+    void saveTrack();
 }

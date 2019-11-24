@@ -12,4 +12,7 @@ package ru.nc.musiclib.interfaces;
  *
  */
 public interface View {
+  void runView();
+  void setModel (Model model);
+  void setController (Controller controller);
 }

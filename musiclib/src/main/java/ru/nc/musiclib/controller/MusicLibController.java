@@ -3,10 +3,6 @@ package ru.nc.musiclib.controller;
 /**
  * Класс контроллера
  * Для использование со стороны View используется методы валидации validAppend, validUpdate, validDelete
- *
- *
- *
- *
  */
 
 import ru.nc.musiclib.interfaces.Controller;
@@ -15,7 +11,6 @@ import ru.nc.musiclib.interfaces.Observer;
 import ru.nc.musiclib.interfaces.View;
 
 public class MusicLibController implements Controller, Observer {
-    MusicLibController musicLibController = new MusicLibController();
     Model model = null;
     View view = null;
 
@@ -38,18 +33,30 @@ public class MusicLibController implements Controller, Observer {
     @Override
     public boolean validAppend(Object... objects) {
         System.out.println("Я контроллер. Получил данные на добавление ");
+        if (model.append(objects)) {
+            model.saveTrack();
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean validUpdate(Object... objects) {
         System.out.println("Я контроллер. Получил данные на изминение ");
+        if (model.update(objects)) {
+            model.saveTrack();
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean validDelete(Object... objects) {
         System.out.println("Я контроллер. Получил данные на удаление ");
+        if (model.delete(objects)) {
+            model.saveTrack();
+            return true;
+        }
         return false;
     }
 
