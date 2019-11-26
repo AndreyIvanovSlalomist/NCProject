@@ -15,7 +15,7 @@ public class MusicModel implements Model, Observable {
     List<Track> tracks = new ArrayList<>();
     List<Genre> genres = new ArrayList<>();
 
-    public MusicModel() {}
+    public MusicModel() {loadTrack();}
 
     @Override
     public void addObserver(Observer o) {
