@@ -86,10 +86,13 @@ public class MusicModel implements Model, Observable {
                 switch ((Integer) objects[1]) {
                     case 1:
                         ((Track) objects[0]).setTrackName((String) objects[2]);
+                        break;
                     case 2:
                         ((Track) objects[0]).setSinger((String) objects[2]);
+                        break;
                     case 3:
                         ((Track) objects[0]).setGenre(findGenre((String) objects[2]));
+                        break;
                 }
             }
         } else return false;
