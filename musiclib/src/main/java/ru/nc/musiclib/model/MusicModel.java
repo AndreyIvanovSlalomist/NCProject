@@ -120,13 +120,10 @@ public class MusicModel implements Model, Observable {
     }
 
     private Genre findGenre(String genreName) {
-        Genre genre = null;
-        for (Genre genre1 : genres) {
+        for (Genre genre1 : genres)
             if (genre1.getGenreName().equals(genreName)) {
-                genre = genre1;
-                break;
+                return genre1;
             }
-        }
-        return genre;
+        return null;
     }
 }
