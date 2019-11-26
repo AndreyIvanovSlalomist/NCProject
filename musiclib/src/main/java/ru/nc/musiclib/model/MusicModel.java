@@ -15,9 +15,7 @@ public class MusicModel implements Model, Observable {
     List<Track> tracks = new ArrayList<>();
     List<Genre> genres = new ArrayList<>();
 
-    public MusicModel() {
-        loadTrack();
-    }
+    public MusicModel() {}
 
     @Override
     public void addObserver(Observer o) {
@@ -30,9 +28,9 @@ public class MusicModel implements Model, Observable {
     }
 
     @Override
-    public void notifyObserver() {
+    public void notifyObserver(String message) {
         for (Observer observer : observers) {
-            observer.sendEvent("Оповещение от Модели");
+            observer.sendEvent(message);
         }
     }
 
@@ -44,23 +42,21 @@ public class MusicModel implements Model, Observable {
     @Override
     public void saveTrack(){
         try {
-
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("tracks.txt"));
             out.writeObject(tracks);
             out.close();
         } catch (IOException e) {
-            System.out.println("Ошибка при сохранении");
+            notifyObserver("Ошибка при сохранении!");
         }
     }
 
     private void loadTrack(){
         try {
-
             ObjectInputStream in = new ObjectInputStream(new FileInputStream("tracks.txt"));
             tracks = (List<Track>)in.readObject();
             in.close();
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Ошибка при загрузки");
+            notifyObserver("Ошибка при загрузке!");
         }
     }
     @Override
@@ -70,11 +66,14 @@ public class MusicModel implements Model, Observable {
             genre = new Genre((String) objects[2]);
             genres.add(genre);
         }
-        if (findTrack(genre, objects) == null) {
+        if (findTrack(objects) == null) {
             Track track = new Track((String) objects[0], (String) objects[1], genre);
             tracks.add(track);
+        }else{
+            notifyObserver("Трек уже существует.");
+            return false;
         }
-        notifyObserver();
+        notifyObserver("Трек добавлен.");
         return true;
     }
 
@@ -90,7 +89,12 @@ public class MusicModel implements Model, Observable {
                         ((Track) objects[0]).setSinger((String) objects[2]);
                         break;
                     case 3:
-                        ((Track) objects[0]).setGenre(findGenre((String) objects[2]));
+                        Genre genre = findGenre((String) objects[2]);
+                        if (genre == null) {
+                            genre = new Genre((String) objects[2]);
+                            genres.add(genre);
+                        }
+                        ((Track) objects[0]).setGenre(genre);
                         break;
                 }
             }
@@ -104,17 +108,14 @@ public class MusicModel implements Model, Observable {
         return true;
     }
 
-    private Track findTrack(Genre genre, Object... objects) {
+    private Track findTrack(Object... objects) {
         Track track = null;
         for (Track track1 : tracks) {
-            if (track1.getGenre().getGenreName().equals(genre.getGenreName()) &&
-                    track1.getTrackName().equals(objects[0]) &&
-                    track1.getSinger().equals(objects[1])) {
+            if (track1.getTrackName().equals(objects[0]) && track1.getSinger().equals(objects[1])) {
                 track = track1;
                 break;
             }
         }
-
         return track;
     }
 

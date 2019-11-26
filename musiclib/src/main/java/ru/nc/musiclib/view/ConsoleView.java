@@ -184,7 +184,6 @@ public class ConsoleView implements View, Observer {
             if (appendResult.size() == 3) {
                 controller.validAppend(appendResult.toArray());
             }
-
         }
     }
 
