@@ -13,5 +13,5 @@ public interface Controller {
     void setView (View view);
     boolean validAppend (Object ... objects);
     boolean validUpdate (Object ... objects);
-    boolean validDelete (Object ... objects);
+    boolean validDelete (int number);
 }

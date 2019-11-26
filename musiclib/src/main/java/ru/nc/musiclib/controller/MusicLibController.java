@@ -51,9 +51,9 @@ public class MusicLibController implements Controller, Observer {
     }
 
     @Override
-    public boolean validDelete(Object... objects) {
+    public boolean validDelete(int n) {
         System.out.println("Я контроллер. Получил данные на удаление ");
-        if (model.delete(objects)) {
+        if (model.delete(n)) {
             model.saveTrack();
             return true;
         }

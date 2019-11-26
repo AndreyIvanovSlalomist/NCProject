@@ -22,6 +22,6 @@ public interface Model {
     List<Track> getAll();
     boolean append(Object ... objects);
     boolean update(Object ... objects);
-    boolean delete(Object ... objects);
+    boolean delete(int number);
     void saveTrack();
 }

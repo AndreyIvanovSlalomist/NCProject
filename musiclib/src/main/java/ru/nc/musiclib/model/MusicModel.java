@@ -66,7 +66,6 @@ public class MusicModel implements Model, Observable {
     @Override
     public boolean append(Object... objects) {
         Genre genre = findGenre((String) objects[2]);
-
         if (genre == null) {
             genre = new Genre((String) objects[2]);
             genres.add(genre);
@@ -100,16 +99,13 @@ public class MusicModel implements Model, Observable {
     }
 
     @Override
-    public boolean delete(Object... objects) {
-        if (objects.length == 1) {
-            tracks.remove(objects[0]);
-        } else return false;
+    public boolean delete(int number) {
+        tracks.remove(number);
         return true;
     }
 
     private Track findTrack(Genre genre, Object... objects) {
         Track track = null;
-
         for (Track track1 : tracks) {
             if (track1.getGenre().getGenreName().equals(genre.getGenreName()) &&
                     track1.getTrackName().equals(objects[0]) &&
