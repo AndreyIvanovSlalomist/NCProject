@@ -75,29 +75,32 @@ public class ConsoleView implements View, Observer {
     }
 
     private void runMainMenu() {
+        Scanner scanner = new Scanner(System.in);
         while (true) {
             mainMenu();
-            int i = readInteger(0, 4, "");
-            if (i == 0) {
+            String number = scanner.nextLine();
+            if (number.equals("0")) {
                 break;
             }
-            switch (i) {
-                case 1: {
+            switch (number) {
+                case "1": {
                     showAllTrack();
                     break;
                 }
-                case 2: {
+                case "2": {
                     runAppendMenu();
                     break;
                 }
-                case 3: {
+                case "3": {
                     runUpdateMenu();
                     break;
                 }
-                case 4: {
+                case "4": {
                     runDeleteMenu();
                     break;
                 }
+                default:
+                    System.out.println("Ошибка.");
             }
         }
     }
@@ -107,11 +110,12 @@ public class ConsoleView implements View, Observer {
         while (true) {
             int i = 1;
             List<Track> trackList = model.getAll();
+            System.out.printf("%-4s%-30s%-20s%-20s%n", "№","Название", "Исполнитель", "Жанр");
             for (Track track : trackList) {
-                System.out.print(i++);
-                System.out.print(track.getTrackName());
-                System.out.print(track.getSinger());
-                System.out.println(track.getGenre().getGenreName());
+                System.out.printf("%-4s", i++);
+                System.out.printf("%-30s",track.getTrackName());
+                System.out.printf("%-20s",track.getSinger());
+                System.out.printf("%-20s%n",track.getGenre().getGenreName());
             }
 
             int r = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход)");
@@ -130,11 +134,12 @@ public class ConsoleView implements View, Observer {
         System.out.println("-- Изменение Трека --");
         int i = 1;
         List<Track> trackList = model.getAll();
+        System.out.printf("%-4s%-30s%-20s%-20s%n", "№","Название", "Исполнитель", "Жанр");
         for (Track track : trackList) {
-            System.out.print(i++);
-            System.out.print(track.getTrackName());
-            System.out.print(track.getSinger());
-            System.out.println(track.getGenre().getGenreName());
+            System.out.printf("%-4s", i++);
+            System.out.printf("%-30s",track.getTrackName());
+            System.out.printf("%-20s",track.getSinger());
+            System.out.printf("%-20s%n",track.getGenre().getGenreName());
         }
 
         int r = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход)");
@@ -148,16 +153,17 @@ public class ConsoleView implements View, Observer {
         System.out.println("-- Изменение Трека --");
         while (true) {
             updateMenu();
-            System.out.print(track.getTrackName());
-            System.out.print(track.getSinger());
-            System.out.println(track.getGenre().getGenreName());
+            System.out.printf("%-30s%-20s%-20s%n", "Название", "Исполнитель", "Жанр");
+            System.out.printf("%-30s",track.getTrackName());
+            System.out.printf("%-20s",track.getSinger());
+            System.out.printf("%-20s%n",track.getGenre().getGenreName());
 
 
             int i = readInteger(0, 3, "");
             if (i == 0) {
                 break;
             }
-            String s = readString(0, 20, "Введите новое значение");
+            String s = readString(0, 30, "Введите новое значение");
             if (s != "") {
 
                 if (controller.validUpdate(track, i, s)) {
@@ -171,10 +177,11 @@ public class ConsoleView implements View, Observer {
 
     private void showAllTrack() {
         System.out.println("-- Показываю все треки -- ");
+        System.out.printf("%-30s%-20s%-20s%n", "Название", "Исполнитель", "Жанр");
         for (Track track : model.getAll()) {
-            System.out.print(track.getTrackName());
-            System.out.print(track.getSinger());
-            System.out.println(track.getGenre().getGenreName());
+            System.out.printf("%-30s",track.getTrackName());
+            System.out.printf("%-20s",track.getSinger());
+            System.out.printf("%-20s%n",track.getGenre().getGenreName());
         }
     }
 
@@ -192,7 +199,7 @@ public class ConsoleView implements View, Observer {
         List<Object> objects = new ArrayList<>();
         System.out.println("-- Добавление Трека --");
         String s;
-        s = readString(0, 20, "Введите название Трека");
+        s = readString(0, 30, "Введите название Трека");
         if (s == "") {
             return null;
         }
