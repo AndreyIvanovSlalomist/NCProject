@@ -14,10 +14,15 @@ public class MusicLibController implements Controller, Observer {
     Model model = null;
     View view = null;
 
+    private void sendLog(String s) {
+        // System.out.println(s);
+    }
+
+    ;
 
     @Override
     public void sendEvent(String event) {
-        System.out.println("Я контроллер. Получил событие " + event);
+        sendLog("Я контроллер. Получил событие " + event);
     }
 
     @Override
@@ -32,7 +37,7 @@ public class MusicLibController implements Controller, Observer {
 
     @Override
     public boolean validAppend(Object... objects) {
-        System.out.println("Я контроллер. Получил данные на добавление ");
+        sendLog("Я контроллер. Получил данные на добавление ");
         if (model.append(objects)) {
             model.saveTrack();
             return true;
@@ -42,7 +47,7 @@ public class MusicLibController implements Controller, Observer {
 
     @Override
     public boolean validUpdate(Object... objects) {
-        System.out.println("Я контроллер. Получил данные на изминение ");
+        sendLog("Я контроллер. Получил данные на изминение ");
         if (model.update(objects)) {
             model.saveTrack();
             return true;
@@ -52,7 +57,7 @@ public class MusicLibController implements Controller, Observer {
 
     @Override
     public boolean validDelete(int n) {
-        System.out.println("Я контроллер. Получил данные на удаление ");
+        sendLog("Я контроллер. Получил данные на удаление ");
         if (model.delete(n)) {
             model.saveTrack();
             return true;

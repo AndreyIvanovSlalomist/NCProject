@@ -1,10 +1,7 @@
 package ru.nc.musiclib.view;
 
 import ru.nc.musiclib.classes.Track;
-import ru.nc.musiclib.interfaces.Controller;
-import ru.nc.musiclib.interfaces.Model;
-import ru.nc.musiclib.interfaces.Observer;
-import ru.nc.musiclib.interfaces.View;
+import ru.nc.musiclib.interfaces.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +11,40 @@ public class ConsoleView implements View, Observer {
     Model model = null;
     Controller controller = null;
 
+    private void showTitle(int i) {
+        if (i != 0) {
+            System.out.printf("%-4s%-30s%-20s%-20s%-20s%-20s%n", "№", "Название", "Исполнитель", "Альбом", "Длинна трека(c)", "Жанр");
+        } else {
+            System.out.printf("%-30s%-20s%-20s%-20s%-20s%n", "Название", "Исполнитель", "Альбом", "Длинна трека(c)", "Жанр");
+        }
+    }
+
+    private void showTrack(Track track, int i) {
+        if (i != 0) {
+            System.out.printf("%-4s", i);
+        }
+        System.out.printf("%-30s", track.getTrackName());
+        System.out.printf("%-20s", track.getSinger());
+        System.out.printf("%-20s", track.getAlbum());
+        System.out.printf("%-20f", track.getTrackLength());
+        System.out.printf("%-20s%n", track.getGenre().getGenreName());
+    }
+
     public void sendEvent(String event) {
-        System.out.println("Я въюшка. Получил оповещение через подписку ");
+        switch (event) {
+            case "Трек добавлен.": {
+                System.out.println("Добавление успешно завершено ");
+                break;
+            }
+            case "Трек удален.": {
+                System.out.println("Удаление успешно завершено ");
+                break;
+            }
+            case "Трек изменен.": {
+                System.out.println("Изменение успешно завершено ");
+                break;
+            }
+        }
     }
 
     private String readString(int minLength, int maxLength, String captionMessage) {
@@ -56,6 +85,30 @@ public class ConsoleView implements View, Observer {
         }
     }
 
+    private Double readDouble(int min, int max, String captionMessage) {
+        Scanner scanner = new Scanner(System.in);
+
+        Double i = 0.0;
+        while (true) {
+            System.out.println(captionMessage + " (0 - возврат)");
+            try {
+                i = Double.parseDouble(scanner.next());
+            } catch (NumberFormatException e) {
+                System.out.println("Ошибка. Введите число от " + min + " до " + max);
+                continue;
+            }
+            if (i == 0) {
+                return 0.0;
+            } else if (i > max) {
+                System.out.println("Ошибка. Число больше " + max);
+            } else if (i < min) {
+                System.out.println("Ошибка. Число меньше " + min);
+            } else {
+                return i;
+            }
+        }
+    }
+
     private void mainMenu() {
         System.out.println("-- Добро пожадовать в музыкальную библиотеку --");
         System.out.println("Основное меню:");
@@ -70,7 +123,9 @@ public class ConsoleView implements View, Observer {
         System.out.println("Выберите что менять:");
         System.out.println("1 - Название");
         System.out.println("2 - Исполнителя");
-        System.out.println("3 - Жанр");
+        System.out.println("3 - Альбом");
+        System.out.println("4 - Длинна трека(c)");
+        System.out.println("5 - Жанр");
         System.out.println("0 - Выход");
     }
 
@@ -110,42 +165,38 @@ public class ConsoleView implements View, Observer {
         while (true) {
             int i = 1;
             List<Track> trackList = model.getAll();
-            System.out.printf("%-4s%-30s%-20s%-20s%n", "№","Название", "Исполнитель", "Жанр");
+            showTitle(i);
             for (Track track : trackList) {
-                System.out.printf("%-4s", i++);
-                System.out.printf("%-30s",track.getTrackName());
-                System.out.printf("%-20s",track.getSinger());
-                System.out.printf("%-20s%n",track.getGenre().getGenreName());
+                showTrack(track, i);
+                i++;
             }
 
             int r = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход)");
-            if (r == 0){
+            if (r == 0) {
                 break;
             }
             if (r != 0) {
-                if (controller.validDelete(r - 1)){
+                if (controller.validDelete(r - 1)) {
                     break;
                 }
             }
         }
     }
 
+
     private void runUpdateMenu() {
         System.out.println("-- Изменение Трека --");
         int i = 1;
         List<Track> trackList = model.getAll();
-        System.out.printf("%-4s%-30s%-20s%-20s%n", "№","Название", "Исполнитель", "Жанр");
+        showTitle(i);
         for (Track track : trackList) {
-            System.out.printf("%-4s", i++);
-            System.out.printf("%-30s",track.getTrackName());
-            System.out.printf("%-20s",track.getSinger());
-            System.out.printf("%-20s%n",track.getGenre().getGenreName());
+            showTrack(track, i);
+            i++;
         }
 
         int r = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход)");
         if (r != 0) {
             updateTrack(trackList.get(r - 1));
-
         }
     }
 
@@ -153,42 +204,43 @@ public class ConsoleView implements View, Observer {
         System.out.println("-- Изменение Трека --");
         while (true) {
             updateMenu();
-            System.out.printf("%-30s%-20s%-20s%n", "Название", "Исполнитель", "Жанр");
-            System.out.printf("%-30s",track.getTrackName());
-            System.out.printf("%-20s",track.getSinger());
-            System.out.printf("%-20s%n",track.getGenre().getGenreName());
+            showTitle(0);
+            showTrack(track, 0);
 
-
-            int i = readInteger(0, 3, "");
+            int i = readInteger(0, 5, "");
             if (i == 0) {
                 break;
             }
-            String s = readString(0, 30, "Введите новое значение");
-            if (s != "") {
-
-                if (controller.validUpdate(track, i, s)) {
-                    break;
+            if (i == 4) {
+                Double d = readDouble(0, 300, "Введите новое значение в секундах");
+                if (d != 0) {
+                    if (controller.validUpdate(track, i, d)) {
+                        break;
+                    }
+                }
+            } else {
+                String s = readString(0, 30, "Введите новое значение");
+                if (s != "") {
+                    if (controller.validUpdate(track, i, s)) {
+                        break;
+                    }
                 }
             }
-
-
         }
     }
 
     private void showAllTrack() {
         System.out.println("-- Показываю все треки -- ");
-        System.out.printf("%-30s%-20s%-20s%n", "Название", "Исполнитель", "Жанр");
+        showTitle(0);
         for (Track track : model.getAll()) {
-            System.out.printf("%-30s",track.getTrackName());
-            System.out.printf("%-20s",track.getSinger());
-            System.out.printf("%-20s%n",track.getGenre().getGenreName());
+            showTrack(track, 0);
         }
     }
 
     private void runAppendMenu() {
         List<Object> appendResult = appendMenu();
         if (appendResult != null) {
-            if (appendResult.size() == 3) {
+            if (appendResult.size() == 5) {
                 controller.validAppend(appendResult.toArray());
             }
         }
@@ -210,6 +262,18 @@ public class ConsoleView implements View, Observer {
         }
         objects.add(s);
 
+        s = readString(0, 20, "Введите Альбом");
+        if (s == "") {
+            return null;
+        }
+        objects.add(s);
+
+        Double d = readDouble(0, 300, "Введите Длинну трека в секундах");
+        if (d == 0) {
+            return null;
+        }
+        objects.add(d);
+
         s = readString(0, 20, "Введите Жанр");
         if (s == "") {
             return null;
@@ -226,6 +290,9 @@ public class ConsoleView implements View, Observer {
     @Override
     public void setModel(Model model) {
         this.model = model;
+        if (this.model instanceof Observable) {
+            ((Observable) this.model).addObserver(this);
+        }
     }
 
     @Override

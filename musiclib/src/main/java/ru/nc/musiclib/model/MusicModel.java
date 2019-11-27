@@ -15,7 +15,9 @@ public class MusicModel implements Model, Observable {
     List<Track> tracks = new ArrayList<>();
     List<Genre> genres = new ArrayList<>();
 
-    public MusicModel() {loadTrack();}
+    public MusicModel() {
+        loadTrack();
+    }
 
     @Override
     public void addObserver(Observer o) {
@@ -40,7 +42,7 @@ public class MusicModel implements Model, Observable {
     }
 
     @Override
-    public void saveTrack(){
+    public void saveTrack() {
         try {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("tracks.txt"));
             out.writeObject(tracks);
@@ -50,26 +52,32 @@ public class MusicModel implements Model, Observable {
         }
     }
 
-    private void loadTrack(){
+    private void loadTrack() {
         try {
             ObjectInputStream in = new ObjectInputStream(new FileInputStream("tracks.txt"));
-            tracks = (List<Track>)in.readObject();
+            tracks = (List<Track>) in.readObject();
             in.close();
+            for (Track track : tracks) {
+                if (findGenre(track.getGenre().getGenreName()) == null) {
+                    genres.add(track.getGenre());
+                }
+            }
         } catch (IOException | ClassNotFoundException e) {
             notifyObserver("Ошибка при загрузке!");
         }
     }
+
     @Override
     public boolean append(Object... objects) {
-        Genre genre = findGenre((String) objects[2]);
+        Genre genre = findGenre((String) objects[4]);
         if (genre == null) {
-            genre = new Genre((String) objects[2]);
+            genre = new Genre((String) objects[4]);
             genres.add(genre);
         }
-        if (findTrack(objects) == null) {
-            Track track = new Track((String) objects[0], (String) objects[1], genre);
+        if (findTrack(genre, objects) == null) {
+            Track track = new Track((String) objects[0], (String) objects[1], (String) objects[2], (Double) objects[3], genre);
             tracks.add(track);
-        }else{
+        } else {
             notifyObserver("Трек уже существует.");
             return false;
         }
@@ -82,13 +90,23 @@ public class MusicModel implements Model, Observable {
         if (objects.length == 3) {
             if (objects[0] instanceof Track) {
                 switch ((Integer) objects[1]) {
-                    case 1:
+                    case 1: {
                         ((Track) objects[0]).setTrackName((String) objects[2]);
                         break;
-                    case 2:
+                    }
+                    case 2: {
                         ((Track) objects[0]).setSinger((String) objects[2]);
                         break;
-                    case 3:
+                    }
+                    case 3: {
+                        ((Track) objects[0]).setAlbum((String) objects[2]);
+                        break;
+                    }
+                    case 4: {
+                        ((Track) objects[0]).setTrackLength((Double) objects[2]);
+                        break;
+                    }
+                    case 5: {
                         Genre genre = findGenre((String) objects[2]);
                         if (genre == null) {
                             genre = new Genre((String) objects[2]);
@@ -96,22 +114,29 @@ public class MusicModel implements Model, Observable {
                         }
                         ((Track) objects[0]).setGenre(genre);
                         break;
+                    }
                 }
             }
         } else return false;
+        notifyObserver("Трек изменен.");
         return true;
     }
 
     @Override
     public boolean delete(int number) {
         tracks.remove(number);
+        notifyObserver("Трек удален.");
         return true;
     }
 
-    private Track findTrack(Object... objects) {
+    private Track findTrack(Genre genre, Object... objects) {
         Track track = null;
         for (Track track1 : tracks) {
-            if (track1.getTrackName().equals(objects[0]) && track1.getSinger().equals(objects[1])) {
+            if (track1.getTrackName().equals(objects[0]) &&
+                    track1.getSinger().equals(objects[1]) &&
+                    track1.getAlbum().equals(objects[2]) &&
+                    track1.getTrackLength().equals(objects[3]) &&
+                    track1.getGenre().getGenreName().equals(genre.getGenreName())) {
                 track = track1;
                 break;
             }
