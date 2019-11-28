@@ -1,6 +1,7 @@
 package ru.nc.musiclib.model;
 
 import ru.nc.musiclib.classes.Genre;
+import ru.nc.musiclib.classes.InvalidFieldValueException;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.interfaces.Model;
 import ru.nc.musiclib.interfaces.Observable;
@@ -74,7 +75,13 @@ public class MusicModel implements Model, Observable {
             genres.add(genre);
         }
         if (findTrack(genre, objects) == null) {
-            Track track = new Track((String) objects[0], (String) objects[1], (String) objects[2], (Double) objects[3], genre);
+            //Track track = new Track((String) objects[0], (String) objects[1], (String) objects[2], (String) objects[3], genre);
+            Track track = new Track();
+            track.setTrackName((String)objects[0]);
+            track.setSinger((String)objects[1]);
+            track.setAlbum((String)objects[2]);
+            track.setTrackLength((String)objects[3]);
+            track.setGenre(genre);
             tracks.add(track);
         } else {
             notifyObserver("Трек уже существует.");
@@ -88,32 +95,37 @@ public class MusicModel implements Model, Observable {
     public boolean update(Object... objects) {
         if (objects.length == 3) {
             if (objects[0] instanceof Track) {
-                switch ((Integer) objects[1]) {
-                    case 1: {
-                        ((Track) objects[0]).setTrackName((String) objects[2]);
-                        break;
-                    }
-                    case 2: {
-                        ((Track) objects[0]).setSinger((String) objects[2]);
-                        break;
-                    }
-                    case 3: {
-                        ((Track) objects[0]).setAlbum((String) objects[2]);
-                        break;
-                    }
-                    case 4: {
-                        ((Track) objects[0]).setTrackLength((Double) objects[2]);
-                        break;
-                    }
-                    case 5: {
-                        Genre genre = findGenre((String) objects[2]);
-                        if (genre == null) {
-                            genre = new Genre((String) objects[2]);
-                            genres.add(genre);
+                try{
+                    switch ((Integer) objects[1]) {
+                        case 1: {
+                            ((Track) objects[0]).setTrackName((String) objects[2]);
+                            break;
                         }
-                        ((Track) objects[0]).setGenre(genre);
-                        break;
+                        case 2: {
+                            ((Track) objects[0]).setSinger((String) objects[2]);
+                            break;
+                        }
+                        case 3: {
+                            ((Track) objects[0]).setAlbum((String) objects[2]);
+                            break;
+                        }
+                        case 4: {
+                            ((Track) objects[0]).setTrackLength((String) objects[2]);
+                            break;
+                        }
+                        case 5: {
+                            Genre genre = findGenre((String) objects[2]);
+                            if (genre == null) {
+                                genre = new Genre((String) objects[2]);
+                                genres.add(genre);
+                            }
+                            ((Track) objects[0]).setGenre(genre);
+                            break;
+                        }
                     }
+                }catch(InvalidFieldValueException ex){
+                    System.out.println(ex.getMessage());
+                    return false;
                 }
             }
         } else return false;

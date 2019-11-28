@@ -6,23 +6,28 @@ public class Track implements Serializable {
     private String trackName;
     private String singer;
     private String album;
-    private Double trackLength;
+    private String trackLength;
     private Genre genre;
+    public Track(){}
 
-    public Track(String trackName, String singer, String album, Double trackLength, Genre genre) {
+    public Track(String trackName, String singer, String album, String trackLength, Genre genre) {
         this.trackName = trackName;
         this.singer = singer;
         this.album = album;
         this.trackLength = trackLength;
         this.genre = genre;
     }
-
-    public Double getTrackLength() {
+    private boolean checkTrackLength(String trackLength){
+        String pattern = "[0-5]?[0-9]:[0-5][0-9]";
+        return trackLength.matches(pattern);
+    }
+    public String getTrackLength() {
         return trackLength;
     }
-
-    public void setTrackLength(Double trackLength) {
-        this.trackLength = trackLength;
+    public void setTrackLength(String trackLength) {
+        if(checkTrackLength(trackLength)){
+            this.trackLength = trackLength;
+        }else throw new InvalidFieldValueException(trackLength);
     }
 
     public String getAlbum() {

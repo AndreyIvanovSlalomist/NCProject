@@ -26,7 +26,7 @@ public class ConsoleView implements View, Observer {
         System.out.printf("%-30s", track.getTrackName());
         System.out.printf("%-20s", track.getSinger());
         System.out.printf("%-20s", track.getAlbum());
-        System.out.printf("%-20f", track.getTrackLength());
+        System.out.printf("%-20s", track.getTrackLength());
         System.out.printf("%-20s%n", track.getGenre().getGenreName());
     }
 
@@ -171,7 +171,7 @@ public class ConsoleView implements View, Observer {
                 i++;
             }
 
-            int r = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход)");
+            int r = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход):");
             if (r == 0) {
                 break;
             }
@@ -194,7 +194,7 @@ public class ConsoleView implements View, Observer {
             i++;
         }
 
-        int r = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход)");
+        int r = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход):");
         if (r != 0) {
             updateTrack(trackList.get(r - 1));
         }
@@ -210,16 +210,16 @@ public class ConsoleView implements View, Observer {
             int i = readInteger(0, 5, "");
             if (i == 0) {
                 break;
-            }
-            if (i == 4) {
-                Double d = readDouble(0, 300, "Введите новое значение в секундах");
-                if (d != 0) {
-                    if (controller.validUpdate(track, i, d)) {
-                        break;
-                    }
-                }
+//            }
+//            if (i == 4) {
+//                Double d = readDouble(0, 300, "Введите новое значение в секундах");
+//                if (d != 0) {
+//                    if (controller.validUpdate(track, i, d)) {
+//                        break;
+//                    }
+//                }
             } else {
-                String s = readString(0, 30, "Введите новое значение");
+                String s = readString(0, 30, "Введите новое значение:");
                 if (s != "") {
                     if (controller.validUpdate(track, i, s)) {
                         break;
@@ -250,31 +250,31 @@ public class ConsoleView implements View, Observer {
         List<Object> objects = new ArrayList<>();
         System.out.println("-- Добавление Трека --");
         String s;
-        s = readString(0, 30, "Введите название Трека");
+        s = readString(0, 30, "Введите название Трека:");
         if (s == "") {
             return null;
         }
         objects.add(s);
 
-        s = readString(0, 20, "Введите Исполнителя");
+        s = readString(0, 20, "Введите Исполнителя:");
         if (s == "") {
             return null;
         }
         objects.add(s);
 
-        s = readString(0, 20, "Введите Альбом");
+        s = readString(0, 20, "Введите Альбом:");
         if (s == "") {
             return null;
         }
         objects.add(s);
 
-        Double d = readDouble(0, 300, "Введите Длину трека в секундах");
-        if (d == 0) {
+        s = readString(0, 20, "Введите Длину трека (мм:сс):");
+        if (s == "") {
             return null;
         }
-        objects.add(d);
+        objects.add(s);
 
-        s = readString(0, 20, "Введите Жанр");
+        s = readString(0, 20, "Введите Жанр:");
         if (s == "") {
             return null;
         }
