@@ -13,9 +13,9 @@ public class ConsoleView implements View, Observer {
 
     private void showTitle(int i) {
         if (i != 0) {
-            System.out.printf("%-4s%-30s%-20s%-20s%-20s%-20s%n", "№", "Название", "Исполнитель", "Альбом", "Длинна трека(c)", "Жанр");
+            System.out.printf("%-4s%-30s%-20s%-20s%-20s%-20s%n", "№", "Название", "Исполнитель", "Альбом", "Длина трека(c)", "Жанр");
         } else {
-            System.out.printf("%-30s%-20s%-20s%-20s%-20s%n", "Название", "Исполнитель", "Альбом", "Длинна трека(c)", "Жанр");
+            System.out.printf("%-30s%-20s%-20s%-20s%-20s%n", "Название", "Исполнитель", "Альбом", "Длина трека(c)", "Жанр");
         }
     }
 
@@ -120,7 +120,7 @@ public class ConsoleView implements View, Observer {
     }
 
     private void updateMenu() {
-        System.out.println("Выберите что менять:");
+        System.out.println("Редактировать:");
         System.out.println("1 - Название");
         System.out.println("2 - Исполнителя");
         System.out.println("3 - Альбом");
@@ -230,7 +230,7 @@ public class ConsoleView implements View, Observer {
     }
 
     private void showAllTrack() {
-        System.out.println("-- Показываю все треки -- ");
+        System.out.println("-- Cписок треков -- ");
         showTitle(0);
         for (Track track : model.getAll()) {
             showTrack(track, 0);
@@ -268,7 +268,7 @@ public class ConsoleView implements View, Observer {
         }
         objects.add(s);
 
-        Double d = readDouble(0, 300, "Введите Длинну трека в секундах");
+        Double d = readDouble(0, 300, "Введите Длину трека в секундах");
         if (d == 0) {
             return null;
         }

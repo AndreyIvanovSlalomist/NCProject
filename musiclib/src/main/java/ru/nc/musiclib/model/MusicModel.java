@@ -40,7 +40,6 @@ public class MusicModel implements Model, Observable {
     public List<Track> getAll() {
         return tracks;
     }
-
     @Override
     public void saveTrack() {
         try {
