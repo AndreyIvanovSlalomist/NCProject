@@ -1,14 +1,14 @@
-package ru.nc.musiclib.controller;
+package ru.nc.musiclib.controller.impl;
 
 /**
  * Класс контроллера
  * Для использование со стороны View используется методы валидации validAppend, validUpdate, validDelete
  */
 
-import ru.nc.musiclib.interfaces.Controller;
-import ru.nc.musiclib.interfaces.Model;
+import ru.nc.musiclib.controller.Controller;
 import ru.nc.musiclib.interfaces.Observer;
-import ru.nc.musiclib.interfaces.View;
+import ru.nc.musiclib.model.Model;
+import ru.nc.musiclib.view.View;
 
 public class MusicLibController implements Controller, Observer {
     Model model = null;

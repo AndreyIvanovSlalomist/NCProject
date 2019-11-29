@@ -1,4 +1,4 @@
-package ru.nc.musiclib.interfaces;
+package ru.nc.musiclib.model;
 
 import ru.nc.musiclib.classes.Track;
 

@@ -1,7 +1,11 @@
-package ru.nc.musiclib.view;
+package ru.nc.musiclib.view.impl;
 
 import ru.nc.musiclib.classes.Track;
-import ru.nc.musiclib.interfaces.*;
+import ru.nc.musiclib.controller.Controller;
+import ru.nc.musiclib.interfaces.Observable;
+import ru.nc.musiclib.interfaces.Observer;
+import ru.nc.musiclib.model.Model;
+import ru.nc.musiclib.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +17,9 @@ public class ConsoleView implements View, Observer {
 
     private void showTitle(int i) {
         if (i != 0) {
-            System.out.printf("%-4s%-30s%-20s%-20s%-20s%-20s%n", "№", "Название", "Исполнитель", "Альбом", "Длина трека(c)", "Жанр");
+            System.out.printf("%-4s%-30s%-20s%-20s%-20s%-20s%n", "№", "Название", "Исполнитель", "Альбом", "Длина трека", "Жанр");
         } else {
-            System.out.printf("%-30s%-20s%-20s%-20s%-20s%n", "Название", "Исполнитель", "Альбом", "Длина трека(c)", "Жанр");
+            System.out.printf("%-30s%-20s%-20s%-20s%-20s%n", "Название", "Исполнитель", "Альбом", "Длина трека", "Жанр");
         }
     }
 
@@ -42,6 +46,14 @@ public class ConsoleView implements View, Observer {
             }
             case "Трек изменен.": {
                 System.out.println("Изменение успешно завершено ");
+                break;
+            }
+            case "Неверный формат длины трека": {
+                System.out.println("Неверный формат длины трека");
+                break;
+            }
+            case "Трек уже существует.": {
+                System.out.println("Трек уже существует.");
                 break;
             }
         }
@@ -73,7 +85,12 @@ public class ConsoleView implements View, Observer {
         int i;
         while (true) {
             System.out.println(captionMessage);
-            i = scanner.nextInt();
+            try {
+                i = Integer.parseInt(scanner.next());
+            } catch (NumberFormatException e) {
+                System.out.println("Ошибка. Введите целое число от " + min + " до " + max);
+                continue;
+            }
 
             if (i > max) {
                 System.out.println("Ошибка. Число больше " + max);
@@ -130,27 +147,25 @@ public class ConsoleView implements View, Observer {
     }
 
     private void runMainMenu() {
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             mainMenu();
-            String number = scanner.nextLine();
-            if (number.equals("0")) {
-                break;
-            }
-            switch (number) {
-                case "1": {
+            switch (readInteger(0, 4, "")) {
+                case 0: {
+                    System.exit(1);
+                }
+                case 1: {
                     showAllTrack();
                     break;
                 }
-                case "2": {
+                case 2: {
                     runAppendMenu();
                     break;
                 }
-                case "3": {
+                case 3: {
                     runUpdateMenu();
                     break;
                 }
-                case "4": {
+                case 4: {
                     runDeleteMenu();
                     break;
                 }
@@ -165,6 +180,10 @@ public class ConsoleView implements View, Observer {
         while (true) {
             int i = 1;
             List<Track> trackList = model.getAll();
+            if (trackList.size() == 0) {
+                System.out.println("Нет треков");
+                break;
+            }
             showTitle(i);
             for (Track track : trackList) {
                 showTrack(track, i);
@@ -180,6 +199,7 @@ public class ConsoleView implements View, Observer {
                     break;
                 }
             }
+
         }
     }
 
@@ -188,15 +208,20 @@ public class ConsoleView implements View, Observer {
         System.out.println("-- Изменение Трека --");
         int i = 1;
         List<Track> trackList = model.getAll();
-        showTitle(i);
-        for (Track track : trackList) {
-            showTrack(track, i);
-            i++;
-        }
+        if (trackList.size() == 0) {
+            System.out.println("Нет треков");
+        } else {
 
-        int r = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход):");
-        if (r != 0) {
-            updateTrack(trackList.get(r - 1));
+            showTitle(i);
+            for (Track track : trackList) {
+                showTrack(track, i);
+                i++;
+            }
+
+            int r = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход):");
+            if (r != 0) {
+                updateTrack(trackList.get(r - 1));
+            }
         }
     }
 

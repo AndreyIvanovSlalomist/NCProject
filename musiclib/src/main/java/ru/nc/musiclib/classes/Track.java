@@ -1,5 +1,7 @@
 package ru.nc.musiclib.classes;
 
+import ru.nc.musiclib.exceptions.InvalidFieldValueException;
+
 import java.io.Serializable;
 
 public class Track implements Serializable {
@@ -8,7 +10,9 @@ public class Track implements Serializable {
     private String album;
     private String trackLength;
     private Genre genre;
-    public Track(){}
+
+    public Track() {
+    }
 
     public Track(String trackName, String singer, String album, String trackLength, Genre genre) {
         this.trackName = trackName;
@@ -17,17 +21,20 @@ public class Track implements Serializable {
         this.trackLength = trackLength;
         this.genre = genre;
     }
-    private boolean checkTrackLength(String trackLength){
+
+    private boolean checkTrackLength(String trackLength) {
         String pattern = "[0-5]?[0-9]:[0-5][0-9]";
         return trackLength.matches(pattern);
     }
+
     public String getTrackLength() {
         return trackLength;
     }
+
     public void setTrackLength(String trackLength) {
-        if(checkTrackLength(trackLength)){
+        if (checkTrackLength(trackLength)) {
             this.trackLength = trackLength;
-        }else throw new InvalidFieldValueException(trackLength);
+        } else throw new InvalidFieldValueException(trackLength);
     }
 
     public String getAlbum() {

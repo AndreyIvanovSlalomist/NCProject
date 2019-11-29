@@ -1,4 +1,7 @@
-package ru.nc.musiclib.interfaces;
+package ru.nc.musiclib.view;
+
+import ru.nc.musiclib.controller.Controller;
+import ru.nc.musiclib.model.Model;
 
 /**
  * Интерфейс для въюшек
