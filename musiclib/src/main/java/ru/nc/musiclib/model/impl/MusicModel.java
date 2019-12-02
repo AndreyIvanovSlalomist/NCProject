@@ -1,8 +1,8 @@
 package ru.nc.musiclib.model.impl;
 
 import ru.nc.musiclib.classes.Genre;
-import ru.nc.musiclib.exceptions.InvalidFieldValueException;
 import ru.nc.musiclib.classes.Track;
+import ru.nc.musiclib.exceptions.InvalidFieldValueException;
 import ru.nc.musiclib.interfaces.Observable;
 import ru.nc.musiclib.interfaces.Observer;
 import ru.nc.musiclib.model.Model;
@@ -31,7 +31,7 @@ public class MusicModel implements Model, Observable {
     }
 
     @Override
-    public void notifyObserver(String message) {
+    public void notifyObservers(String message) {
         for (Observer observer : observers) {
             observer.sendEvent(message);
         }
@@ -49,7 +49,7 @@ public class MusicModel implements Model, Observable {
             out.writeObject(tracks);
             out.close();
         } catch (IOException e) {
-            notifyObserver("Ошибка при сохранении!");
+            notifyObservers("Ошибка при сохранении!");
         }
     }
 
@@ -64,92 +64,92 @@ public class MusicModel implements Model, Observable {
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            notifyObserver("Ошибка при загрузке!");
+            notifyObservers("Ошибка при загрузке!");
         }
     }
 
     @Override
-    public boolean append(Object... objects) {
-        Genre genre = findGenre((String) objects[4]);
-        if (genre == null) {
-            genre = new Genre((String) objects[4]);
-            genres.add(genre);
-        }
-        if (findTrack(genre, objects) == null) {
-            //Track track = new Track((String) objects[0], (String) objects[1], (String) objects[2], (String) objects[3], genre);
+    public boolean append(String name, String singer, String album, String length, String genreName) {
+
+        if (findTrack(name, singer, album, length) == null) {
             Track track = new Track();
-            track.setTrackName((String) objects[0]);
-            track.setSinger((String) objects[1]);
-            track.setAlbum((String) objects[2]);
-            track.setTrackLength((String) objects[3]);
+            track.setTrackName(name);
+            track.setSinger(singer);
+            track.setAlbum(album);
+            try {
+                track.setTrackLength(length);
+            } catch (InvalidFieldValueException ex) {
+                notifyObservers("Неверный формат длины трека");
+                return false;
+            }
+            Genre genre = findGenre(genreName);
+            if (genre == null) {
+                genre = new Genre(genreName);
+                genres.add(genre);
+            }
             track.setGenre(genre);
             tracks.add(track);
         } else {
-            notifyObserver("Трек уже существует.");
+            notifyObservers("Трек уже существует.");
             return false;
         }
-        notifyObserver("Трек добавлен.");
+        notifyObservers("Трек добавлен.");
         return true;
     }
 
     @Override
-    public boolean update(Object... objects) {
-        if (objects.length == 3) {
-            if (objects[0] instanceof Track) {
-
-                switch ((Integer) objects[1]) {
-                    case 1: {
-                        ((Track) objects[0]).setTrackName((String) objects[2]);
-                        break;
-                    }
-                    case 2: {
-                        ((Track) objects[0]).setSinger((String) objects[2]);
-                        break;
-                    }
-                    case 3: {
-                        ((Track) objects[0]).setAlbum((String) objects[2]);
-                        break;
-                    }
-                    case 4: {
-                        try {
-                            ((Track) objects[0]).setTrackLength((String) objects[2]);
-                            break;
-                        } catch (InvalidFieldValueException ex) {
-                            notifyObserver("Неверный формат длины трека");
-                            return false;
-                        }
-                    }
-                    case 5: {
-                        Genre genre = findGenre((String) objects[2]);
-                        if (genre == null) {
-                            genre = new Genre((String) objects[2]);
-                            genres.add(genre);
-                        }
-                        ((Track) objects[0]).setGenre(genre);
-                        break;
-                    }
-                }
-
+    public boolean update(Track track, int colNumber, String newValue) {
+        switch (colNumber) {
+            case 1: {
+                track.setTrackName(newValue);
+                break;
             }
-        } else return false;
-        notifyObserver("Трек изменен.");
+            case 2: {
+                track.setSinger(newValue);
+                break;
+            }
+            case 3: {
+                track.setAlbum(newValue);
+                break;
+            }
+            case 4: {
+                try {
+                    track.setTrackLength(newValue);
+                    break;
+                } catch (InvalidFieldValueException ex) {
+                    notifyObservers("Неверный формат длины трека");
+                    return false;
+                }
+            }
+            case 5: {
+                Genre genre = findGenre(newValue);
+                if (genre == null) {
+                    genre = new Genre(newValue);
+                    genres.add(genre);
+                }
+                track.setGenre(genre);
+                break;
+            }
+        }
+
+        notifyObservers("Трек изменен.");
         return true;
     }
 
     @Override
     public boolean delete(int number) {
         tracks.remove(number);
-        notifyObserver("Трек удален.");
+        notifyObservers("Трек удален.");
         return true;
     }
 
-    private Track findTrack(Genre genre, Object... objects) {
+    private Track findTrack(String name, String singer, String album, String length) {
         Track track = null;
         for (Track track1 : tracks) {
-            if (track1.getTrackName().equals(objects[0]) &&
-                    track1.getSinger().equals(objects[1]) &&
-                    track1.getAlbum().equals(objects[2]) &&
-                    track1.getTrackLength().equals(objects[3])) {
+            if (track1.getTrackName().equals(name) &&
+                    track1.getSinger().equals(singer) &&
+                    track1.getAlbum().equals(album) &&
+                    track1.getTrackLength().equals(length)) {
                 track = track1;
                 break;
             }

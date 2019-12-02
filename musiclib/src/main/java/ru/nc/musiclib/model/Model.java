@@ -19,9 +19,9 @@ import java.util.List;
 public interface Model {
     List<Track> getAll();
 
-    boolean append(Object... objects);
+    boolean append(String name, String singer, String album, String length, String genreName);
 
-    boolean update(Object... objects);
+    boolean update(Track track, int colNumber, String newValue);
 
     boolean delete(int number);
 

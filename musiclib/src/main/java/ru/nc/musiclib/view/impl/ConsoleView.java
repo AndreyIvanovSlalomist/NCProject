@@ -195,7 +195,7 @@ public class ConsoleView implements View, Observer {
                 break;
             }
             if (r != 0) {
-                if (controller.validDelete(r - 1)) {
+                if (controller.isValidDelete(r - 1)) {
                     break;
                 }
             }
@@ -246,7 +246,7 @@ public class ConsoleView implements View, Observer {
             } else {
                 String s = readString(0, 30, "Введите новое значение:");
                 if (s != "") {
-                    if (controller.validUpdate(track, i, s)) {
+                    if (controller.isValidUpdate(track, i, s)) {
                         break;
                     }
                 }
@@ -263,16 +263,16 @@ public class ConsoleView implements View, Observer {
     }
 
     private void runAppendMenu() {
-        List<Object> appendResult = appendMenu();
+        List<String> appendResult = appendMenu();
         if (appendResult != null) {
             if (appendResult.size() == 5) {
-                controller.validAppend(appendResult.toArray());
+                controller.isValidAdd(appendResult.get(0), appendResult.get(1), appendResult.get(2), appendResult.get(3), appendResult.get(3));
             }
         }
     }
 
-    private List<Object> appendMenu() {
-        List<Object> objects = new ArrayList<>();
+    private List<String> appendMenu() {
+        List<String> objects = new ArrayList<>();
         System.out.println("-- Добавление Трека --");
         String s;
         s = readString(0, 30, "Введите название Трека:");

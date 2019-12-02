@@ -10,5 +10,5 @@ public interface Observable {
 
     void removeObserver(Observer o);
 
-    void notifyObserver(String message);
+    void notifyObservers(String message);
 }

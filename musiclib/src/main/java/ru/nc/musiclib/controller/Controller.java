@@ -1,5 +1,6 @@
 package ru.nc.musiclib.controller;
 
+import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.view.View;
 import ru.nc.musiclib.model.Model;
 
@@ -14,9 +15,9 @@ public interface Controller {
 
     void setView(View view);
 
-    boolean validAppend(Object... objects);
+    boolean isValidAdd(String name, String singer, String album, String length, String genreName);
 
-    boolean validUpdate(Object... objects);
+    boolean isValidUpdate(Track track, int colNumber, String newValue);
 
-    boolean validDelete(int number);
+    boolean isValidDelete(int number);
 }
