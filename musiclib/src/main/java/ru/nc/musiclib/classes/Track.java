@@ -5,7 +5,7 @@ import ru.nc.musiclib.exceptions.InvalidFieldValueException;
 import java.io.Serializable;
 
 public class Track implements Serializable {
-    private String trackName;
+    private String name;
     private String singer;
     private String album;
     private String trackLength;
@@ -14,8 +14,8 @@ public class Track implements Serializable {
     public Track() {
     }
 
-    public Track(String trackName, String singer, String album, String trackLength, Genre genre) {
-        this.trackName = trackName;
+    public Track(String name, String singer, String album, String trackLength, Genre genre) {
+        this.name = name;
         this.singer = singer;
         this.album = album;
         this.trackLength = trackLength;
@@ -45,12 +45,12 @@ public class Track implements Serializable {
         this.album = album;
     }
 
-    public String getTrackName() {
-        return trackName;
+    public String getName() {
+        return name;
     }
 
-    public void setTrackName(String trackName) {
-        this.trackName = trackName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSinger() {

@@ -75,7 +75,7 @@ public class MusicModel implements Model, Observable {
 
         if (findTrack(name, singer, album, length) == null) {
             Track track = new Track();
-            track.setTrackName(name);
+            track.setName(name);
             track.setSinger(singer);
             track.setAlbum(album);
             try {
@@ -108,7 +108,7 @@ public class MusicModel implements Model, Observable {
         trackList = loadTrack(fileName);
 
         for (Track track : trackList) {
-            add(track.getTrackName(), track.getSinger(), track.getAlbum(), track.getTrackLength(), track.getGenre().getGenreName(), false);
+            add(track.getName(), track.getSinger(), track.getAlbum(), track.getTrackLength(), track.getGenre().getGenreName(), false);
         }
         notifyObservers("Загрузка завершена.");
         return true;
@@ -118,7 +118,7 @@ public class MusicModel implements Model, Observable {
     public boolean update(Track track, int colNumber, String newValue) {
         switch (colNumber) {
             case 1: {
-                track.setTrackName(newValue);
+                track.setName(newValue);
                 break;
             }
             case 2: {
@@ -163,7 +163,7 @@ public class MusicModel implements Model, Observable {
     private Track findTrack(String name, String singer, String album, String length) {
         Track track = null;
         for (Track track1 : tracks) {
-            if (track1.getTrackName().equals(name) &&
+            if (track1.getName().equals(name) &&
                     track1.getSinger().equals(singer) &&
                     track1.getAlbum().equals(album) &&
                     track1.getTrackLength().equals(length)) {

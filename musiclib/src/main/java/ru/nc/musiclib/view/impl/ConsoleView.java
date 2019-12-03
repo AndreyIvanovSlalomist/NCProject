@@ -28,7 +28,7 @@ public class ConsoleView implements View, Observer {
         if (i != 0) {
             System.out.printf("%-4s", i);
         }
-        System.out.printf("%-30s", track.getTrackName());
+        System.out.printf("%-30s", track.getName());
         System.out.printf("%-20s", track.getSinger());
         System.out.printf("%-20s", track.getAlbum());
         System.out.printf("%-20s", track.getTrackLength());
@@ -143,7 +143,7 @@ public class ConsoleView implements View, Observer {
         System.out.println("1 - Название");
         System.out.println("2 - Исполнителя");
         System.out.println("3 - Альбом");
-        System.out.println("4 - Длинна трека(c)");
+        System.out.println("4 - Длинна трека");
         System.out.println("5 - Жанр");
         System.out.println("0 - Выход");
     }
