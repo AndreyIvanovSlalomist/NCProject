@@ -7,6 +7,7 @@ import ru.nc.musiclib.interfaces.Observer;
 import ru.nc.musiclib.model.Model;
 import ru.nc.musiclib.view.View;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -133,6 +134,7 @@ public class ConsoleView implements View, Observer {
         System.out.println("2 - Добавить Трек");
         System.out.println("3 - Изменить Трек");
         System.out.println("4 - Удалить Трек");
+        System.out.println("5 - Загрузить терки из файла");
         System.out.println("0 - Выход");
     }
 
@@ -149,7 +151,7 @@ public class ConsoleView implements View, Observer {
     private void runMainMenu() {
         while (true) {
             mainMenu();
-            switch (readInteger(0, 4, "")) {
+            switch (readInteger(0, 5, "")) {
                 case 0: {
                     System.exit(1);
                 }
@@ -158,7 +160,7 @@ public class ConsoleView implements View, Observer {
                     break;
                 }
                 case 2: {
-                    runAppendMenu();
+                    runAddMenu();
                     break;
                 }
                 case 3: {
@@ -169,8 +171,35 @@ public class ConsoleView implements View, Observer {
                     runDeleteMenu();
                     break;
                 }
+                case 5: {
+                    runAddFromFileMenu();
+                    break;
+                }
                 default:
                     System.out.println("Ошибка.");
+            }
+        }
+    }
+
+    private void runAddFromFileMenu() {
+        String fileName = addFromFileMenu();
+        if (fileName != null) {
+            controller.isValidAddFromFile(fileName);
+        }
+    }
+
+    private String addFromFileMenu() {
+        String fileName = "";
+        while (true) {
+            System.out.println("-- Загрузить терки из файла --");
+            fileName = readString(0, 30, "Введите полный путь к файлу");
+            if (fileName == "") {
+                return null;
+            }
+            if ((new File(fileName)).exists()) {
+                return fileName;
+            } else {
+                System.out.println("Файл не существует");
             }
         }
     }
@@ -262,16 +291,16 @@ public class ConsoleView implements View, Observer {
         }
     }
 
-    private void runAppendMenu() {
-        List<String> appendResult = appendMenu();
-        if (appendResult != null) {
-            if (appendResult.size() == 5) {
-                controller.isValidAdd(appendResult.get(0), appendResult.get(1), appendResult.get(2), appendResult.get(3), appendResult.get(3));
+    private void runAddMenu() {
+        List<String> addResult = addMenu();
+        if (addResult != null) {
+            if (addResult.size() == 5) {
+                controller.isValidAdd(addResult.get(0), addResult.get(1), addResult.get(2), addResult.get(3), addResult.get(3));
             }
         }
     }
 
-    private List<String> appendMenu() {
+    private List<String> addMenu() {
         List<String> objects = new ArrayList<>();
         System.out.println("-- Добавление Трека --");
         String s;

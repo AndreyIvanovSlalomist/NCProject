@@ -17,7 +17,12 @@ public class MusicModel implements Model, Observable {
     List<Genre> genres = new ArrayList<>();
 
     public MusicModel() {
-        loadTrack();
+        tracks = loadTrack("tracks.txt");
+        for (Track track : tracks) {
+            if (findGenre(track.getGenre().getGenreName()) == null) {
+                genres.add(track.getGenre());
+            }
+        }
     }
 
     @Override
@@ -53,23 +58,20 @@ public class MusicModel implements Model, Observable {
         }
     }
 
-    private void loadTrack() {
+    private List<Track> loadTrack(String fileName) {
+        List<Track> trackList = new ArrayList<>();
         try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream("tracks.txt"));
-            tracks = (List<Track>) in.readObject();
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
+            trackList = (List<Track>) in.readObject();
             in.close();
-            for (Track track : tracks) {
-                if (findGenre(track.getGenre().getGenreName()) == null) {
-                    genres.add(track.getGenre());
-                }
-            }
         } catch (IOException | ClassNotFoundException e) {
             notifyObservers("Ошибка при загрузке!");
         }
+        return trackList;
     }
 
     @Override
-    public boolean append(String name, String singer, String album, String length, String genreName) {
+    public boolean add(String name, String singer, String album, String length, String genreName, boolean isSendNotify) {
 
         if (findTrack(name, singer, album, length) == null) {
             Track track = new Track();
@@ -79,7 +81,8 @@ public class MusicModel implements Model, Observable {
             try {
                 track.setTrackLength(length);
             } catch (InvalidFieldValueException ex) {
-                notifyObservers("Неверный формат длины трека");
+                if (isSendNotify)
+                    notifyObservers("Неверный формат длины трека");
                 return false;
             }
             Genre genre = findGenre(genreName);
@@ -90,10 +93,24 @@ public class MusicModel implements Model, Observable {
             track.setGenre(genre);
             tracks.add(track);
         } else {
-            notifyObservers("Трек уже существует.");
+            if (isSendNotify)
+                notifyObservers("Трек уже существует.");
             return false;
         }
-        notifyObservers("Трек добавлен.");
+        if (isSendNotify)
+            notifyObservers("Трек добавлен.");
+        return true;
+    }
+
+    @Override
+    public boolean addFromFile(String fileName) {
+        List<Track> trackList = new ArrayList<>();
+        trackList = loadTrack(fileName);
+
+        for (Track track : trackList) {
+            add(track.getTrackName(), track.getSinger(), track.getAlbum(), track.getTrackLength(), track.getGenre().getGenreName(), false);
+        }
+        notifyObservers("Загрузка завершена.");
         return true;
     }
 

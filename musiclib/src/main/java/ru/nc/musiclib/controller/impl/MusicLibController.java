@@ -39,11 +39,18 @@ public class MusicLibController implements Controller, Observer {
     @Override
     public boolean isValidAdd(String name, String singer, String album, String length, String genreName) {
         sendLog("Я контроллер. Получил данные на добавление ");
-        if (model.append(name, singer, album, length, genreName)) {
+        if (model.add(name, singer, album, length, genreName, true)) {
             model.saveTrack();
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean isValidAddFromFile(String fileName) {
+       model.addFromFile(fileName);
+        model.saveTrack();
+        return true;
     }
 
     @Override

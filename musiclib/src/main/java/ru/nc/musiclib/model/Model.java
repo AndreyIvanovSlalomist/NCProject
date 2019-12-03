@@ -19,7 +19,9 @@ import java.util.List;
 public interface Model {
     List<Track> getAll();
 
-    boolean append(String name, String singer, String album, String length, String genreName);
+    boolean add(String name, String singer, String album, String length, String genreName, boolean isSendNotif);
+
+    boolean addFromFile(String fileName);
 
     boolean update(Track track, int colNumber, String newValue);
 
