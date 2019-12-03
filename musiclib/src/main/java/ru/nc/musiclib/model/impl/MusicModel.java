@@ -38,7 +38,7 @@ public class MusicModel implements Model, Observable {
     @Override
     public void notifyObservers(String message) {
         for (Observer observer : observers) {
-            observer.sendEvent(message);
+            observer.update(message);
         }
     }
 
@@ -104,7 +104,7 @@ public class MusicModel implements Model, Observable {
 
     @Override
     public boolean addFromFile(String fileName) {
-        List<Track> trackList = new ArrayList<>();
+        List<Track> trackList;
         trackList = loadTrack(fileName);
 
         for (Track track : trackList) {

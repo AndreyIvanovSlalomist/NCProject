@@ -13,20 +13,20 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleView implements View, Observer {
-    Model model = null;
-    Controller controller = null;
+    private Model model = null;
+    private Controller controller = null;
 
-    private void showTitle(int i) {
-        if (i != 0) {
+    private void showTitle(int number) {
+        if (number != 0) {
             System.out.printf("%-4s%-30s%-20s%-20s%-20s%-20s%n", "№", "Название", "Исполнитель", "Альбом", "Длина трека", "Жанр");
         } else {
             System.out.printf("%-30s%-20s%-20s%-20s%-20s%n", "Название", "Исполнитель", "Альбом", "Длина трека", "Жанр");
         }
     }
 
-    private void showTrack(Track track, int i) {
-        if (i != 0) {
-            System.out.printf("%-4s", i);
+    private void showTrack(Track track, int number) {
+        if (number != 0) {
+            System.out.printf("%-4s", number);
         }
         System.out.printf("%-30s", track.getName());
         System.out.printf("%-20s", track.getSinger());
@@ -35,7 +35,7 @@ public class ConsoleView implements View, Observer {
         System.out.printf("%-20s%n", track.getGenre().getGenreName());
     }
 
-    public void sendEvent(String event) {
+    public void update(String event) {
         switch (event) {
             case "Трек добавлен.": {
                 System.out.println("Добавление успешно завершено ");
@@ -62,20 +62,20 @@ public class ConsoleView implements View, Observer {
 
     private String readString(int minLength, int maxLength, String captionMessage) {
         Scanner scanner = new Scanner(System.in);
-        String s = "";
+        String inputString;
         while (true) {
             System.out.println(captionMessage + " (exit - возврат)");
-            s = scanner.nextLine();
-            if (s.equals("exit")) {
+            inputString = scanner.nextLine();
+            if (inputString.equals("exit")) {
                 return "";
             }
 
-            if (s.length() > maxLength) {
+            if (inputString.length() > maxLength) {
                 System.out.println("Ошибка. Длинна строки больше " + maxLength);
-            } else if (s.length() < minLength) {
+            } else if (inputString.length() < minLength) {
                 System.out.println("Ошибка. Длинна строки меньше " + minLength);
             } else {
-                return s;
+                return inputString;
             }
         }
     }
@@ -83,46 +83,46 @@ public class ConsoleView implements View, Observer {
     private int readInteger(int min, int max, String captionMessage) {
         Scanner scanner = new Scanner(System.in);
 
-        int i;
+        int inputInt;
         while (true) {
             System.out.println(captionMessage);
             try {
-                i = Integer.parseInt(scanner.next());
+                inputInt = Integer.parseInt(scanner.next());
             } catch (NumberFormatException e) {
                 System.out.println("Ошибка. Введите целое число от " + min + " до " + max);
                 continue;
             }
 
-            if (i > max) {
+            if (inputInt > max) {
                 System.out.println("Ошибка. Число больше " + max);
-            } else if (i < min) {
+            } else if (inputInt < min) {
                 System.out.println("Ошибка. Число меньше " + min);
             } else {
-                return i;
+                return inputInt;
             }
         }
     }
 
-    private Double readDouble(int min, int max, String captionMessage) {
+    private double readDouble(int min, int max, String captionMessage) {
         Scanner scanner = new Scanner(System.in);
 
-        Double i = 0.0;
+        double inputDouble;
         while (true) {
             System.out.println(captionMessage + " (0 - возврат)");
             try {
-                i = Double.parseDouble(scanner.next());
+                inputDouble = Double.parseDouble(scanner.next());
             } catch (NumberFormatException e) {
                 System.out.println("Ошибка. Введите число от " + min + " до " + max);
                 continue;
             }
-            if (i == 0) {
+            if (inputDouble == 0) {
                 return 0.0;
-            } else if (i > max) {
+            } else if (inputDouble > max) {
                 System.out.println("Ошибка. Число больше " + max);
-            } else if (i < min) {
+            } else if (inputDouble < min) {
                 System.out.println("Ошибка. Число меньше " + min);
             } else {
-                return i;
+                return inputDouble;
             }
         }
     }
@@ -189,11 +189,11 @@ public class ConsoleView implements View, Observer {
     }
 
     private String addFromFileMenu() {
-        String fileName = "";
+        String fileName;
         while (true) {
             System.out.println("-- Загрузить терки из файла --");
             fileName = readString(0, 30, "Введите полный путь к файлу");
-            if (fileName == "") {
+            if (fileName.equals("")) {
                 return null;
             }
             if ((new File(fileName)).exists()) {
@@ -207,24 +207,23 @@ public class ConsoleView implements View, Observer {
     private void runDeleteMenu() {
         System.out.println("-- Удаление Трека --");
         while (true) {
-            int i = 1;
+            int number = 1;
             List<Track> trackList = model.getAll();
             if (trackList.size() == 0) {
                 System.out.println("Нет треков");
                 break;
             }
-            showTitle(i);
+            showTitle(number);
             for (Track track : trackList) {
-                showTrack(track, i);
-                i++;
+                showTrack(track, number);
+                number++;
             }
 
-            int r = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход):");
-            if (r == 0) {
+            int inputInt = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход):");
+            if (inputInt == 0) {
                 break;
-            }
-            if (r != 0) {
-                if (controller.isValidDelete(r - 1)) {
+            } else {
+                if (controller.isValidDelete(inputInt - 1)) {
                     break;
                 }
             }
@@ -235,21 +234,21 @@ public class ConsoleView implements View, Observer {
 
     private void runUpdateMenu() {
         System.out.println("-- Изменение Трека --");
-        int i = 1;
+        int number = 1;
         List<Track> trackList = model.getAll();
         if (trackList.size() == 0) {
             System.out.println("Нет треков");
         } else {
 
-            showTitle(i);
+            showTitle(number);
             for (Track track : trackList) {
-                showTrack(track, i);
-                i++;
+                showTrack(track, number);
+                number++;
             }
 
-            int r = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход):");
-            if (r != 0) {
-                updateTrack(trackList.get(r - 1));
+            int inputInt = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход):");
+            if (inputInt != 0) {
+                updateTrack(trackList.get(inputInt - 1));
             }
         }
     }
@@ -261,21 +260,21 @@ public class ConsoleView implements View, Observer {
             showTitle(0);
             showTrack(track, 0);
 
-            int i = readInteger(0, 5, "");
-            if (i == 0) {
+            int inputInt = readInteger(0, 5, "");
+            if (inputInt == 0) {
                 break;
 //            }
-//            if (i == 4) {
+//            if (inputInt == 4) {
 //                Double d = readDouble(0, 300, "Введите новое значение в секундах");
 //                if (d != 0) {
-//                    if (controller.validUpdate(track, i, d)) {
+//                    if (controller.validUpdate(track, inputInt, d)) {
 //                        break;
 //                    }
 //                }
             } else {
-                String s = readString(0, 30, "Введите новое значение:");
-                if (s != "") {
-                    if (controller.isValidUpdate(track, i, s)) {
+                String newValue = readString(0, 30, "Введите новое значение:");
+                if (!newValue.equals("")) {
+                    if (controller.isValidUpdate(track, inputInt, newValue)) {
                         break;
                     }
                 }
@@ -303,36 +302,36 @@ public class ConsoleView implements View, Observer {
     private List<String> addMenu() {
         List<String> objects = new ArrayList<>();
         System.out.println("-- Добавление Трека --");
-        String s;
-        s = readString(0, 30, "Введите название Трека:");
-        if (s == "") {
+        String inputValue;
+        inputValue = readString(0, 30, "Введите название Трека:");
+        if (inputValue.equals("")) {
             return null;
         }
-        objects.add(s);
+        objects.add(inputValue);
 
-        s = readString(0, 20, "Введите Исполнителя:");
-        if (s == "") {
+        inputValue = readString(0, 20, "Введите Исполнителя:");
+        if (inputValue.equals("")) {
             return null;
         }
-        objects.add(s);
+        objects.add(inputValue);
 
-        s = readString(0, 20, "Введите Альбом:");
-        if (s == "") {
+        inputValue = readString(0, 20, "Введите Альбом:");
+        if (inputValue.equals("")) {
             return null;
         }
-        objects.add(s);
+        objects.add(inputValue);
 
-        s = readString(0, 20, "Введите Длину трека (мм:сс):");
-        if (s == "") {
+        inputValue = readString(0, 20, "Введите Длину трека (мм:сс):");
+        if (inputValue.equals("")) {
             return null;
         }
-        objects.add(s);
+        objects.add(inputValue);
 
-        s = readString(0, 20, "Введите Жанр:");
-        if (s == "") {
+        inputValue = readString(0, 20, "Введите Жанр:");
+        if (inputValue.equals("")) {
             return null;
         }
-        objects.add(s);
+        objects.add(inputValue);
         return objects;
     }
 

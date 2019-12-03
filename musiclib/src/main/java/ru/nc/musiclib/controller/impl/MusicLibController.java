@@ -12,17 +12,15 @@ import ru.nc.musiclib.model.Model;
 import ru.nc.musiclib.view.View;
 
 public class MusicLibController implements Controller, Observer {
-    Model model = null;
-    View view = null;
+    private Model model = null;
+    private View view = null;
 
     private void sendLog(String s) {
         // System.out.println(s);
     }
 
-    ;
-
     @Override
-    public void sendEvent(String event) {
+    public void update(String event) {
         sendLog("Я контроллер. Получил событие " + event);
     }
 
