@@ -294,7 +294,7 @@ public class ConsoleView implements View, Observer {
         List<String> addResult = addMenu();
         if (addResult != null) {
             if (addResult.size() == 5) {
-                controller.isValidAdd(addResult.get(0), addResult.get(1), addResult.get(2), addResult.get(3), addResult.get(3));
+                controller.isValidAdd(addResult.get(0), addResult.get(1), addResult.get(2), addResult.get(3), addResult.get(4));
             }
         }
     }

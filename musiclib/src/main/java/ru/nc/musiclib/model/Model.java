@@ -28,4 +28,6 @@ public interface Model {
     boolean delete(int number);
 
     void saveTrack();
+
+    void setSort(int numberField, boolean isRevers);
 }

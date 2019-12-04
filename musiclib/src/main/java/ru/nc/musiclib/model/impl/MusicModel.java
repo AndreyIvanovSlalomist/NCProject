@@ -9,6 +9,7 @@ import ru.nc.musiclib.model.Model;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class MusicModel implements Model, Observable {
@@ -55,6 +56,20 @@ public class MusicModel implements Model, Observable {
             out.close();
         } catch (IOException e) {
             notifyObservers("Ошибка при сохранении!");
+        }
+    }
+
+    @Override
+    public void setSort(int numberField, boolean isRevers) {
+        switch (numberField) {
+            case 1:
+                tracks.sort(Comparator.comparing(Track::getName));
+            case 2:
+                tracks.sort(Comparator.comparing(Track::getSinger));
+            case 3:
+                tracks.sort(Comparator.comparing(Track::getAlbum));
+            case 4:
+                tracks.sort(Comparator.comparing(Track::getTrackLength));
         }
     }
 
