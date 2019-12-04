@@ -65,6 +65,10 @@ public class Track implements Serializable {
         return genre;
     }
 
+    public String getGenreName() {
+        return genre.getGenreName();
+    }
+
     public void setGenre(Genre genre) {
         this.genre = genre;
     }

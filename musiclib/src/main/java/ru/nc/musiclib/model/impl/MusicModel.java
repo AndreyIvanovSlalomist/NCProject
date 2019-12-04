@@ -63,13 +63,40 @@ public class MusicModel implements Model, Observable {
     public void setSort(int numberField, boolean isRevers) {
         switch (numberField) {
             case 1:
-                tracks.sort(Comparator.comparing(Track::getName));
+                if (isRevers) {
+                    tracks.sort(Comparator.comparing(Track::getName).reversed());
+                } else {
+                    tracks.sort(Comparator.comparing(Track::getName));
+                }
+                break;
             case 2:
-                tracks.sort(Comparator.comparing(Track::getSinger));
+                if (isRevers) {
+                    tracks.sort(Comparator.comparing(Track::getSinger).reversed());
+                } else {
+                    tracks.sort(Comparator.comparing(Track::getSinger));
+                }
+                break;
             case 3:
-                tracks.sort(Comparator.comparing(Track::getAlbum));
+                if (isRevers) {
+                    tracks.sort(Comparator.comparing(Track::getAlbum).reversed());
+                } else {
+                    tracks.sort(Comparator.comparing(Track::getAlbum));
+                }
+                break;
             case 4:
-                tracks.sort(Comparator.comparing(Track::getTrackLength));
+                if (isRevers) {
+                    tracks.sort(Comparator.comparing(Track::getTrackLength).reversed());
+                } else {
+                    tracks.sort(Comparator.comparing(Track::getTrackLength));
+                }
+                break;
+            case 5:
+                if (isRevers) {
+                    tracks.sort(Comparator.comparing(Track::getGenreName).reversed());
+                } else {
+                    tracks.sort(Comparator.comparing(Track::getGenreName));
+                }
+                break;
         }
     }
 
