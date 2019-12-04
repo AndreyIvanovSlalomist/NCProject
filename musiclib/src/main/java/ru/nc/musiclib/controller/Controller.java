@@ -21,5 +21,7 @@ public interface Controller {
 
     boolean isValidUpdate(Track track, int colNumber, String newValue);
 
+    boolean isValidSort(int numberField, boolean isRevers);
+
     boolean isValidDelete(int number);
 }

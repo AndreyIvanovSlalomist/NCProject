@@ -46,7 +46,7 @@ public class MusicLibController implements Controller, Observer {
 
     @Override
     public boolean isValidAddFromFile(String fileName) {
-       model.addFromFile(fileName);
+        model.addFromFile(fileName);
         model.saveTrack();
         return true;
     }
@@ -59,6 +59,14 @@ public class MusicLibController implements Controller, Observer {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean isValidSort(int numberField, boolean isRevers) {
+        sendLog("Я контроллер. Получил команду для сортировки ");
+        model.setSort(numberField, isRevers);
+        model.saveTrack();
+        return true;
     }
 
     @Override
