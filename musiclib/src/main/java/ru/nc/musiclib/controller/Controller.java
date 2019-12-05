@@ -15,7 +15,7 @@ public interface Controller {
 
     void setView(View view);
 
-    boolean isValidAdd(String name, String singer, String album, String length, String genreName);
+    boolean isValidAdd(String name, String singer, String album, int length, String genreName);
 
     boolean isValidAddFromFile(String fileName);
 

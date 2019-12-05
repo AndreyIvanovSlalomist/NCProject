@@ -88,9 +88,9 @@ public class MusicModel implements Model, Observable {
                 break;
             case 4:
                 if (isRevers) {
-                    tracks.sort(Comparator.comparing(Track::getTrackLength).reversed());
+                    tracks.sort(Comparator.comparing(Track::getLengthInt).reversed());
                 } else {
-                    tracks.sort(Comparator.comparing(Track::getTrackLength));
+                    tracks.sort(Comparator.comparing(Track::getLengthInt));
                 }
                 break;
             case 5:
@@ -116,7 +116,7 @@ public class MusicModel implements Model, Observable {
     }
 
     @Override
-    public boolean add(String name, String singer, String album, String length, String genreName, boolean isSendNotify) {
+    public boolean add(String name, String singer, String album, int length, String genreName, boolean isSendNotify) {
 
         if (findTrack(name, singer, album, length) == null) {
             Track track = new Track();
@@ -124,7 +124,7 @@ public class MusicModel implements Model, Observable {
             track.setSinger(singer);
             track.setAlbum(album);
             try {
-                track.setTrackLength(length);
+                track.setLength(length);
             } catch (InvalidFieldValueException ex) {
                 if (isSendNotify)
                     notifyObservers("Неверный формат длины трека");
@@ -153,7 +153,7 @@ public class MusicModel implements Model, Observable {
         trackList = loadTrack(fileName);
 
         for (Track track : trackList) {
-            add(track.getName(), track.getSinger(), track.getAlbum(), track.getTrackLength(), track.getGenre().getGenreName(), false);
+            add(track.getName(), track.getSinger(), track.getAlbum(), track.getLengthInt(), track.getGenre().getGenreName(), false);
         }
         notifyObservers("Загрузка завершена.");
         return true;
@@ -176,7 +176,7 @@ public class MusicModel implements Model, Observable {
             }
             case 4: {
                 try {
-                    track.setTrackLength(newValue);
+                    track.setLength(Integer.parseInt(newValue));
                     break;
                 } catch (InvalidFieldValueException ex) {
                     notifyObservers("Неверный формат длины трека");
@@ -219,11 +219,11 @@ public class MusicModel implements Model, Observable {
                         curValue = track.getAlbum();
                         break;
                     }
-                    case 4: {
-                        curValue = track.getTrackLength();
+                  /*  case 4: {
+                        curValue = track.getLength();
                         break;
-                    }
-                    case 5: {
+                    }*/
+                    case 4: {
                         curValue = track.getGenreName();
                         break;
                     }
@@ -249,13 +249,13 @@ public class MusicModel implements Model, Observable {
         return true;
     }
 
-    private Track findTrack(String name, String singer, String album, String length) {
+    private Track findTrack(String name, String singer, String album, int length) {
         Track track = null;
         for (Track track1 : tracks) {
             if (track1.getName().equals(name) &&
                     track1.getSinger().equals(singer) &&
                     track1.getAlbum().equals(album) &&
-                    track1.getTrackLength().equals(length)) {
+                    track1.getLengthInt() == (length)) {
                 track = track1;
                 break;
             }

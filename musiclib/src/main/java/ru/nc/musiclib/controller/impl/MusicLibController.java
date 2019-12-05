@@ -35,7 +35,7 @@ public class MusicLibController implements Controller, Observer {
     }
 
     @Override
-    public boolean isValidAdd(String name, String singer, String album, String length, String genreName) {
+    public boolean isValidAdd(String name, String singer, String album, int length, String genreName) {
         sendLog("Я контроллер. Получил данные на добавление ");
         if (model.add(name, singer, album, length, genreName, true)) {
             model.saveTrack();

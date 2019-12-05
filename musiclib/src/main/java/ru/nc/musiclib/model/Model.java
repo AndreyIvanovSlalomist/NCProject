@@ -19,7 +19,7 @@ import java.util.List;
 public interface Model {
     List<Track> getAll();
 
-    boolean add(String name, String singer, String album, String length, String genreName, boolean isSendNotif);
+    boolean add(String name, String singer, String album, int length, String genreName, boolean isSendNotif);
 
     boolean addFromFile(String fileName);
 

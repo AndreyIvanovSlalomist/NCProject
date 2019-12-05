@@ -31,7 +31,7 @@ public class ConsoleView implements View, Observer {
         System.out.printf("%-30s", track.getName());
         System.out.printf("%-20s", track.getSinger());
         System.out.printf("%-20s", track.getAlbum());
-        System.out.printf("%-20s", track.getTrackLength());
+        System.out.printf("%-20s", track.getLength());
         System.out.printf("%-20s%n", track.getGenre().getGenreName());
     }
 
@@ -196,11 +196,11 @@ public class ConsoleView implements View, Observer {
         while (true) {
             findMenu();
 
-            int inputInt = readInteger(0, 5, "");
+            int inputInt = readInteger(0, 4, "");
             if (inputInt == 0) {
                 break;
             } else {
-                String findValue = readString(0, 30, "Введите значение для поиска ():");
+                String findValue = readString(0, 30, "Введите значение для поиска :");
                 if (findValue.equals("")) {
                     break;
                 } else {
@@ -224,8 +224,8 @@ public class ConsoleView implements View, Observer {
         System.out.println("1 - Название");
         System.out.println("2 - Исполнителя");
         System.out.println("3 - Альбом");
-        System.out.println("4 - Длинна трека");
-        System.out.println("5 - Жанр");
+     //   System.out.println("4 - Длинна трека");
+        System.out.println("4 - Жанр");
         System.out.println("0 - Выход");
     }
 
@@ -351,14 +351,16 @@ public class ConsoleView implements View, Observer {
             int inputInt = readInteger(0, 5, "");
             if (inputInt == 0) {
                 break;
-//            }
-//            if (inputInt == 4) {
-//                Double d = readDouble(0, 300, "Введите новое значение в секундах");
-//                if (d != 0) {
-//                    if (controller.validUpdate(track, inputInt, d)) {
-//                        break;
-//                    }
-//                }
+
+            }
+            if (inputInt == 4) {
+                Integer newValueInt = readInteger(0, Integer.MAX_VALUE, "Введите новое значение в секундах");
+                if (newValueInt != 0) {
+                    if (controller.isValidUpdate(track, inputInt, newValueInt.toString())) {
+                        break;
+                    }
+                }
+
             } else {
                 String newValue = readString(0, 30, "Введите новое значение:");
                 if (!newValue.equals("")) {
@@ -382,7 +384,7 @@ public class ConsoleView implements View, Observer {
         List<String> addResult = addMenu();
         if (addResult != null) {
             if (addResult.size() == 5) {
-                controller.isValidAdd(addResult.get(0), addResult.get(1), addResult.get(2), addResult.get(3), addResult.get(4));
+                controller.isValidAdd(addResult.get(0), addResult.get(1), addResult.get(2), Integer.parseInt(addResult.get(3)), addResult.get(4));
             }
         }
     }
@@ -409,7 +411,7 @@ public class ConsoleView implements View, Observer {
         }
         objects.add(inputValue);
 
-        inputValue = readString(0, 20, "Введите Длину трека (мм:сс):");
+        inputValue = readString(0, 20, "Введите Длину трека (в секундах):");
         if (inputValue.equals("")) {
             return null;
         }
