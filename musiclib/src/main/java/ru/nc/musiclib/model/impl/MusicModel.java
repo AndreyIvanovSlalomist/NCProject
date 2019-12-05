@@ -11,11 +11,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MusicModel implements Model, Observable {
     List<Observer> observers = new ArrayList<>();
     List<Track> tracks = new ArrayList<>();
     List<Genre> genres = new ArrayList<>();
+
 
     public MusicModel() {
         tracks = loadTrack("tracks.txt");
@@ -193,6 +196,50 @@ public class MusicModel implements Model, Observable {
 
         notifyObservers("Трек изменен.");
         return true;
+    }
+
+    @Override
+    public List<Track> find(int colNumber, String findValue) {
+        List<Track> trackList = new ArrayList<>();
+        String curValue;
+        findValue = findValue.replaceAll("\\*", ".+");
+        findValue = findValue.replaceAll("\\?", ".");
+        if (colNumber > 0) {
+            for (Track track : tracks) {
+                switch (colNumber) {
+                    case 1: {
+                        curValue = track.getName();
+                        break;
+                    }
+                    case 2: {
+                        curValue = track.getSinger();
+                        break;
+                    }
+                    case 3: {
+                        curValue = track.getAlbum();
+                        break;
+                    }
+                    case 4: {
+                        curValue = track.getTrackLength();
+                        break;
+                    }
+                    case 5: {
+                        curValue = track.getGenreName();
+                        break;
+                    }
+                    default:
+                        curValue = "";
+                }
+                Pattern pattern = Pattern.compile(findValue);
+                Matcher matcher = pattern.matcher(curValue);
+                if (matcher.find()) {
+                    trackList.add(track);
+                }
+            }
+        }
+
+
+        return trackList;
     }
 
     @Override

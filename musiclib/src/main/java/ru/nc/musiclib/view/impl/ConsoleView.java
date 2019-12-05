@@ -136,6 +136,7 @@ public class ConsoleView implements View, Observer {
         System.out.println("4 - Удалить Трек");
         System.out.println("5 - Загрузить терки из файла");
         System.out.println("6 - Сортировка");
+        System.out.println("7 - Поиск");
         System.out.println("0 - Выход");
     }
 
@@ -152,7 +153,7 @@ public class ConsoleView implements View, Observer {
     private void runMainMenu() {
         while (true) {
             mainMenu();
-            switch (readInteger(0, 6, "")) {
+            switch (readInteger(0, 7, "")) {
                 case 0: {
                     System.exit(1);
                 }
@@ -180,10 +181,52 @@ public class ConsoleView implements View, Observer {
                     runSortMenu();
                     break;
                 }
+                case 7: {
+                    runFindMenu();
+                    break;
+                }
                 default:
                     System.out.println("Ошибка.");
             }
         }
+    }
+
+    private void runFindMenu() {
+        System.out.println("-- Поиск --");
+        while (true) {
+            findMenu();
+
+            int inputInt = readInteger(0, 5, "");
+            if (inputInt == 0) {
+                break;
+            } else {
+                String findValue = readString(0, 30, "Введите значение для поиска ():");
+                if (findValue.equals("")) {
+                    break;
+                } else {
+                    List<Track> trackList = model.find(inputInt, findValue);
+                    if (trackList.size() == 0) {
+                        System.out.println("Ничего не найдено");
+                    } else {
+
+                        showTitle(0);
+                        for (Track track : trackList) {
+                            showTrack(track, 0);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void findMenu() {
+        System.out.println("По кокому полю искать?:");
+        System.out.println("1 - Название");
+        System.out.println("2 - Исполнителя");
+        System.out.println("3 - Альбом");
+        System.out.println("4 - Длинна трека");
+        System.out.println("5 - Жанр");
+        System.out.println("0 - Выход");
     }
 
     private void runSortMenu() {
