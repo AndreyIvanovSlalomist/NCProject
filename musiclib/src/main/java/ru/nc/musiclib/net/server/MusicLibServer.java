@@ -20,7 +20,7 @@ public class MusicLibServer {
             server = new ServerSocket(port);
         } catch (IOException e) {
             System.out.println(
-                    "РќРµ РјРѕРіСѓ РѕС‚РєСЂС‹С‚СЊ РїРѕСЂС‚: 4444");
+                    "Не удалось запустить сервер на порту: " + port);
             System.exit(-1);
         }
 
@@ -29,16 +29,16 @@ public class MusicLibServer {
             try {
                 client = server.accept();
             } catch (IOException e) {
-                System.out.println("РћС€РёР±РєР° РїРѕРґРєР»СЋС‡Р°РЅРёСЏ РЅР° РїРѕСЂС‚Сѓ: 4444");
+                System.out.println("Ошибка при подключении пользователя через порт: "+ port);
                 System.exit(-1);
             }
-            System.out.print("Рљ СЃРµСЂРІРµСЂСѓ РїРѕРґРєР»СЋС‡РёР»СЃСЏ РєР»РёРµРЅС‚");
+            System.out.print("Подключился пользователь");
 
             executeIt.execute(new Server(client, model, controller));
         }
 
         executeIt.shutdown();
-        System.out.print("Р’СЃРµ РїРѕРґРєР»СЋС‡РµРЅРёСЏ Р·Р°РєСЂС‹С‚С‹");
+        System.out.print("Сервер выключается");
     }
 
     private static class Server implements Runnable {
@@ -58,12 +58,17 @@ public class MusicLibServer {
                 ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
                 ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
 
+                System.out.println("Клиент подключился");
                 while (!clientSocket.isClosed()) {
-                    System.out.println("РЎРµСЂРІРµСЂ СЃС‡РёС‚С‹РІР°РµС‚ РїРѕР»СѓС‡РµРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ");
                     Object inputObject = in.readObject();
                     if (inputObject instanceof String && inputObject.toString().equals("exit")) {
                         break;
                     }
+                    System.out.println("От клиента получен запрос: " + inputObject.toString());
+                    if (inputObject instanceof String && inputObject.toString().equals("exit")) {
+                        break;
+                    }
+
                     switch (inputObject.toString()) {
                         case "find": {
 
@@ -119,7 +124,7 @@ public class MusicLibServer {
                 in.close();
                 out.close();
                 clientSocket.close();
-                System.out.println("РЎРµСЂРІРµСЂ Р·Р°РєСЂС‹РІР°РµС‚ СЃРѕРµРґРёРЅРµРЅРёРµ");
+                System.out.println("Пользователь закрывает соединение");
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }

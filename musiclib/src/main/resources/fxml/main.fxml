@@ -6,13 +6,13 @@
             prefHeight="376.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/8.0.161"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nc.musiclib.net.client.FxController">
     <children>
-        <TableView layoutX="7.0" layoutY="27.0" prefHeight="347.0" prefWidth="576.0">
+        <TableView fx:id="table" layoutX="7.0" layoutY="27.0" prefHeight="347.0" prefWidth="576.0" visible="false">
             <columns>
-                <TableColumn prefWidth="127.0" text="Название"/>
-                <TableColumn prefWidth="105.0" text="Исполнитель"/>
-                <TableColumn prefWidth="102.0" text="Альбом"/>
-                <TableColumn prefWidth="110.0" text="Длинна Трека"/>
-                <TableColumn prefWidth="104.0" text="Жанр"/>
+                <TableColumn fx:id="nameColumn" prefWidth="127.0" text="Название"/>
+                <TableColumn fx:id="singerColumn" prefWidth="105.0" text="Исполнитель"/>
+                <TableColumn fx:id="albumColumn" prefWidth="102.0" text="Альбом"/>
+                <TableColumn fx:id="lengthColumn" prefWidth="110.0" text="Длинна Трека"/>
+                <TableColumn fx:id="genreColumn" prefWidth="104.0" text="Жанр"/>
             </columns>
         </TableView>
         <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="590.0">
