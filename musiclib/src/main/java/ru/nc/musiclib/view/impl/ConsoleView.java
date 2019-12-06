@@ -71,9 +71,9 @@ public class ConsoleView implements View, Observer {
             }
 
             if (inputString.length() > maxLength) {
-                System.out.println("Ошибка. Длинна строки больше " + maxLength);
+                System.out.println("Ошибка. Длина строки больше " + maxLength);
             } else if (inputString.length() < minLength) {
-                System.out.println("Ошибка. Длинна строки меньше " + minLength);
+                System.out.println("Ошибка. Длина строки меньше " + minLength);
             } else {
                 return inputString;
             }
@@ -128,7 +128,7 @@ public class ConsoleView implements View, Observer {
     }
 
     private void mainMenu() {
-        System.out.println("-- Добро пожадовать в музыкальную библиотеку --");
+        System.out.println("-- Добро пожаловать в музыкальную библиотеку --");
         System.out.println("Основное меню:");
         System.out.println("1 - Просмотр Треков");
         System.out.println("2 - Добавить Трек");
@@ -145,7 +145,7 @@ public class ConsoleView implements View, Observer {
         System.out.println("1 - Название");
         System.out.println("2 - Исполнителя");
         System.out.println("3 - Альбом");
-        System.out.println("4 - Длинна трека");
+        System.out.println("4 - Длина трека");
         System.out.println("5 - Жанр");
         System.out.println("0 - Выход");
     }
@@ -220,11 +220,11 @@ public class ConsoleView implements View, Observer {
     }
 
     private void findMenu() {
-        System.out.println("По кокому полю искать?:");
+        System.out.println("По какому полю искать?:");
         System.out.println("1 - Название");
         System.out.println("2 - Исполнителя");
         System.out.println("3 - Альбом");
-     //   System.out.println("4 - Длинна трека");
+     //   System.out.println("4 - Длина трека");
         System.out.println("4 - Жанр");
         System.out.println("0 - Выход");
     }
@@ -253,18 +253,18 @@ public class ConsoleView implements View, Observer {
 
 
     private void sortMenu() {
-        System.out.println("По кокому полю сортировать?:");
+        System.out.println("По какому полю сортировать?:");
         System.out.println("1 - Название");
-        System.out.println("2 - Исполнителя");
+        System.out.println("2 - Исполнитель");
         System.out.println("3 - Альбом");
-        System.out.println("4 - Длинна трека");
+        System.out.println("4 - Длина трека");
         System.out.println("5 - Жанр");
         System.out.println("0 - Выход");
     }
 
     private void sortMenu2() {
         System.out.println("Как сортировать?:");
-        System.out.println("1 - По возростанию");
+        System.out.println("1 - По возрастанию");
         System.out.println("2 - По убыванию");
         System.out.println("0 - Выход");
     }
@@ -373,7 +373,7 @@ public class ConsoleView implements View, Observer {
     }
 
     private void showAllTrack() {
-        System.out.println("-- Cписок треков -- ");
+        System.out.println("-- Список треков -- ");
         showTitle(0);
         for (Track track : model.getAll()) {
             showTrack(track, 0);
