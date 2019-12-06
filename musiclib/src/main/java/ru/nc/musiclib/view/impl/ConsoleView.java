@@ -411,8 +411,8 @@ public class ConsoleView implements View, Observer {
         }
         objects.add(inputValue);
 
-        inputValue = readString(0, 20, "Введите Длину трека (в секундах):");
-        if (inputValue.equals("")) {
+        int inputValueInt = readInteger(0, Integer.MAX_VALUE, "Введите Длину трека (в секундах):");
+        if (inputValueInt == 0) {
             return null;
         }
         objects.add(inputValue);
