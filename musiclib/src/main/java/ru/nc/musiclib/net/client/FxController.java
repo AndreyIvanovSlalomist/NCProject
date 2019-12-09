@@ -7,6 +7,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ru.nc.musiclib.classes.Track;
+import ru.nc.musiclib.net.ConstProtocol;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -44,27 +45,27 @@ public class FxController {
             try {
                 clientSocket = new ClientSocket(InetAddress.getLocalHost(), 4444);
             } catch (UnknownHostException e) {
-                e.printStackTrace();
+                System.out.println("Ошибка Неизвестен хост");
             }
             if (!clientSocket.getSocket().isOutputShutdown()) {
                 try {
-                    clientSocket.getOos().writeObject("showAll");
+                    clientSocket.getOos().writeObject(ConstProtocol.getAll);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println("Ошибка записи в поток");
                 }
                 try {
                     clientSocket.getOos().flush();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println("Ошибка при отправки потока");
                 }
 
                 Object inputObject = null;
                 try {
                     inputObject = clientSocket.getOis().readObject();
+                }catch (ClassNotFoundException e) {
+                    System.out.println("Ошибка класс не найден");
                 } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    System.out.println("Ошибка чтения из поток");
                 }
 
                 nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -97,24 +98,25 @@ public class FxController {
                 System.out.println("Отправляем на сервер exit");
 
                 try {
-                    clientSocket.getOos().writeObject("exit");
+                    clientSocket.getOos().writeObject(ConstProtocol.exit);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println("Ошибка при записи в поток");
                 }
                 try {
                     clientSocket.getOos().flush();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println("Ошибка при отправке");
                 }
                 try {
                     clientSocket.getOis().close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+
+                    System.out.println("Ошибка при закрытии потока на чтение");
                 }
                 try {
                     clientSocket.getOos().close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.out.println("Ошибка при закрытии потока на запись");
                 }
                 table.getItems().removeAll();
             }

@@ -28,22 +28,22 @@ public class ClientSocket {
         return ois;
     }
 
-    private void startSocket(InetAddress inetAddress, int porn) {
+    private void startSocket(InetAddress inetAddress, int port) {
 
         try {
-            socket = new Socket(inetAddress, porn);
+            socket = new Socket(inetAddress, port);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Ошибка при открытии сокена на порту " + port);
         }
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Ошибка при открытии потока на запись ");
         }
         try {
             ois = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Ошибка при открытии потока на чтение ");
         }
 
     }
