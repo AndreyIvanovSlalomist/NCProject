@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="376.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/8.0.161"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nc.musiclib.net.client.FxController">
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="376.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nc.musiclib.net.client.FxController">
     <children>
-        <TableView fx:id="table" layoutX="7.0" layoutY="27.0" prefHeight="347.0" prefWidth="576.0" visible="false">
+        <TableView fx:id="table" layoutX="7.0" layoutY="27.0" prefHeight="347.0" prefWidth="576.0">
             <columns>
-                <TableColumn fx:id="nameColumn" prefWidth="127.0" text="Название"/>
-                <TableColumn fx:id="singerColumn" prefWidth="105.0" text="Исполнитель"/>
-                <TableColumn fx:id="albumColumn" prefWidth="102.0" text="Альбом"/>
-                <TableColumn fx:id="lengthColumn" prefWidth="110.0" text="Длинна Трека"/>
-                <TableColumn fx:id="genreColumn" prefWidth="104.0" text="Жанр"/>
+                <TableColumn fx:id="nameColumn" prefWidth="127.0" text="Название" />
+                <TableColumn fx:id="singerColumn" prefWidth="105.0" text="Исполнитель" />
+                <TableColumn fx:id="albumColumn" prefWidth="102.0" text="Альбом" />
+                <TableColumn fx:id="lengthColumn" prefWidth="110.0" text="Длинна Трека" />
+                <TableColumn fx:id="genreColumn" prefWidth="104.0" text="Жанр" />
             </columns>
         </TableView>
         <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="590.0">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem fx:id="connect" mnemonicParsing="false" text="Connect" onAction="#onClickConnect"/>
-                        <MenuItem fx:id="exit" mnemonicParsing="false" text="Close" onAction="#onClickExit"/>
+                        <MenuItem fx:id="connect" mnemonicParsing="false" onAction="#onClickConnect" text="Connect" />
+                        <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#onClickExit" text="Close" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem fx:id="add" mnemonicParsing="false" text="Add" onAction="#onClickAdd"/>
-                        <MenuItem fx:id="update" mnemonicParsing="false" text="Update" onAction="#onClickUpdate"/>
-                        <MenuItem fx:id="delete" mnemonicParsing="false" text="Delete" onAction="#onClickDelete"/>
+                        <MenuItem fx:id="add" mnemonicParsing="false" onAction="#onClickAdd" text="Add" />
+                        <MenuItem fx:id="update" mnemonicParsing="false" onAction="#onClickUpdate" text="Update" />
+                        <MenuItem fx:id="delete" mnemonicParsing="false" onAction="#onClickDelete" text="Delete" />
                     </items>
                 </Menu>
             </menus>

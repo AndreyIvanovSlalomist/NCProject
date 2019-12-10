@@ -11,8 +11,8 @@ public class ClientSocket {
     private ObjectOutputStream oos = null;
     private ObjectInputStream ois = null;
 
-    public ClientSocket(InetAddress inetAddress, int porn) {
-        startSocket(inetAddress, porn);
+    public ClientSocket(InetAddress inetAddress, int port) {
+        startSocket(inetAddress, port);
     }
 
 

@@ -18,11 +18,11 @@ public class FxController {
 
     private ClientSocket clientSocket;
 
-    public TableColumn nameColumn;
-    public TableColumn singerColumn;
-    public TableColumn albumColumn;
-    public TableColumn lengthColumn;
-    public TableColumn genreColumn;
+    public TableColumn<Track, String> nameColumn;
+    public TableColumn<Track, String> singerColumn;
+    public TableColumn<Track, String> albumColumn;
+    public TableColumn<Track, Integer> lengthColumn;
+    public TableColumn<Track, String> genreColumn;
     @FXML
     public MenuItem connect;
     @FXML
@@ -34,12 +34,11 @@ public class FxController {
     @FXML
     public MenuItem exit;
     @FXML
-    public TableView table;
+    public TableView<Track> table;
 
 
     @FXML
     public void onClickConnect(ActionEvent actionEvent) {
-        table.setVisible(true);
         if (clientSocket == null) {
 
             try {
@@ -91,7 +90,6 @@ public class FxController {
 
     @FXML
     public void onClickExit(ActionEvent actionEvent) {
-        table.setVisible(false);
         if (clientSocket != null)
           {
             if (!clientSocket.getSocket().isOutputShutdown()) {
@@ -118,7 +116,8 @@ public class FxController {
                 } catch (IOException e) {
                     System.out.println("Ошибка при закрытии потока на запись");
                 }
-                table.getItems().removeAll();
+                clientSocket = null;
+                table.getItems().clear();
             }
         }
 
