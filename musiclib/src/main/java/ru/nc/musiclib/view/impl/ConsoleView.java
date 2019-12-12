@@ -56,7 +56,8 @@ public class ConsoleView implements View, Observer {
             case "Трек уже существует.": {
                 System.out.println("Трек уже существует.");
                 break;
-            }
+            } default:
+                System.out.println(event);
         }
     }
 

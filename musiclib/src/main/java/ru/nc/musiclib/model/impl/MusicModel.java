@@ -109,8 +109,10 @@ public class MusicModel implements Model, Observable {
             ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
             trackList = (List<Track>) in.readObject();
             in.close();
-        } catch (IOException | ClassNotFoundException e) {
-            notifyObservers("Ошибка при загрузке!");
+        } catch (IOException e) {
+            notifyObservers("Ошибка ввода/вывода при загрузке!");
+        } catch (ClassNotFoundException e) {
+            notifyObservers("Ошибка при загрузке, класс не найден!");
         }
         return trackList;
     }
@@ -250,23 +252,21 @@ public class MusicModel implements Model, Observable {
     }
 
     private Track findTrack(String name, String singer, String album, int length) {
-        Track track = null;
-        for (Track track1 : tracks) {
-            if (track1.getName().equals(name) &&
-                    track1.getSinger().equals(singer) &&
-                    track1.getAlbum().equals(album) &&
-                    track1.getLengthInt() == (length)) {
-                track = track1;
-                break;
+        for (Track track : tracks) {
+            if (track.getName().equals(name) &&
+                    track.getSinger().equals(singer) &&
+                    track.getAlbum().equals(album) &&
+                    track.getLengthInt() == (length)) {
+                return track;
             }
         }
-        return track;
+        return null;
     }
 
     private Genre findGenre(String genreName) {
-        for (Genre genre1 : genres)
-            if (genre1.getGenreName().equals(genreName)) {
-                return genre1;
+        for (Genre genre : genres)
+            if (genre.getGenreName().equals(genreName)) {
+                return genre;
             }
         return null;
     }
