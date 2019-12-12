@@ -134,7 +134,7 @@ public class ConsoleView implements View, Observer {
         System.out.println("2 - Добавить Трек");
         System.out.println("3 - Изменить Трек");
         System.out.println("4 - Удалить Трек");
-        System.out.println("5 - Загрузить терки из файла");
+        System.out.println("5 - Загрузить треки из файла");
         System.out.println("6 - Сортировка");
         System.out.println("7 - Поиск");
         System.out.println("0 - Выход");
@@ -279,7 +279,7 @@ public class ConsoleView implements View, Observer {
     private String addFromFileMenu() {
         String fileName;
         while (true) {
-            System.out.println("-- Загрузить терки из файла --");
+            System.out.println("-- Загрузить треки из файла --");
             fileName = readString(0, 30, "Введите полный путь к файлу");
             if (fileName.equals("")) {
                 return null;
