@@ -1,5 +1,7 @@
 package ru.nc.musiclib.model.impl;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.nc.musiclib.classes.Genre;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.exceptions.InvalidFieldValueException;
@@ -15,10 +17,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MusicModel implements Model, Observable {
+    private final static Logger logger = LogManager.getLogger(MusicModel.class);
     List<Observer> observers = new ArrayList<>();
     List<Track> tracks = new ArrayList<>();
     List<Genre> genres = new ArrayList<>();
-
 
     public MusicModel() {
         tracks = loadTrack("tracks.txt");
@@ -58,6 +60,7 @@ public class MusicModel implements Model, Observable {
             out.writeObject(tracks);
             out.close();
         } catch (IOException e) {
+            logger.error("Ошибка при сохранении!");
             notifyObservers("Ошибка при сохранении!");
         }
     }
@@ -110,8 +113,10 @@ public class MusicModel implements Model, Observable {
             trackList = (List<Track>) in.readObject();
             in.close();
         } catch (IOException e) {
+            logger.error("Ошибка ввода/вывода при загрузке!");
             notifyObservers("Ошибка ввода/вывода при загрузке!");
         } catch (ClassNotFoundException e) {
+            logger.error("Ошибка при загрузке, класс не найден!");
             notifyObservers("Ошибка при загрузке, класс не найден!");
         }
         return trackList;
@@ -128,8 +133,10 @@ public class MusicModel implements Model, Observable {
             try {
                 track.setLength(length);
             } catch (InvalidFieldValueException ex) {
-                if (isSendNotify)
+                if (isSendNotify) {
+                    logger.error("Неверный формат длины трека");
                     notifyObservers("Неверный формат длины трека");
+                }
                 return false;
             }
             Genre genre = findGenre(genreName);
@@ -140,12 +147,16 @@ public class MusicModel implements Model, Observable {
             track.setGenre(genre);
             tracks.add(track);
         } else {
-            if (isSendNotify)
+            if (isSendNotify) {
+                logger.error("Трек уже существует.");
                 notifyObservers("Трек уже существует.");
+            }
             return false;
         }
-        if (isSendNotify)
+        if (isSendNotify) {
+            logger.info("Трек добавлен.");
             notifyObservers("Трек добавлен.");
+        }
         return true;
     }
 
@@ -157,6 +168,7 @@ public class MusicModel implements Model, Observable {
         for (Track track : trackList) {
             add(track.getName(), track.getSinger(), track.getAlbum(), track.getLengthInt(), track.getGenre().getGenreName(), false);
         }
+        logger.info("Загрузка завершена.");
         notifyObservers("Загрузка завершена.");
         return true;
     }
@@ -181,6 +193,7 @@ public class MusicModel implements Model, Observable {
                     track.setLength(Integer.parseInt(newValue));
                     break;
                 } catch (InvalidFieldValueException ex) {
+                    logger.error("Неверный формат длины трека");
                     notifyObservers("Неверный формат длины трека");
                     return false;
                 }
@@ -196,6 +209,7 @@ public class MusicModel implements Model, Observable {
             }
         }
 
+        logger.info("Трек изменен.");
         notifyObservers("Трек изменен.");
         return true;
     }
@@ -247,6 +261,7 @@ public class MusicModel implements Model, Observable {
     @Override
     public boolean delete(int number) {
         tracks.remove(number);
+        logger.info("Трек удален.");
         notifyObservers("Трек удален.");
         return true;
     }
