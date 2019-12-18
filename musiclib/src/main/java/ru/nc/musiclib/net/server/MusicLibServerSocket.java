@@ -1,5 +1,7 @@
 package ru.nc.musiclib.net.server;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.nc.musiclib.controller.Controller;
 import ru.nc.musiclib.model.Model;
 import ru.nc.musiclib.net.ConstProtocol;
@@ -14,6 +16,8 @@ public class MusicLibServerSocket implements Runnable {
     private Model model;
     private Controller controller;
 
+    private final static Logger logger = LogManager.getLogger(MusicLibServerSocket.class);
+
     public MusicLibServerSocket(Socket client, Model model, Controller controller) {
         this.clientSocket = client;
         this.model = model;
@@ -26,10 +30,10 @@ public class MusicLibServerSocket implements Runnable {
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
 
-            System.out.println("Клиент подключился");
+            logger.info("Клиент подключился");
             while (!clientSocket.isClosed()) {
                 Object inputObject = in.readObject();
-                System.out.println("От клиента получен запрос " + inputObject);
+                logger.info("От клиента получен запрос " + inputObject);
                 if (inputObject instanceof ConstProtocol) {
                     ConstProtocol inputConstProtocol = (ConstProtocol) inputObject;
                     if (inputObject == ConstProtocol.exit) {
@@ -54,12 +58,12 @@ public class MusicLibServerSocket implements Runnable {
             in.close();
             out.close();
             clientSocket.close();
-            System.out.println("Пользователь закрывает соединение");
+            logger.info("Пользователь закрывает соединение");
         } catch (ClassNotFoundException e) {
 
-            System.out.println("Ошибка класс не найден");
+            logger.error("Ошибка класс не найден");
         } catch (IOException e) {
-            System.out.println("Ошибка чтения/записи в поток");
+            logger.error("Ошибка чтения/записи в поток");
         }
     }
 
