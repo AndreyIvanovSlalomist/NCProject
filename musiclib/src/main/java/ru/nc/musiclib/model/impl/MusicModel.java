@@ -219,7 +219,8 @@ public class MusicModel implements Model, Observable {
         List<Track> trackList = new ArrayList<>();
         String curValue;
         findValue = findValue.replaceAll("\\*", ".*");
-        findValue = findValue.replaceAll("\\?", ".");
+        findValue = findValue.replaceAll("\\?", ".?");
+
         if (colNumber > 0) {
             for (Track track : tracks) {
                 switch (colNumber) {

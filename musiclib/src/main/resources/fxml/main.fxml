@@ -7,30 +7,30 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="376.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nc.musiclib.net.client.FxController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="376.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/8.0.221" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nc.musiclib.net.client.FxController">
     <children>
-        <TableView fx:id="table" layoutX="7.0" layoutY="27.0" prefHeight="347.0" prefWidth="576.0">
+        <TableView fx:id="table" layoutX="7.0" layoutY="27.0" prefHeight="350.0" prefWidth="585.0" style="-fx-background-color: #E0FFFF;">
             <columns>
-                <TableColumn fx:id="nameColumn" prefWidth="127.0" text="Название" />
-                <TableColumn fx:id="singerColumn" prefWidth="105.0" text="Исполнитель" />
-                <TableColumn fx:id="albumColumn" prefWidth="102.0" text="Альбом" />
-                <TableColumn fx:id="lengthColumn" prefWidth="110.0" text="Длинна Трека" />
-                <TableColumn fx:id="genreColumn" prefWidth="104.0" text="Жанр" />
+                <TableColumn fx:id="nameColumn" prefWidth="130.0" style="-fx-background-color: #4682B4;" text="Название" />
+                <TableColumn fx:id="singerColumn" prefWidth="125.0" style="-fx-background-color: #4682B4;" text="Исполнитель" />
+                <TableColumn fx:id="albumColumn" prefWidth="114.0" style="-fx-background-color: #4682B4;" text="Альбом" />
+                <TableColumn fx:id="lengthColumn" prefWidth="110.0" style="-fx-background-color: #4682B4;" text="Длина записи" />
+                <TableColumn fx:id="genreColumn" prefWidth="104.0" style="-fx-background-color: #4682B4;" text="Жанр" />
             </columns>
         </TableView>
-        <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="590.0">
+        <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
             <menus>
-                <Menu mnemonicParsing="false" text="File">
+                <Menu mnemonicParsing="false" text="Файл">
                     <items>
-                        <MenuItem fx:id="connect" mnemonicParsing="false" onAction="#onClickConnect" text="Connect" />
-                        <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#onClickExit" text="Close" />
+                        <MenuItem fx:id="connect" mnemonicParsing="false" onAction="#onClickConnect" text="Подключится" />
+                        <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#onClickExit" text="Отключится" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
+                <Menu mnemonicParsing="false" text="Редактировать">
                     <items>
-                        <MenuItem fx:id="add" mnemonicParsing="false" onAction="#onClickAdd" text="Add" />
-                        <MenuItem fx:id="update" mnemonicParsing="false" onAction="#onClickUpdate" text="Update" />
-                        <MenuItem fx:id="delete" mnemonicParsing="false" onAction="#onClickDelete" text="Delete" />
+                        <MenuItem fx:id="add" mnemonicParsing="false" onAction="#onClickAdd" text="Добавить трек" />
+                        <MenuItem fx:id="update" mnemonicParsing="false" onAction="#onClickUpdate" text="Изменить трек" />
+                        <MenuItem fx:id="delete" mnemonicParsing="false" onAction="#onClickDelete" text="Удалить трек" />
                     </items>
                 </Menu>
             </menus>

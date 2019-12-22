@@ -2,10 +2,14 @@ package ru.nc.musiclib.net.client;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.net.ConstProtocol;
 
@@ -40,7 +44,6 @@ public class FxController {
     @FXML
     public void onClickConnect(ActionEvent actionEvent) {
         if (clientSocket == null) {
-
             try {
                 clientSocket = new ClientSocket(InetAddress.getLocalHost(), 4444);
             } catch (UnknownHostException e) {
@@ -57,7 +60,6 @@ public class FxController {
                 } catch (IOException e) {
                     System.out.println("Ошибка при отправки потока");
                 }
-
                 Object inputObject = null;
                 try {
                     inputObject = clientSocket.getOis().readObject();
@@ -66,20 +68,16 @@ public class FxController {
                 } catch (IOException e) {
                     System.out.println("Ошибка чтения из поток");
                 }
-
                 nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
                 singerColumn.setCellValueFactory(new PropertyValueFactory<>("singer"));
                 albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
                 lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
                 genreColumn.setCellValueFactory(new PropertyValueFactory<>("genreName"));
-
                 if (inputObject instanceof List) {
                     for (Object o : (List<?>) inputObject) {
                         if (o instanceof Track) {
                             table.getItems().add((Track) o);
                         }
-
                     }
                 }
             }
@@ -91,7 +89,7 @@ public class FxController {
     @FXML
     public void onClickExit(ActionEvent actionEvent) {
         if (clientSocket != null)
-          {
+        {
             if (!clientSocket.getSocket().isOutputShutdown()) {
                 System.out.println("Отправляем на сервер exit");
 
@@ -120,20 +118,75 @@ public class FxController {
                 table.getItems().clear();
             }
         }
-
-
     }
 
 
     @FXML
     public void onClickAdd(ActionEvent actionEvent) {
+
+        FXMLLoader loader = new FXMLLoader();
+        Parent root = null;
+        try {
+            root = (Parent) loader.load(getClass().getResourceAsStream("/fxml/addForm.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Stage stage  = new Stage();
+        stage.setResizable(false);
+        stage.setOnShown(event -> {
+            add.getParentMenu().setDisable(true);
+            connect.getParentMenu().setDisable(true);
+        });
+        stage.setOnHiding(event -> {
+            add.getParentMenu().setDisable(false);
+            connect.getParentMenu().setDisable(false);
+            if(AddFormController.objects!=null){
+                try {
+                    clientSocket.getOos().writeObject(ConstProtocol.add);
+                    clientSocket.getOos().writeObject(AddFormController.objects.get(0));
+                    clientSocket.getOos().writeObject(AddFormController.objects.get(1));
+                    clientSocket.getOos().writeObject(AddFormController.objects.get(2));
+                    clientSocket.getOos().writeObject(Integer.parseInt(AddFormController.objects.get(3)));
+                    clientSocket.getOos().writeObject(AddFormController.objects.get(4));
+                    clientSocket.getOos().flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        stage.setTitle("Добавить трек");
+        stage.setScene(new Scene(root));
+        stage.show();
+
+
     }
 
     @FXML
     public void onClickUpdate(ActionEvent actionEvent) {
+        FXMLLoader loader = new FXMLLoader();
+        Parent root = null;
+        try {
+            root = (Parent) loader.load(getClass().getResourceAsStream("/fxml/addForm.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Stage stage  = new Stage();
+        stage.setTitle("Изменить трек");
+        stage.setScene(new Scene(root));
+        stage.setResizable(false);
+        stage.show();
     }
 
     @FXML
     public void onClickDelete(ActionEvent actionEvent) {
+        Integer n = table.getSelectionModel().getFocusedIndex();
+        try {
+            clientSocket.getOos().writeObject(ConstProtocol.delete);
+            clientSocket.getOos().writeObject(n);
+            clientSocket.getOos().flush();
+        } catch (IOException e) {
+            System.out.println("Ошибка записи в поток");
+        }
     }
+
 }
