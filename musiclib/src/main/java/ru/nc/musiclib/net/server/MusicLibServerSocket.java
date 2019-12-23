@@ -16,7 +16,6 @@ public class MusicLibServerSocket implements Runnable {
     private Model model;
     private Controller controller;
 
-
     private final static MusicLibLogger logger = new MusicLibLogger(MusicLibServerSocket.class);
 
     public MusicLibServerSocket(Socket client, Model model, Controller controller) {
