@@ -1,9 +1,8 @@
 package ru.nc.musiclib.net.server;
 
 import ru.nc.musiclib.controller.Controller;
+import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.model.Model;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,7 +11,7 @@ import java.util.concurrent.Executors;
 public class MusicLibServer {
     static ExecutorService executeIt = Executors.newFixedThreadPool(100);
 
-    private final static Logger logger = LogManager.getLogger(MusicLibServer.class);
+    private final static MusicLibLogger logger = new MusicLibLogger(MusicLibServer.class);
 
     public void startServer(int port, Model model, Controller controller) {
         logger.info("Сервер запускается на порту: " + port);

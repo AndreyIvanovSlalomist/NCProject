@@ -1,12 +1,11 @@
 package ru.nc.musiclib.model.impl;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import ru.nc.musiclib.classes.Genre;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.exceptions.InvalidFieldValueException;
 import ru.nc.musiclib.interfaces.Observable;
 import ru.nc.musiclib.interfaces.Observer;
+import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.model.Model;
 
 import java.io.*;
@@ -17,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MusicModel implements Model, Observable {
-    private final static Logger logger = LogManager.getLogger(MusicModel.class);
+    private final static MusicLibLogger logger = new MusicLibLogger(MusicModel.class);
     List<Observer> observers = new ArrayList<>();
     List<Track> tracks = new ArrayList<>();
     List<Genre> genres = new ArrayList<>();
