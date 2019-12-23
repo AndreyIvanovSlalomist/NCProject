@@ -1,8 +1,7 @@
 package ru.nc.musiclib.net.server;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import ru.nc.musiclib.controller.Controller;
+import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.model.Model;
 import ru.nc.musiclib.net.ConstProtocol;
 
@@ -16,7 +15,7 @@ public class MusicLibServerSocket implements Runnable {
     private Model model;
     private Controller controller;
 
-    private final static Logger logger = LogManager.getLogger(MusicLibServerSocket.class);
+    private final static MusicLibLogger logger = new MusicLibLogger(MusicLibServerSocket.class);
 
     public MusicLibServerSocket(Socket client, Model model, Controller controller) {
         this.clientSocket = client;
