@@ -307,7 +307,6 @@ public class ConsoleView implements View, Observer {
                 showTrack(track, number);
                 number++;
             }
-
             int inputInt = readInteger(0, trackList.size(), "Введите номер Трека (0 - выход):");
             if (inputInt == 0) {
                 break;

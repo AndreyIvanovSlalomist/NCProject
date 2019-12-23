@@ -17,7 +17,8 @@ public class ClientApp extends Application {
         String fxmlFile = "/fxml/main.fxml";
         FXMLLoader loader = new FXMLLoader();
         Parent root = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
-        stage.setTitle("JavaFX and Maven");
+        stage.setResizable(false);
+        stage.setTitle("Музыкальная библиотека");
         stage.setScene(new Scene(root));
         stage.show();
     }
