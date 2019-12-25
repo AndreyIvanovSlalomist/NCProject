@@ -28,7 +28,7 @@ public class MusicModel implements Model, Observable {
     List<Genre> genres = new ArrayList<>();
 
     public MusicModel() {
-        addFromFile("tracks");
+        addFromFile("tracks.xml");
         //tracks.setTracks(loadTrack("tracks.txt"));
         for (Track track : tracks.getTracks()) {
             if (findGenre(track.getGenre().getGenreName()) == null) {
@@ -60,7 +60,7 @@ public class MusicModel implements Model, Observable {
             logger.error("setProperty Exception");
             return;
         }
-        //Marshal the employees list in file
+
         try {
             jaxbMarshaller.marshal(tracks, new File("tracks.xml"));
         } catch (JAXBException e) {
@@ -68,6 +68,16 @@ public class MusicModel implements Model, Observable {
             return;
         }
 
+    }
+
+    @Override
+    public FileInputStream getFIle(String fileName) {
+        try {
+            return new FileInputStream(fileName);
+        } catch (FileNotFoundException e) {
+            logger.error("Ошибка при чтении из файла");
+        }
+        return null;
     }
 
     @Override
@@ -173,10 +183,10 @@ public class MusicModel implements Model, Observable {
         }
     }
 
-    private List<Track> loadTrack(String fileName) {
+    private List<Track> loadTrack(FileInputStream fileInputStream) {
         List<Track> trackList = new ArrayList<>();
         try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName));
+            ObjectInputStream in = new ObjectInputStream(fileInputStream);
             trackList = (List<Track>) in.readObject();
             in.close();
         } catch (IOException e) {
@@ -230,10 +240,10 @@ public class MusicModel implements Model, Observable {
     @Override
     public boolean addFromFile(String fileName) {
         List<Track> trackList = addFromXMLFile(fileName);
-
-        for (Track track : trackList) {
-            add(track.getName(), track.getSinger(), track.getAlbum(), track.getLengthInt(), track.getGenre().getGenreName(), false);
-        }
+        if (trackList != null)
+            for (Track track : trackList) {
+                add(track.getName(), track.getSinger(), track.getAlbum(), track.getLengthInt(), track.getGenre().getGenreName(), false);
+            }
         logger.info("Загрузка завершена.");
         notifyObservers("Загрузка завершена.");
         return true;
@@ -241,11 +251,11 @@ public class MusicModel implements Model, Observable {
 
 
     private List<Track> addFromXMLFile(String fileName) {
-        return loadFromXml(fileName + ".xml").getTracks();
+        return loadFromXml(fileName).getTracks();
     }
 
-    private List<Track> addFromSerializableFile(String fileName) {
-        return loadTrack(fileName + ".txt");
+    private List<Track> addFromSerializableFile(FileInputStream fileInputStream) {
+        return loadTrack(fileInputStream);
     }
 
     @Override
@@ -347,12 +357,13 @@ public class MusicModel implements Model, Observable {
         return true;
     }
 
-    public boolean delete(String name, String singer, String album, int length, String genreName){
+    public boolean delete(String name, String singer, String album, int length, String genreName) {
         tracks.getTracks().remove(findTrack(name, singer, album, length));
         logger.info("Трек удален.");
         notifyObservers("Трек удален.");
         return true;
     }
+
     private Track findTrack(String name, String singer, String album, int length) {
         for (Track track : tracks.getTracks()) {
             if (track.getName().equals(name) &&

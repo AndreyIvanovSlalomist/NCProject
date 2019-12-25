@@ -2,6 +2,8 @@ package ru.nc.musiclib.model;
 
 import ru.nc.musiclib.classes.Track;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -35,6 +37,8 @@ public interface Model {
     boolean delete(String name, String singer, String album, int length, String genreName);
 
     void saveTrack();
+
+    FileInputStream getFIle(String fileName);
 
     void setSort(int numberField, boolean isRevers);
 }

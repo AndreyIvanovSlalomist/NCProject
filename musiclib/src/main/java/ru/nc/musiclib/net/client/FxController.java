@@ -9,17 +9,20 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.net.ConstProtocol;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 
 public class FxController {
 
+    public MenuItem saveToFile;
+    public MenuItem loadFromFile;
     private ClientSocket clientSocket;
 
     public TableColumn<Track, String> nameColumn;
@@ -193,4 +196,46 @@ public class FxController {
         }
     }
 
+    public void onClickSaveToFile(ActionEvent actionEvent) throws IOException {
+        InputStream in = null;
+        OutputStream out = null;
+        clientSocket.getOos().writeObject(ConstProtocol.getFile);
+        try {
+            in = clientSocket.getSocket().getInputStream();
+        } catch (IOException e) {
+            System.out.println("Ошибка getInputStream");
+        }
+        // Нужно добавить диалоговое окно
+        try {
+            out = new FileOutputStream("tmp.xml");
+        } catch (FileNotFoundException e) {
+            System.out.println("Ошибка FileOutputStream");
+        }
+
+        byte[] b = new byte[20*1024];
+
+        int i ;
+        while((i = in.read(b)) >0){
+            out.write(b, 0, i);
+        }
+    }
+
+    public void onClickLoadFromFile(ActionEvent actionEvent) throws IOException {
+
+        clientSocket.getOos().writeObject(ConstProtocol.loadFromFile);
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(null);
+        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+        BufferedOutputStream bos = new BufferedOutputStream(clientSocket.getOos());
+        byte[] byteArray = new byte[8192];
+        int in;
+        while ((in = bis.read(byteArray)) != -1){
+            bos.write(byteArray,0,in);
+        }
+        bis.close();
+        bos.flush();
+        //bos.close();
+
+        //clientSocket.getOos().flush();
+    }
 }

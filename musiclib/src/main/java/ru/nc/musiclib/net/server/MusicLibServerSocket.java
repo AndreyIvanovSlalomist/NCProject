@@ -6,9 +6,7 @@ import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.model.Model;
 import ru.nc.musiclib.net.ConstProtocol;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 public class MusicLibServerSocket implements Runnable {
@@ -64,6 +62,14 @@ public class MusicLibServerSocket implements Runnable {
                             sortList(out, in);
                             break;
                         }
+                        case getFile: {
+                            getFile(clientSocket.getOutputStream());
+                            break;
+                        }
+                        case loadFromFile: {
+                            loadFromFile(clientSocket.getInputStream());
+                            break;
+                        }
                     }
                 }
             }
@@ -77,6 +83,43 @@ public class MusicLibServerSocket implements Runnable {
         } catch (IOException e) {
             logger.error("Ошибка чтения/записи в поток");
         }
+    }
+
+    private void loadFromFile(InputStream inputStream) throws IOException {
+
+        OutputStream out = null;
+
+        try {
+            out = new FileOutputStream("loadFile.xml");
+        } catch (FileNotFoundException e) {
+            logger.error("Ошибка файл не найден");
+        }
+
+        byte[] b = new byte[20*1024];
+
+        int i ;
+        while((i = inputStream.read(b)) >0){
+            out.write(b, 0, i);
+        }
+        out.close();
+        //пока не работает, файл сохраняется битый
+        //model.addFromFile("loadFile.xml");
+
+
+    }
+
+    private void getFile(OutputStream out) throws IOException {
+        BufferedInputStream bis = new BufferedInputStream(model.getFIle("tracks.xml"));
+        BufferedOutputStream bos = new BufferedOutputStream(out);
+        byte[] byteArray = new byte[8192];
+        int in;
+        while ((in = bis.read(byteArray)) != -1){
+            bos.write(byteArray,0,in);
+        }
+        bis.close();
+        bos.close();
+
+        out.flush();
     }
 
     private void sortList(ObjectOutputStream out, ObjectInputStream in) {
