@@ -182,7 +182,11 @@ public class FxController {
         Integer n = table.getSelectionModel().getFocusedIndex();
         try {
             clientSocket.getOos().writeObject(ConstProtocol.delete);
-            clientSocket.getOos().writeObject(n);
+            clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getName());
+            clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getSinger());
+            clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getAlbum());
+            clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getLengthInt());
+            clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getGenreName());
             clientSocket.getOos().flush();
         } catch (IOException e) {
             System.out.println("Ошибка записи в поток");

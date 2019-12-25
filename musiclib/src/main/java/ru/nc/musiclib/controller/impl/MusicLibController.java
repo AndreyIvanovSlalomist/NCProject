@@ -62,6 +62,14 @@ public class MusicLibController implements Controller, Observer {
     }
 
     @Override
+    public boolean isValidUpdate(String name, String singer, String album, int length, String genreName, int colNumber, String newValue){
+        if (model.update(name, singer, album, length, genreName, colNumber, newValue)) {
+            model.saveTrack();
+            return true;
+        }
+        return false;
+    }
+    @Override
     public boolean isValidSort(int numberField, boolean isRevers) {
         sendLog("Я контроллер. Получил команду для сортировки ");
         model.setSort(numberField, isRevers);
@@ -79,4 +87,12 @@ public class MusicLibController implements Controller, Observer {
         return false;
     }
 
+    @Override
+    public boolean isValidDelete(String name, String singer, String album, int length, String genreName){
+        sendLog("Я контроллер. Получил данные на удаление ");
+        if (model.delete(name, singer, album, length, genreName)) {
+            model.saveTrack();
+            return true;
+        }
+        return false;}
 }

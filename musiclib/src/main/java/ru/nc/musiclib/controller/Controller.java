@@ -21,7 +21,11 @@ public interface Controller {
 
     boolean isValidUpdate(Track track, int colNumber, String newValue);
 
+    boolean isValidUpdate(String name, String singer, String album, int length, String genreName, int colNumber, String newValue);
+
     boolean isValidSort(int numberField, boolean isRevers);
 
     boolean isValidDelete(int number);
+
+    boolean isValidDelete(String name, String singer, String album, int length, String genreName);
 }

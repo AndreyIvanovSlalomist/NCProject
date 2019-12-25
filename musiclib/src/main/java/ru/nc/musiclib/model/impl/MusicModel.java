@@ -241,13 +241,17 @@ public class MusicModel implements Model, Observable {
 
 
     private List<Track> addFromXMLFile(String fileName) {
-        return loadFromXml(fileName+".xml").getTracks();
+        return loadFromXml(fileName + ".xml").getTracks();
     }
 
     private List<Track> addFromSerializableFile(String fileName) {
-        return loadTrack(fileName+".txt");
+        return loadTrack(fileName + ".txt");
     }
 
+    @Override
+    public boolean update(String name, String singer, String album, int length, String genreName, int colNumber, String newValue) {
+        return update(findTrack(name, singer, album, length), colNumber, newValue);
+    }
 
     @Override
     public boolean update(Track track, int colNumber, String newValue) {
@@ -343,6 +347,12 @@ public class MusicModel implements Model, Observable {
         return true;
     }
 
+    public boolean delete(String name, String singer, String album, int length, String genreName){
+        tracks.getTracks().remove(findTrack(name, singer, album, length));
+        logger.info("Трек удален.");
+        notifyObservers("Трек удален.");
+        return true;
+    }
     private Track findTrack(String name, String singer, String album, int length) {
         for (Track track : tracks.getTracks()) {
             if (track.getName().equals(name) &&
@@ -376,6 +386,7 @@ public class MusicModel implements Model, Observable {
         public void setTracks(List<Track> tracks) {
             this.tracks = tracks;
         }
+
         @Override
         public String toString() {
             return "musiclib [tracks=" + tracks + "]";

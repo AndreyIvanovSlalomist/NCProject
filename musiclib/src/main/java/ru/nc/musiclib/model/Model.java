@@ -25,10 +25,14 @@ public interface Model {
 
     boolean update(Track track, int colNumber, String newValue);
 
+    boolean update(String name, String singer, String album, int length, String genreName, int colNumber, String newValue);
+
 
     List<Track> find(int colNumber, String findValue);
 
     boolean delete(int number);
+
+    boolean delete(String name, String singer, String album, int length, String genreName);
 
     void saveTrack();
 
