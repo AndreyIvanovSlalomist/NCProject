@@ -56,6 +56,14 @@ public class MusicLibServerSocket implements Runnable {
                             delete(in);
                             break;
                         }
+                        case update: {
+                            update(in);
+                            break;
+                        }
+                        case sort: {
+                            sortList(out, in);
+                            break;
+                        }
                     }
                 }
             }
@@ -68,6 +76,39 @@ public class MusicLibServerSocket implements Runnable {
             logger.error("Ошибка класс не найден");
         } catch (IOException e) {
             logger.error("Ошибка чтения/записи в поток");
+        }
+    }
+
+    private void sortList(ObjectOutputStream out, ObjectInputStream in) {
+    }
+
+    private void update(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        Object name;
+        Object singer;
+        Object album;
+        Object length;
+        Object genreName;
+        name = in.readObject();
+        singer = in.readObject();
+        album = in.readObject();
+        length = in.readObject();
+        genreName = in.readObject();
+        if (name instanceof String &&
+                singer instanceof String &&
+                album instanceof String &&
+                length instanceof Integer &&
+                genreName instanceof String) {
+            Object inputObject;
+            inputObject = in.readObject();
+            if (inputObject instanceof Integer) {
+                int inputInt = (int) inputObject;
+                inputObject = in.readObject();
+                if (inputObject instanceof String) {
+                    String updateValue = (String) inputObject;
+                    controller.isValidUpdate((String) name, (String) singer, (String) album, (Integer) length, (String) genreName, inputInt, updateValue);
+                }
+            }
+
         }
     }
 
@@ -90,10 +131,22 @@ public class MusicLibServerSocket implements Runnable {
         }
     }
     private void delete(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        Object inputObject = in.readObject();
-        if (inputObject instanceof Integer) {
-            int inputInt = (int) inputObject;
-            controller.isValidDelete(inputInt);
+        Object name;
+        Object singer;
+        Object album;
+        Object length;
+        Object genreName;
+        name = in.readObject();
+        singer = in.readObject();
+        album = in.readObject();
+        length = in.readObject();
+        genreName = in.readObject();
+        if (name instanceof String &&
+                singer instanceof String &&
+                album instanceof String &&
+                length instanceof Integer &&
+                genreName instanceof String) {
+            controller.isValidDelete((String) name, (String) singer, (String) album, (Integer) length, (String) genreName);
         }
     }
     private void add(ObjectInputStream in) throws IOException, ClassNotFoundException {
