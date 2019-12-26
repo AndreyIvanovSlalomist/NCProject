@@ -206,8 +206,12 @@ public class FxController {
             System.out.println("Ошибка getInputStream");
         }
         // Нужно добавить диалоговое окно
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+        fileChooser.getExtensionFilters().add(extensionFilter);
+        File file = fileChooser.showSaveDialog(null);
         try {
-            out = new FileOutputStream("tmp.xml");
+            out = new FileOutputStream(file.getPath());
         } catch (FileNotFoundException e) {
             System.out.println("Ошибка FileOutputStream");
         }
@@ -224,6 +228,8 @@ public class FxController {
 
         clientSocket.getOos().writeObject(ConstProtocol.loadFromFile);
         FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
+        fileChooser.getExtensionFilters().add(extensionFilter);
         File file = fileChooser.showOpenDialog(null);
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
         BufferedOutputStream bos = new BufferedOutputStream(clientSocket.getOos());

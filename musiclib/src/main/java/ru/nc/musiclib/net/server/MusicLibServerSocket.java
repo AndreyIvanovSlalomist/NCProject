@@ -63,11 +63,11 @@ public class MusicLibServerSocket implements Runnable {
                             break;
                         }
                         case getFile: {
-                            getFile(clientSocket.getOutputStream());
+                            getFile(out);
                             break;
                         }
                         case loadFromFile: {
-                            loadFromFile(clientSocket.getInputStream());
+                            loadFromFile(in);
                             break;
                         }
                     }
@@ -101,9 +101,7 @@ public class MusicLibServerSocket implements Runnable {
         while((i = inputStream.read(b)) >0){
             out.write(b, 0, i);
         }
-        out.close();
-        //пока не работает, файл сохраняется битый
-        //model.addFromFile("loadFile.xml");
+        model.addFromFile("loadFile.xml");
 
 
     }
