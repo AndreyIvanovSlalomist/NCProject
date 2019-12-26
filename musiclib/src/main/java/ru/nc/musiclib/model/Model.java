@@ -27,7 +27,7 @@ public interface Model {
 
     boolean update(Track track, int colNumber, String newValue);
 
-    boolean update(String name, String singer, String album, int length, String genreName, int colNumber, String newValue);
+    boolean update(Track track, String name, String singer, String album, int length, String genreName);
 
 
     List<Track> find(int colNumber, String findValue);

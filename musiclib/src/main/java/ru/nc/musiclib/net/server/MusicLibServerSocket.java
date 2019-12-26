@@ -8,6 +8,7 @@ import ru.nc.musiclib.net.ConstProtocol;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.List;
 
 public class MusicLibServerSocket implements Runnable {
     private Socket clientSocket;
@@ -129,27 +130,20 @@ public class MusicLibServerSocket implements Runnable {
         Object album;
         Object length;
         Object genreName;
+        Object track;
         name = in.readObject();
         singer = in.readObject();
         album = in.readObject();
         length = in.readObject();
         genreName = in.readObject();
+        track = in.readObject();
         if (name instanceof String &&
                 singer instanceof String &&
                 album instanceof String &&
                 length instanceof Integer &&
-                genreName instanceof String) {
-            Object inputObject;
-            inputObject = in.readObject();
-            if (inputObject instanceof Integer) {
-                int inputInt = (int) inputObject;
-                inputObject = in.readObject();
-                if (inputObject instanceof String) {
-                    String updateValue = (String) inputObject;
-                    controller.isValidUpdate((String) name, (String) singer, (String) album, (Integer) length, (String) genreName, inputInt, updateValue);
-                }
-            }
-
+                genreName instanceof String &&
+                track instanceof Track) {
+            controller.isValidUpdate((Track) track, (String) name, (String) singer, (String) album, (Integer) length, (String) genreName);
         }
     }
 

@@ -4,6 +4,8 @@ import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.view.View;
 import ru.nc.musiclib.model.Model;
 
+import java.util.List;
+
 /**
  * Интерфейс для контроллеров
  * Знает о модели
@@ -21,7 +23,7 @@ public interface Controller {
 
     boolean isValidUpdate(Track track, int colNumber, String newValue);
 
-    boolean isValidUpdate(String name, String singer, String album, int length, String genreName, int colNumber, String newValue);
+    boolean isValidUpdate(Track track, String name, String singer, String album, int length, String genreName);
 
     boolean isValidSort(int numberField, boolean isRevers);
 

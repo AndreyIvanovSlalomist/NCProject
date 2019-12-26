@@ -259,8 +259,19 @@ public class MusicModel implements Model, Observable {
     }
 
     @Override
-    public boolean update(String name, String singer, String album, int length, String genreName, int colNumber, String newValue) {
-        return update(findTrack(name, singer, album, length), colNumber, newValue);
+    public boolean update(Track oldTrack, String name, String singer, String album, int length, String genreName) {
+        Track track = findTrack(oldTrack.getName(), oldTrack.getSinger(), oldTrack.getAlbum(), oldTrack.getLengthInt());
+        track.setName(name);
+        track.setSinger(singer);
+        track.setAlbum(album);
+        track.setLength(length);
+        Genre genre = findGenre(genreName);
+        if (genre == null) {
+            genre = new Genre(genreName);
+            genres.add(genre);
+        }
+        track.setGenre(genre);
+        return true;
     }
 
     @Override

@@ -45,4 +45,22 @@
             <genreName>Хип-хоп</genreName>
         </genre>
     </track>
+    <track>
+        <name>Hey You</name>
+        <singer>Pink Floyd</singer>
+        <album>The Wall</album>
+        <length>234</length>
+        <genre>
+            <genreName>Progressive Rock</genreName>
+        </genre>
+    </track>
+    <track>
+        <name>O'Children</name>
+        <singer>Nick Cave &amp; The Bad Seeds</singer>
+        <album>Abattoir Blues/The Lyre of Orpheus</album>
+        <length>345</length>
+        <genre>
+            <genreName>rock</genreName>
+        </genre>
+    </track>
 </musiclib>
