@@ -1,5 +1,7 @@
 package ru.nc.musiclib.net.client;
 
+import ru.nc.musiclib.logger.MusicLibLogger;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -10,6 +12,8 @@ public class ClientSocket {
     private Socket socket = null;
     private ObjectOutputStream oos = null;
     private ObjectInputStream ois = null;
+
+    private final static MusicLibLogger logger = new MusicLibLogger(ClientSocket.class);
 
     public ClientSocket(InetAddress inetAddress, int port) {
         startSocket(inetAddress, port);
@@ -33,17 +37,17 @@ public class ClientSocket {
         try {
             socket = new Socket(inetAddress, port);
         } catch (IOException e) {
-            System.out.println("Ошибка при открытии сокена на порту " + port);
+            logger.error("Ошибка при открытии сокена на порту " + port);
         }
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException e) {
-            System.out.println("Ошибка при открытии потока на запись ");
+            logger.error("Ошибка при открытии потока на запись ");
         }
         try {
             ois = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
-            System.out.println("Ошибка при открытии потока на чтение ");
+            logger.error("Ошибка при открытии потока на чтение ");
         }
 
     }
