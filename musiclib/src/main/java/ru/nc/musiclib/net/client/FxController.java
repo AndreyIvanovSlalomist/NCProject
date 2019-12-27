@@ -297,6 +297,7 @@ public class FxController {
     }
 
     public void onClickRefresh(ActionEvent actionEvent) {
+
         onClickExit(null);
         onClickConnect(null);
         return;
