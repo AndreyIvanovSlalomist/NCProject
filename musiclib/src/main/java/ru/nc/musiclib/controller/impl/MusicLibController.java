@@ -2,7 +2,7 @@ package ru.nc.musiclib.controller.impl;
 
 /**
  * Класс контроллера
- * Для использование со стороны View используется методы валидации validAppend, validUpdate, validDelete
+ * Для использования со стороны View используются методы валидации validAppend, validUpdate, validDelete
  */
 
 import ru.nc.musiclib.classes.Track;
@@ -10,6 +10,8 @@ import ru.nc.musiclib.controller.Controller;
 import ru.nc.musiclib.interfaces.Observer;
 import ru.nc.musiclib.model.Model;
 import ru.nc.musiclib.view.View;
+
+import java.util.List;
 
 public class MusicLibController implements Controller, Observer {
     private Model model = null;
@@ -53,7 +55,7 @@ public class MusicLibController implements Controller, Observer {
 
     @Override
     public boolean isValidUpdate(Track track, int colNumber, String newValue) {
-        sendLog("Я контроллер. Получил данные на изминение ");
+        sendLog("Я контроллер. Получил данные на изменение ");
         if (model.update(track, colNumber, newValue)) {
             model.saveTrack();
             return true;
@@ -61,9 +63,10 @@ public class MusicLibController implements Controller, Observer {
         return false;
     }
 
+
     @Override
-    public boolean isValidUpdate(String name, String singer, String album, int length, String genreName, int colNumber, String newValue){
-        if (model.update(name, singer, album, length, genreName, colNumber, newValue)) {
+    public boolean isValidUpdate(Track track, String name, String singer, String album, int length, String genreName){
+        if (model.update(track, name, singer, album, length, genreName)) {
             model.saveTrack();
             return true;
         }

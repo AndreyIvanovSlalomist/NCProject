@@ -5,12 +5,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import ru.nc.musiclib.classes.Genre;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.net.ConstProtocol;
 
@@ -24,6 +26,7 @@ public class FxController {
     public MenuItem saveToFile;
     public MenuItem loadFromFile;
     private ClientSocket clientSocket;
+
 
     public TableColumn<Track, String> nameColumn;
     public TableColumn<Track, String> singerColumn;
@@ -42,6 +45,13 @@ public class FxController {
     public MenuItem exit;
     @FXML
     public TableView<Track> table;
+
+    public static boolean edit;
+    public static String name;
+    public static String singer;
+    public static String album;
+    public static String length;
+    public static String genre;
 
 
     @FXML
@@ -85,8 +95,6 @@ public class FxController {
                 }
             }
         }
-
-
     }
 
     @FXML
@@ -126,7 +134,7 @@ public class FxController {
 
     @FXML
     public void onClickAdd(ActionEvent actionEvent) {
-
+        edit = false;
         FXMLLoader loader = new FXMLLoader();
         Parent root = null;
         try {
@@ -143,14 +151,14 @@ public class FxController {
         stage.setOnHiding(event -> {
             add.getParentMenu().setDisable(false);
             connect.getParentMenu().setDisable(false);
-            if(AddFormController.objects!=null){
+            if(!AddFormController.isCanceled){
                 try {
                     clientSocket.getOos().writeObject(ConstProtocol.add);
-                    clientSocket.getOos().writeObject(AddFormController.objects.get(0));
-                    clientSocket.getOos().writeObject(AddFormController.objects.get(1));
-                    clientSocket.getOos().writeObject(AddFormController.objects.get(2));
-                    clientSocket.getOos().writeObject(Integer.parseInt(AddFormController.objects.get(3)));
-                    clientSocket.getOos().writeObject(AddFormController.objects.get(4));
+                    clientSocket.getOos().writeObject(name);
+                    clientSocket.getOos().writeObject(singer);
+                    clientSocket.getOos().writeObject(album);
+                    clientSocket.getOos().writeObject(Integer.parseInt(length));
+                    clientSocket.getOos().writeObject(genre);
                     clientSocket.getOos().flush();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -161,38 +169,82 @@ public class FxController {
         stage.setScene(new Scene(root));
         stage.show();
 
-
     }
 
     @FXML
     public void onClickUpdate(ActionEvent actionEvent) {
-        FXMLLoader loader = new FXMLLoader();
-        Parent root = null;
-        try {
-            root = (Parent) loader.load(getClass().getResourceAsStream("/fxml/addForm.fxml"));
-        } catch (IOException e) {
-            e.printStackTrace();
+        edit = true;
+        if(table.getSelectionModel().getSelectedItem()!=null){
+            name=table.getSelectionModel().getSelectedItem().getName();
+            singer=table.getSelectionModel().getSelectedItem().getSinger();
+            album=table.getSelectionModel().getSelectedItem().getAlbum();
+            length=Integer.toString(table.getSelectionModel().getSelectedItem().getLengthInt());
+            genre=table.getSelectionModel().getSelectedItem().getGenreName();
+            Track track = new Track(name,singer,album,Integer.parseInt(length),new Genre(genre));
+            FXMLLoader loader = new FXMLLoader();
+            Parent root = null;
+            try {
+                root = (Parent) loader.load(getClass().getResourceAsStream("/fxml/addForm.fxml"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Stage stage  = new Stage();
+            stage.setResizable(false);
+            stage.setOnShown(event -> {
+                add.getParentMenu().setDisable(true);
+                connect.getParentMenu().setDisable(true);
+            });
+            stage.setOnHiding(event -> {
+                add.getParentMenu().setDisable(false);
+                connect.getParentMenu().setDisable(false);
+                if(!AddFormController.isCanceled){
+                    try {
+                        clientSocket.getOos().writeObject(ConstProtocol.update);
+                        clientSocket.getOos().writeObject(name);
+                        clientSocket.getOos().writeObject(singer);
+                        clientSocket.getOos().writeObject(album);
+                        clientSocket.getOos().writeObject(Integer.parseInt(length));
+                        clientSocket.getOos().writeObject(genre);
+                        clientSocket.getOos().writeObject(track);
+                        clientSocket.getOos().flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            stage.setTitle("Изменить трек");
+            stage.setScene(new Scene(root));
+            stage.show();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Ошибка!");
+            alert.setHeaderText(null);
+            alert.setContentText("Трек не выбран!");
+            alert.showAndWait();
         }
-        Stage stage  = new Stage();
-        stage.setTitle("Изменить трек");
-        stage.setScene(new Scene(root));
-        stage.setResizable(false);
-        stage.show();
+
     }
 
     @FXML
     public void onClickDelete(ActionEvent actionEvent) {
-        Integer n = table.getSelectionModel().getFocusedIndex();
-        try {
-            clientSocket.getOos().writeObject(ConstProtocol.delete);
-            clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getName());
-            clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getSinger());
-            clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getAlbum());
-            clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getLengthInt());
-            clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getGenreName());
-            clientSocket.getOos().flush();
-        } catch (IOException e) {
-            System.out.println("Ошибка записи в поток");
+        if(table.getSelectionModel().getSelectedItem()!=null){
+            try {
+                clientSocket.getOos().writeObject(ConstProtocol.delete);
+                clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getName());
+                clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getSinger());
+                clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getAlbum());
+                clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getLengthInt());
+                clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getGenreName());
+                clientSocket.getOos().flush();
+            } catch (IOException e) {
+                System.out.println("Ошибка записи в поток");
+            }
+        }else{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Ошибка!");
+            alert.setHeaderText(null);
+            alert.setContentText("Трек не выбран!");
+            alert.showAndWait();
         }
     }
 

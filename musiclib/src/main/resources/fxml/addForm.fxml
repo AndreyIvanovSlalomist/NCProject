@@ -38,7 +38,7 @@
                   <Font size="14.0" />
                </font>
             </TextField>
-            <Button fx:id="addButton" layoutX="70.0" layoutY="209.0" mnemonicParsing="false" text="Сохранить" />
+            <Button fx:id="addButton" layoutX="70.0" layoutY="209.0" mnemonicParsing="false" text="Добавить" />
          </children>
       </AnchorPane>
       <Label layoutX="85.0" layoutY="22.0" text="Новый трек" textFill="#f0edf8">

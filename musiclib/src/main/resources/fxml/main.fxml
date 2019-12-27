@@ -7,23 +7,23 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="376.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nc.musiclib.net.client.FxController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="376.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/8.0.221" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nc.musiclib.net.client.FxController">
     <children>
         <TableView fx:id="table" layoutX="7.0" layoutY="27.0" prefHeight="350.0" prefWidth="585.0" style="-fx-background-color: #E0FFFF;">
             <columns>
-                <TableColumn fx:id="nameColumn" prefWidth="130.0" style="-fx-background-color: #4682B4;" text="Название" />
-                <TableColumn fx:id="singerColumn" prefWidth="125.0" style="-fx-background-color: #4682B4;" text="Исполнитель" />
-                <TableColumn fx:id="albumColumn" prefWidth="114.0" style="-fx-background-color: #4682B4;" text="Альбом" />
-                <TableColumn fx:id="lengthColumn" prefWidth="110.0" style="-fx-background-color: #4682B4;" text="Длина записи" />
-                <TableColumn fx:id="genreColumn" prefWidth="104.0" style="-fx-background-color: #4682B4;" text="Жанр" />
+                <TableColumn fx:id="nameColumn" prefWidth="130.0" style="-fx-background-color: #E0FFFF;" text="Название" />
+                <TableColumn fx:id="singerColumn" prefWidth="125.0" style="-fx-background-color: #E0FFFF;" text="Исполнитель" />
+                <TableColumn fx:id="albumColumn" prefWidth="114.0" style="-fx-background-color: #E0FFFF;" text="Альбом" />
+                <TableColumn fx:id="lengthColumn" prefWidth="110.0" style="-fx-background-color: #E0FFFF;" text="Длина записи" />
+                <TableColumn fx:id="genreColumn" prefWidth="104.0" style="-fx-background-color: #E0FFFF;" text="Жанр" />
             </columns>
         </TableView>
         <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
             <menus>
                 <Menu mnemonicParsing="false" text="Файл">
                     <items>
-                        <MenuItem fx:id="connect" mnemonicParsing="false" onAction="#onClickConnect" text="Подключится" />
-                        <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#onClickExit" text="Отключится" />
+                        <MenuItem fx:id="connect" mnemonicParsing="false" onAction="#onClickConnect" text="Подключиться" />
+                        <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#onClickExit" text="Отключиться" />
                   <MenuItem fx:id="saveToFile" mnemonicParsing="false" onAction="#onClickSaveToFile" text="Сохранить в файл" />
                   <MenuItem fx:id="loadFromFile" mnemonicParsing="false" onAction="#onClickLoadFromFile" text="Загрузить из файла" />
                     </items>
