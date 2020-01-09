@@ -5,17 +5,16 @@ import ru.nc.musiclib.controller.Controller;
 import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.model.Model;
 import ru.nc.musiclib.net.ConstProtocol;
+import ru.nc.musiclib.net.StreamFile;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.List;
 
 public class MusicLibServerSocket implements Runnable {
+    private final static MusicLibLogger logger = new MusicLibLogger(MusicLibServerSocket.class);
     private Socket clientSocket;
     private Model model;
     private Controller controller;
-
-    private final static MusicLibLogger logger = new MusicLibLogger(MusicLibServerSocket.class);
 
     public MusicLibServerSocket(Socket client, Model model, Controller controller) {
         this.clientSocket = client;
@@ -86,39 +85,14 @@ public class MusicLibServerSocket implements Runnable {
         }
     }
 
-    private void loadFromFile(InputStream inputStream) throws IOException {
-
-        OutputStream out = null;
-
-        try {
-            out = new FileOutputStream("loadFile.xml");
-        } catch (FileNotFoundException e) {
-            logger.error("Ошибка файл не найден");
-        }
-
-        byte[] b = new byte[20*1024];
-
-        int i ;
-        while((i = inputStream.read(b)) >0){
-            out.write(b, 0, i);
-        }
+    private void loadFromFile(ObjectInputStream inputStream) {
+        StreamFile.streamToFile(inputStream, "loadFile.xml");
         model.addFromFile("loadFile.xml");
-
-
     }
 
-    private void getFile(OutputStream out) throws IOException {
-        BufferedInputStream bis = new BufferedInputStream(model.getFIle("tracks.xml"));
-        BufferedOutputStream bos = new BufferedOutputStream(out);
-        byte[] byteArray = new byte[8192];
-        int in;
-        while ((in = bis.read(byteArray)) != -1){
-            bos.write(byteArray,0,in);
-        }
-        bis.close();
-        bos.close();
-
-        out.flush();
+    private void getFile(ObjectOutputStream out) {
+        StreamFile.fileToStream(out, "tracks.xml");
+        logger.info("Файл передан");
     }
 
     private void sortList(ObjectOutputStream out, ObjectInputStream in) {
@@ -165,6 +139,7 @@ public class MusicLibServerSocket implements Runnable {
             }
         }
     }
+
     private void delete(ObjectInputStream in) throws IOException, ClassNotFoundException {
         Object name;
         Object singer;
@@ -184,6 +159,7 @@ public class MusicLibServerSocket implements Runnable {
             controller.isValidDelete((String) name, (String) singer, (String) album, (Integer) length, (String) genreName);
         }
     }
+
     private void add(ObjectInputStream in) throws IOException, ClassNotFoundException {
         Object name;
         Object singer;
@@ -204,7 +180,6 @@ public class MusicLibServerSocket implements Runnable {
         }
 
     }
-
 
 
 }

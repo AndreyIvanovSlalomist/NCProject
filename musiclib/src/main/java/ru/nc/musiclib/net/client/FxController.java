@@ -16,8 +16,10 @@ import ru.nc.musiclib.classes.Genre;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.net.ConstProtocol;
+import ru.nc.musiclib.net.StreamFile;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -105,7 +107,7 @@ public class FxController {
                 try {
                     clientSocket.getOos().writeObject(ConstProtocol.exit);
                 } catch (IOException e) {
-                    logger.error("Ошибка при записи в поток");
+                    logger.error("Ошибка при записи в поток" + e.getLocalizedMessage());
                 }
                 try {
                     clientSocket.getOos().flush();
@@ -250,57 +252,71 @@ public class FxController {
     }
 
     public void onClickSaveToFile(ActionEvent actionEvent) throws IOException {
-        InputStream in = null;
-        OutputStream out = null;
-        clientSocket.getOos().writeObject(ConstProtocol.getFile);
-        try {
-            in = clientSocket.getSocket().getInputStream();
-        } catch (IOException e) {
-            logger.error("Ошибка getInputStream");
-        }
-        // Нужно добавить диалоговое окно
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extensionFilter);
         File file = fileChooser.showSaveDialog(null);
-        try {
-            out = new FileOutputStream(file.getPath());
-        } catch (FileNotFoundException e) {
-            logger.error("Ошибка FileOutputStream");
-        }
+        if (file == null)
+            return;
+        clientSocket.getOos().writeObject(ConstProtocol.getFile);
+        StreamFile.streamToFile(clientSocket.getOis(), file.getPath());
 
-        byte[] b = new byte[20 * 1024];
+        onClickRefresh(null);
 
-        int i;
-        while ((i = in.read(b)) > 0) {
-            out.write(b, 0, i);
-        }
     }
 
     public void onClickLoadFromFile(ActionEvent actionEvent) throws IOException {
 
-        clientSocket.getOos().writeObject(ConstProtocol.loadFromFile);
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extensionFilter);
         File file = fileChooser.showOpenDialog(null);
-        BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-        BufferedOutputStream bos = new BufferedOutputStream(clientSocket.getOos());
-        byte[] byteArray = new byte[8192];
-        int in;
-        while ((in = bis.read(byteArray)) != -1) {
-            bos.write(byteArray, 0, in);
-        }
-        bis.close();
-        bos.flush();
+        if (file == null)
+            return;
+        clientSocket.getOos().writeObject(ConstProtocol.loadFromFile);
+        StreamFile.fileToStream(clientSocket.getOos(), file.getPath());
+
         onClickRefresh(null);
     }
 
     public void onClickRefresh(ActionEvent actionEvent) {
 
-        onClickExit(null);
-        onClickConnect(null);
-        return;
+        /*table.getItems().clear();
+        {
+            {
+                try {
+                    clientSocket.getOos().writeObject(ConstProtocol.getAll);
+                } catch (IOException e) {
+                    logger.error("Ошибка записи в поток");
+                }
+                try {
+                    clientSocket.getOos().flush();
+                } catch (IOException e) {
+                    logger.error("Ошибка при отправки потока");
+                }
+
+                Object inputObject = null;
+                try {
+                    inputObject = clientSocket.getOis().readObject();
+                } catch (ClassNotFoundException e) {
+                    logger.error("Ошибка класс не найден");
+                } catch (IOException e) {
+                    logger.error("Ошибка чтения из поток");
+                }
+                nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+                singerColumn.setCellValueFactory(new PropertyValueFactory<>("singer"));
+                albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
+                lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
+                genreColumn.setCellValueFactory(new PropertyValueFactory<>("genreName"));
+                if (inputObject instanceof List) {
+                    for (Object o : (List<?>) inputObject) {
+                        if (o instanceof Track) {
+                            table.getItems().add((Track) o);
+                        }
+                    }
+                }
+            }
+        }*/
 
     }
 }

@@ -98,7 +98,7 @@ public class MusicModel implements Model, Observable {
     }
 
     @Override
-    public List<Track> getAll() {
+    public synchronized List<Track> getAll() {
         return tracks.getTracks();
     }
 
@@ -200,7 +200,7 @@ public class MusicModel implements Model, Observable {
     }
 
     @Override
-    public boolean add(String name, String singer, String album, int length, String genreName, boolean isSendNotify) {
+    public synchronized boolean add(String name, String singer, String album, int length, String genreName, boolean isSendNotify) {
 
         if (findTrack(name, singer, album, length) == null) {
             Track track = new Track();
@@ -259,7 +259,7 @@ public class MusicModel implements Model, Observable {
     }
 
     @Override
-    public boolean update(Track oldTrack, String name, String singer, String album, int length, String genreName) {
+    public synchronized boolean update(Track oldTrack, String name, String singer, String album, int length, String genreName) {
         Track track = findTrack(oldTrack.getName(), oldTrack.getSinger(), oldTrack.getAlbum(), oldTrack.getLengthInt());
         track.setName(name);
         track.setSinger(singer);
@@ -275,7 +275,7 @@ public class MusicModel implements Model, Observable {
     }
 
     @Override
-    public boolean update(Track track, int colNumber, String newValue) {
+    public synchronized boolean update(Track track, int colNumber, String newValue) {
         switch (colNumber) {
             case 1: {
                 track.setName(newValue);
@@ -368,7 +368,7 @@ public class MusicModel implements Model, Observable {
         return true;
     }
 
-    public boolean delete(String name, String singer, String album, int length, String genreName) {
+    public synchronized boolean delete(String name, String singer, String album, int length, String genreName) {
         tracks.getTracks().remove(findTrack(name, singer, album, length));
         logger.info("Трек удален.");
         notifyObservers("Трек удален.");
