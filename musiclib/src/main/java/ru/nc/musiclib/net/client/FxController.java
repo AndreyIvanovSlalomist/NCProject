@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.List;
 
 public class FxController {
 
@@ -64,36 +63,7 @@ public class FxController {
                 logger.error("Ошибка Неизвестен хост");
             }
             if (!clientSocket.getSocket().isOutputShutdown()) {
-                try {
-                    clientSocket.getOos().writeObject(ConstProtocol.getAll);
-                } catch (IOException e) {
-                    logger.error("Ошибка записи в поток");
-                }
-                try {
-                    clientSocket.getOos().flush();
-                } catch (IOException e) {
-                    logger.error("Ошибка при отправки потока");
-                }
-                Object inputObject = null;
-                try {
-                    inputObject = clientSocket.getOis().readObject();
-                } catch (ClassNotFoundException e) {
-                    logger.error("Ошибка класс не найден");
-                } catch (IOException e) {
-                    logger.error("Ошибка чтения из поток");
-                }
-                nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-                singerColumn.setCellValueFactory(new PropertyValueFactory<>("singer"));
-                albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
-                lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
-                genreColumn.setCellValueFactory(new PropertyValueFactory<>("genreName"));
-                if (inputObject instanceof List) {
-                    for (Object o : (List<?>) inputObject) {
-                        if (o instanceof Track) {
-                            table.getItems().add((Track) o);
-                        }
-                    }
-                }
+                onClickRefresh(null);
             }
         }
     }
@@ -238,6 +208,7 @@ public class FxController {
                 clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getLengthInt());
                 clientSocket.getOos().writeObject(table.getSelectionModel().getSelectedItem().getGenreName());
                 clientSocket.getOos().flush();
+                onClickRefresh(null);
             } catch (IOException e) {
                 logger.error("Ошибка записи в поток");
             }
@@ -248,7 +219,6 @@ public class FxController {
             alert.setContentText("Трек не выбран!");
             alert.showAndWait();
         }
-        onClickRefresh(null);
     }
 
     public void onClickSaveToFile(ActionEvent actionEvent) throws IOException {
@@ -281,7 +251,13 @@ public class FxController {
 
     public void onClickRefresh(ActionEvent actionEvent) {
 
-        /*table.getItems().clear();
+        logger.info("gat all");
+        table.getItems().clear();
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        singerColumn.setCellValueFactory(new PropertyValueFactory<>("singer"));
+        albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
+        lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
+        genreColumn.setCellValueFactory(new PropertyValueFactory<>("genreName"));
         {
             {
                 try {
@@ -294,29 +270,22 @@ public class FxController {
                 } catch (IOException e) {
                     logger.error("Ошибка при отправки потока");
                 }
-
                 Object inputObject = null;
-                try {
-                    inputObject = clientSocket.getOis().readObject();
-                } catch (ClassNotFoundException e) {
-                    logger.error("Ошибка класс не найден");
-                } catch (IOException e) {
-                    logger.error("Ошибка чтения из поток");
-                }
-                nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-                singerColumn.setCellValueFactory(new PropertyValueFactory<>("singer"));
-                albumColumn.setCellValueFactory(new PropertyValueFactory<>("album"));
-                lengthColumn.setCellValueFactory(new PropertyValueFactory<>("length"));
-                genreColumn.setCellValueFactory(new PropertyValueFactory<>("genreName"));
-                if (inputObject instanceof List) {
-                    for (Object o : (List<?>) inputObject) {
-                        if (o instanceof Track) {
-                            table.getItems().add((Track) o);
-                        }
+                do {
+                    try {
+                        inputObject = clientSocket.getOis().readObject();
+                    } catch (ClassNotFoundException e) {
+                        logger.error("Ошибка класс не найден");
+                    } catch (IOException e) {
+                        logger.error("Ошибка чтения из поток");
                     }
-                }
+
+                    if (inputObject instanceof Track) {
+                        table.getItems().add((Track) inputObject);
+                    }
+                } while (!((inputObject instanceof ConstProtocol) && ((ConstProtocol) inputObject == ConstProtocol.finish)));
             }
-        }*/
+        }
 
     }
 }

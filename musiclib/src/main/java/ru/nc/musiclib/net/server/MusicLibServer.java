@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 public class MusicLibServer {
-    static ExecutorService executeIt = Executors.newFixedThreadPool(100);
+    static ExecutorService executeIt = Executors.newFixedThreadPool(20);
 
     private final static MusicLibLogger logger = new MusicLibLogger(MusicLibServer.class);
 

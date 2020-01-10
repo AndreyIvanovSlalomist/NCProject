@@ -7,8 +7,11 @@ import ru.nc.musiclib.model.Model;
 import ru.nc.musiclib.net.ConstProtocol;
 import ru.nc.musiclib.net.StreamFile;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.List;
 
 public class MusicLibServerSocket implements Runnable {
     private final static MusicLibLogger logger = new MusicLibLogger(MusicLibServerSocket.class);
@@ -85,9 +88,38 @@ public class MusicLibServerSocket implements Runnable {
         }
     }
 
+    private void getAll(ObjectOutputStream out) {
+
+        List<Track> trackList = model.getAll();
+        for (Track track : trackList) {
+
+            try {
+                out.writeObject(track);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                out.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            out.writeObject(ConstProtocol.finish);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void loadFromFile(ObjectInputStream inputStream) {
         StreamFile.streamToFile(inputStream, "loadFile.xml");
         model.addFromFile("loadFile.xml");
+        model.saveTrack();
     }
 
     private void getFile(ObjectOutputStream out) {
@@ -119,11 +151,6 @@ public class MusicLibServerSocket implements Runnable {
                 track instanceof Track) {
             controller.isValidUpdate((Track) track, (String) name, (String) singer, (String) album, (Integer) length, (String) genreName);
         }
-    }
-
-    private void getAll(ObjectOutputStream out) throws IOException {
-        out.writeObject(model.getAll());
-        out.flush();
     }
 
     private void find(ObjectOutputStream out, ObjectInputStream in) throws IOException, ClassNotFoundException {
