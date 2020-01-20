@@ -4,4 +4,4 @@ package ru.nc.musiclib.net;
  * прежде чем начать передавать наддые
  *
  */
-public enum ConstProtocol {exit, add, find, delete, update, getAll, sort, getFile, loadFromFile, finish}
+public enum ConstProtocol {exit, add, find, delete, update, getAll, sort, getFile, loadFromFile, finish, addUser, checkUser, setRole, getAllUsers, errorUser}

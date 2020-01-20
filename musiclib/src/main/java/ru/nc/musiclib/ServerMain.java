@@ -3,7 +3,9 @@ package ru.nc.musiclib;
 import ru.nc.musiclib.controller.Controller;
 import ru.nc.musiclib.controller.impl.MusicLibController;
 import ru.nc.musiclib.model.Model;
+import ru.nc.musiclib.model.UserModel;
 import ru.nc.musiclib.model.impl.MusicModel;
+import ru.nc.musiclib.model.impl.UsersModelImpl;
 import ru.nc.musiclib.net.server.MusicLibServer;
 
 public class ServerMain {
@@ -17,8 +19,9 @@ public class ServerMain {
 
         Controller controller = new MusicLibController();
         Model model = new MusicModel();
+        UserModel userModel = new UsersModelImpl();
         controller.setModel(model);
         MusicLibServer musicLibServer = new MusicLibServer();
-        musicLibServer.startServer(port, model, controller);
+        musicLibServer.startServer(port, model, controller, userModel);
     }
 }

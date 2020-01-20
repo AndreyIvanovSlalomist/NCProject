@@ -1,10 +1,13 @@
 package ru.nc.musiclib.net.server;
 
 import ru.nc.musiclib.classes.Track;
+import ru.nc.musiclib.classes.User;
 import ru.nc.musiclib.controller.Controller;
 import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.model.Model;
+import ru.nc.musiclib.model.UserModel;
 import ru.nc.musiclib.net.ConstProtocol;
+import ru.nc.musiclib.net.Role;
 import ru.nc.musiclib.net.StreamFile;
 
 import java.io.IOException;
@@ -18,11 +21,14 @@ public class MusicLibServerSocket implements Runnable {
     private Socket clientSocket;
     private Model model;
     private Controller controller;
+    private UserModel userModel;
+    private User currentUser;
 
-    public MusicLibServerSocket(Socket client, Model model, Controller controller) {
+    public MusicLibServerSocket(Socket client, Model model, Controller controller, UserModel userModel) {
         this.clientSocket = client;
         this.model = model;
         this.controller = controller;
+        this.userModel = userModel;
     }
 
     @Override
@@ -73,6 +79,23 @@ public class MusicLibServerSocket implements Runnable {
                             loadFromFile(in);
                             break;
                         }
+
+                        case addUser: {
+                            addUser(in);
+                            break;
+                        }
+                        case checkUser: {
+                            checkUser(out, in);
+                            break;
+                        }
+                        case setRole: {
+                            setRole(in);
+                            break;
+                        }
+                        case getAllUsers: {
+                            getAllUsers(out);
+                            break;
+                        }
                     }
                 }
             }
@@ -85,6 +108,72 @@ public class MusicLibServerSocket implements Runnable {
             logger.error("Ошибка класс не найден");
         } catch (IOException e) {
             logger.error("Ошибка чтения/записи в поток");
+        }
+    }
+
+    private void getAllUsers(ObjectOutputStream out) {
+
+        List<User> userList = userModel.getAllUser();
+        for (User user : userList) {
+
+            try {
+                out.writeObject(user);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                out.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            out.writeObject(ConstProtocol.finish);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setRole(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        Object userName;
+        Object role;
+        userName = in.readObject();
+        role = in.readObject();
+        if (userName instanceof String &&
+                role instanceof Role) {
+            userModel.setRole((String) userName, (Role) role);
+        }
+
+    }
+
+    private void checkUser(ObjectOutputStream out, ObjectInputStream in) throws IOException, ClassNotFoundException {
+        Object userName;
+        Object password;
+        userName = in.readObject();
+        password = in.readObject();
+        if (userName instanceof String &&
+                password instanceof String) {
+            if (userModel.checkUser((String) userName, (String) password)) {
+                out.writeObject(ConstProtocol.errorUser);
+            } else {
+                out.writeObject(userModel.findUser((String) userName).getRole());
+            }
+        }
+    }
+
+    private void addUser(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        Object userName;
+        Object password;
+        userName = in.readObject();
+        password = in.readObject();
+        if (userName instanceof String &&
+                password instanceof String) {
+            userModel.add((String) userName, (String) password);
         }
     }
 
