@@ -1,15 +1,22 @@
 package ru.nc.musiclib.net.client;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import ru.nc.musiclib.classes.User;
 import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.net.ConstProtocol;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 public class UsersController {
     private final static MusicLibLogger logger = new MusicLibLogger(UsersController.class);
@@ -72,6 +79,55 @@ public class UsersController {
     }
 
     public void onClickSetRole() {
+        if (clientSocket == null)
+            return;
+        Map<Class, Callable<?>> creators = new HashMap<>();
+        creators.put(SetRole.class, (Callable<SetRole>) () -> new SetRole(
+                clientSocket,
+                usersTable.getSelectionModel().getSelectedItem().getUserName(),
+                usersTable.getSelectionModel().getSelectedItem().getRole()));
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/setRole.fxml"));
+
+        loader.setControllerFactory(param -> {
+            Callable<?> callable = creators.get(param);
+            if (callable == null) {
+                try {
+                    return param.newInstance();
+                } catch (InstantiationException | IllegalAccessException ex) {
+                    throw new IllegalStateException(ex);
+                }
+            } else {
+                try {
+                    return callable.call();
+                } catch (Exception ex) {
+                    throw new IllegalStateException(ex);
+                }
+            }
+        });
+
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Stage stage = new Stage();
+        stage.setResizable(false);
+        stage.setOnShown(event -> {
+            returnBtn.setDisable(true);
+            setRoleBtn.setDisable(true);
+        });
+        stage.setOnHiding(event -> {
+            returnBtn.setDisable(false);
+            setRoleBtn.setDisable(false);
+            showUsers();
+        });
+        stage.setTitle("Изменить роль");
+        stage.setScene(new Scene(root));
+        stage.show();
+
     }
 
 }

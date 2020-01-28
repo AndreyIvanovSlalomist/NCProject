@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane prefHeight="182.0" prefWidth="207.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nc.musiclib.net.client.SetRole">
+   <children>
+      <Button fx:id="cancelBtn" layoutX="21.0" layoutY="134.0" mnemonicParsing="false" onAction="#onClickCancel" text="Отмена" />
+      <Button fx:id="saveBtn" layoutX="115.0" layoutY="134.0" mnemonicParsing="false" onAction="#onClickSave" text="Сохранить" />
+      <CheckBox fx:id="userRole" layoutX="37.0" layoutY="47.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="130.0" onAction="#onClickUserRole" text="Пользователь" />
+      <Label fx:id="userName" layoutX="21.0" layoutY="14.0" />
+      <CheckBox fx:id="moderatorRole" layoutX="37.0" layoutY="74.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="130.0" onAction="#onClickModeratorRole" text="Модератор" />
+      <CheckBox fx:id="administratorRole" layoutX="37.0" layoutY="100.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="130.0" onAction="#onClickAdministratorRole" text="Администратор" />
+   </children>
+</AnchorPane>
