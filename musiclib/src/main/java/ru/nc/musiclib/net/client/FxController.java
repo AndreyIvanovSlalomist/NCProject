@@ -12,6 +12,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import ru.nc.musiclib.classes.Genre;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.logger.MusicLibLogger;
@@ -22,6 +23,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 public class FxController {
 
@@ -104,6 +108,8 @@ public class FxController {
 
     @FXML
     public void onClickAdd(ActionEvent actionEvent) {
+        if (clientSocket == null)
+            return;
         edit = false;
         FXMLLoader loader = new FXMLLoader();
         Parent root = null;
@@ -144,6 +150,8 @@ public class FxController {
 
     @FXML
     public void onClickUpdate(ActionEvent actionEvent) {
+        if (clientSocket == null)
+            return;
         edit = true;
         if (table.getSelectionModel().getSelectedItem() != null) {
             name = table.getSelectionModel().getSelectedItem().getName();
@@ -199,6 +207,8 @@ public class FxController {
 
     @FXML
     public void onClickDelete(ActionEvent actionEvent) {
+        if (clientSocket == null)
+            return;
         if (table.getSelectionModel().getSelectedItem() != null) {
             try {
                 clientSocket.getOos().writeObject(ConstProtocol.delete);
@@ -222,6 +232,8 @@ public class FxController {
     }
 
     public void onClickSaveToFile(ActionEvent actionEvent) throws IOException {
+        if (clientSocket == null)
+            return;
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extensionFilter);
@@ -236,6 +248,8 @@ public class FxController {
     }
 
     public void onClickLoadFromFile(ActionEvent actionEvent) throws IOException {
+        if (clientSocket == null)
+            return;
 
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
@@ -250,6 +264,8 @@ public class FxController {
     }
 
     public void onClickRefresh(ActionEvent actionEvent) {
+        if (clientSocket == null)
+            return;
 
         logger.info("gat all");
         table.getItems().clear();
@@ -281,11 +297,59 @@ public class FxController {
                     }
 
                     if (inputObject instanceof Track) {
+                        logger.info(((Track) inputObject).toString());
                         table.getItems().add((Track) inputObject);
                     }
                 } while (!((inputObject instanceof ConstProtocol) && ((ConstProtocol) inputObject == ConstProtocol.finish)));
             }
         }
 
+    }
+
+    public void onClickUsers(ActionEvent actionEvent) {
+        if (clientSocket == null)
+            return;
+        Map<Class, Callable<?>> creators = new HashMap<>();
+        creators.put(UsersController.class, (Callable<UsersController>) () -> new UsersController(clientSocket));
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/users.fxml"));
+
+        loader.setControllerFactory(param -> {
+            Callable<?> callable = creators.get(param);
+            if (callable == null) {
+                try {
+                    return param.newInstance();
+                } catch (InstantiationException | IllegalAccessException ex) {
+                    throw new IllegalStateException(ex);
+                }
+            } else {
+                try {
+                    return callable.call();
+                } catch (Exception ex) {
+                    throw new IllegalStateException(ex);
+                }
+            }
+        });
+
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Stage stage = new Stage();
+        stage.setResizable(false);
+        stage.setOnShown(event -> {
+            add.getParentMenu().setDisable(true);
+            connect.getParentMenu().setDisable(true);
+        });
+        stage.setOnHiding(event -> {
+            add.getParentMenu().setDisable(false);
+            connect.getParentMenu().setDisable(false);
+        });
+        stage.setTitle("Пользователи");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 }

@@ -28,12 +28,21 @@
         </genre>
     </track>
     <track>
-        <name>O'Children</name>
+        <name>O'Children23452345</name>
         <singer>Nick Cave &amp; The Bad Seeds</singer>
         <album>Abattoir Blues/The Lyre of Orpheus</album>
         <length>345</length>
         <genre>
             <genreName>rock</genreName>
+        </genre>
+    </track>
+    <track>
+        <name>ew</name>
+        <singer>qer</singer>
+        <album>qew</album>
+        <length>34</length>
+        <genre>
+            <genreName>qrew</genreName>
         </genre>
     </track>
 </musiclib>

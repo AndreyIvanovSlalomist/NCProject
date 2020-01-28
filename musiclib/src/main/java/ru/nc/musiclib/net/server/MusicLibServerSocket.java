@@ -183,6 +183,7 @@ public class MusicLibServerSocket implements Runnable {
         for (Track track : trackList) {
 
             try {
+                logger.info(track.toString());
                 out.writeObject(track);
             } catch (IOException e) {
                 e.printStackTrace();

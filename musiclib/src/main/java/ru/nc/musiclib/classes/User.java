@@ -5,9 +5,10 @@ import ru.nc.musiclib.net.Role;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import java.io.Serializable;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class User {
+public class User implements Serializable {
     @XmlElement(name = "userName")
     private String userName;
     @XmlElement(name = "password")

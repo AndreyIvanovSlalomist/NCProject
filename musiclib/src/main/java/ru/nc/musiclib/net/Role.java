@@ -1,3 +1,5 @@
 package ru.nc.musiclib.net;
 
-public enum Role {user, moderator, administrator}
+import java.io.Serializable;
+
+public enum Role implements Serializable {user, moderator, administrator}
