@@ -261,6 +261,8 @@ public class MusicModel implements Model, Observable {
     @Override
     public boolean update(Track oldTrack, String name, String singer, String album, int length, String genreName) {
         Track track = findTrack(oldTrack.getName(), oldTrack.getSinger(), oldTrack.getAlbum(), oldTrack.getLengthInt());
+        if (track == null)
+            return false;
         track.setName(name);
         track.setSinger(singer);
         track.setAlbum(album);
