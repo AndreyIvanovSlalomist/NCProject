@@ -17,6 +17,7 @@ import ru.nc.musiclib.classes.Genre;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.net.ConstProtocol;
+import ru.nc.musiclib.net.Role;
 import ru.nc.musiclib.net.StreamFile;
 
 import java.io.File;
@@ -30,6 +31,8 @@ import java.util.concurrent.Callable;
 public class FxController {
 
     private final static MusicLibLogger logger = new MusicLibLogger(FxController.class);
+    public MenuItem users;
+    private Role currentRole = null;
     public static boolean edit;
     public static String name;
     public static String singer;
@@ -57,6 +60,26 @@ public class FxController {
     @FXML
     public TableView<Track> table;
     private ClientSocket clientSocket;
+
+    private void setCurrentRole(Role role){
+        currentRole = role;
+        add.setVisible(currentRole.equals(Role.administrator)||currentRole.equals(Role.moderator));
+        update.setVisible(currentRole.equals(Role.administrator)||currentRole.equals(Role.moderator));
+        delete.setVisible(currentRole.equals(Role.administrator)||currentRole.equals(Role.moderator));
+        saveToFile.setVisible(currentRole.equals(Role.administrator)||currentRole.equals(Role.moderator));
+        loadFromFile.setVisible(currentRole.equals(Role.administrator)||currentRole.equals(Role.moderator));
+        refresh.setVisible(currentRole.equals(Role.administrator)||currentRole.equals(Role.moderator)||currentRole.equals(Role.user));
+
+        users.setVisible(currentRole.equals(Role.administrator));
+    }
+
+
+
+    @FXML
+    void initialize() {
+      // для тестов setCurrentRole(Role.moderator);
+    }
+
 
     @FXML
     public void onClickConnect(ActionEvent actionEvent) {
