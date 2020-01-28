@@ -117,6 +117,7 @@ public class MusicLibServerSocket implements Runnable {
         for (User user : userList) {
 
             try {
+                logger.info(user.toString());
                 out.writeObject(user);
             } catch (IOException e) {
                 e.printStackTrace();

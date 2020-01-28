@@ -20,10 +20,14 @@ public class User implements Serializable {
         this.userName = userName;
         this.password = password;
     }
-
+    @Override
+    public String toString() {
+        return "user [userName=" + userName + ", password= секрет, Role=" + role.toString() + "]";
+    }
     public void setRole(Role role) {
         this.role = role;
     }
+
 
     public User() {
     }

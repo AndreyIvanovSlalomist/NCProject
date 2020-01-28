@@ -39,6 +39,7 @@ public class ClientSocket {
         } catch (IOException e) {
             logger.error("Ошибка при открытии сокета на порту " + port);
         }
+
         try {
             oos = new ObjectOutputStream(socket.getOutputStream());
         } catch (IOException e) {

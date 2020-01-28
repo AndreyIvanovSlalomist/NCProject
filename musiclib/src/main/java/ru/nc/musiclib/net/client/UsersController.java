@@ -66,7 +66,9 @@ public class UsersController {
                     }
 
                     if (inputObject instanceof User) {
+                        logger.info(inputObject.toString());
                         usersTable.getItems().add((User) inputObject);
+                        inputObject = null;
                     }
                 } while (!((inputObject == ConstProtocol.finish)));
             }
