@@ -112,7 +112,11 @@ public class MusicLibServerSocket implements Runnable {
     }
 
     private void getAllUsers(ObjectOutputStream out) {
-
+        try {
+            out.reset();
+        } catch (IOException e) {
+            logger.error("Ошибка при отчистки потока на запись");
+        }
         List<User> userList = userModel.getAllUser();
         for (User user : userList) {
 
@@ -162,6 +166,11 @@ public class MusicLibServerSocket implements Runnable {
             if (userModel.checkUser((String) userName, (String) password)) {
                 out.writeObject(ConstProtocol.errorUser);
             } else {
+                try {
+                    out.reset();
+                } catch (IOException e) {
+                    logger.error("Ошибка при отчистки потока на запись");
+                }
                 out.writeObject(userModel.findUser((String) userName).getRole());
             }
         }
@@ -179,7 +188,11 @@ public class MusicLibServerSocket implements Runnable {
     }
 
     private void getAll(ObjectOutputStream out) {
-
+        try {
+            out.reset();
+        } catch (IOException e) {
+            logger.error("Ошибка при отчистки потока на запись");
+        }
         List<Track> trackList = model.getAll();
         for (Track track : trackList) {
 
@@ -251,6 +264,11 @@ public class MusicLibServerSocket implements Runnable {
             int inputInt = (int) inputObject;
             inputObject = in.readObject();
             if (inputObject instanceof String) {
+                try {
+                    out.reset();
+                } catch (IOException e) {
+                    logger.error("Ошибка при отчистки потока на запись");
+                }
                 String findValue = (String) inputObject;
                 out.writeObject(model.find(inputInt, findValue));
                 out.flush();
