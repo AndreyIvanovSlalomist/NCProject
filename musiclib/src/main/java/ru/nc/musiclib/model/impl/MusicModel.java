@@ -357,8 +357,6 @@ public class MusicModel implements Model, Observable {
                 }
             }
         }
-
-
         return trackList;
     }
 
@@ -387,6 +385,48 @@ public class MusicModel implements Model, Observable {
             }
         }
         return null;
+    }
+
+    private String replaceFindValue(String findValue) {
+        if (findValue.equals(""))
+            return findValue;
+        findValue = findValue.replaceAll("\\*", ".*");
+        findValue = findValue.replaceAll("\\?", ".?");
+        findValue = "^" + findValue + "$";
+        return findValue.toUpperCase();
+    }
+
+    private boolean matcherFind (String findValue, String currentValue){
+        if (findValue.equals(""))
+            return true;
+        Pattern pattern = Pattern.compile(findValue);
+        Matcher matcher = pattern.matcher(currentValue);
+        return matcher.find();
+    }
+
+    private boolean checkForFind(Track track, String name, String singer, String album, String genreName) {
+        String currentName, currentSinger, currentAlbum, currentGenreName;
+        currentName = track.getName().toUpperCase();
+        currentSinger = track.getSinger().toUpperCase();
+        currentAlbum = track.getAlbum().toUpperCase();
+        currentGenreName = track.getGenreName().toUpperCase();
+        return matcherFind(name, currentName) && matcherFind(singer, currentSinger) &&
+                matcherFind(album, currentAlbum) && matcherFind(genreName, currentGenreName);
+    }
+
+    @Override
+    public List<Track> filter(String name, String singer, String album, String genreName) {
+        List<Track> trackList = new ArrayList<>();
+        name = replaceFindValue(name);
+        singer = replaceFindValue(singer);
+        album = replaceFindValue(album);
+        genreName = replaceFindValue(genreName);
+        for (Track track : tracks.getTracks()) {
+            if (checkForFind(track, name, singer, album, genreName)) {
+                trackList.add(track);
+            }
+        }
+        return trackList;
     }
 
     private Genre findGenre(String genreName) {

@@ -5,10 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -32,6 +29,12 @@ public class FxController {
 
     private final static MusicLibLogger logger = new MusicLibLogger(FxController.class);
     public MenuItem users;
+    public TextField filterName;
+    public TextField filterSinger;
+    public TextField filterAlbum;
+    public TextField filterGenre;
+    public Button filterBtn;
+    public Button filterCancelBtn;
     private Role currentRole = null;
     public static boolean edit;
     public static String name;
@@ -127,7 +130,6 @@ public class FxController {
             }
         }
     }
-
 
     @FXML
     public void onClickAdd(ActionEvent actionEvent) {
@@ -289,8 +291,12 @@ public class FxController {
     public void onClickRefresh(ActionEvent actionEvent) {
         if (clientSocket == null)
             return;
-
-        logger.info("gat all");
+        boolean isFiltered = !(filterName.getText().equals("") && filterSinger.getText().equals("") && filterAlbum.getText().equals("") && filterGenre.getText().equals(""));
+        if (isFiltered) {
+            logger.info("get filter");
+        } else {
+            logger.info("get all");
+        }
         table.getItems().clear();
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         singerColumn.setCellValueFactory(new PropertyValueFactory<>("singer"));
@@ -300,7 +306,11 @@ public class FxController {
         {
             {
                 try {
-                    clientSocket.getOos().writeObject(ConstProtocol.getAll);
+                    if (isFiltered) {
+                        clientSocket.getOos().writeObject(ConstProtocol.filter);
+                    } else {
+                        clientSocket.getOos().writeObject(ConstProtocol.getAll);
+                    }
                 } catch (IOException e) {
                     logger.error("Ошибка записи в поток");
                 }
@@ -308,6 +318,20 @@ public class FxController {
                     clientSocket.getOos().flush();
                 } catch (IOException e) {
                     logger.error("Ошибка при отправки потока");
+                }
+                if (isFiltered) {
+                    try {
+                        clientSocket.getOos().writeObject(filterName.getText());
+                        clientSocket.getOos().flush();
+                        clientSocket.getOos().writeObject(filterSinger.getText());
+                        clientSocket.getOos().flush();
+                        clientSocket.getOos().writeObject(filterAlbum.getText());
+                        clientSocket.getOos().flush();
+                        clientSocket.getOos().writeObject(filterGenre.getText());
+                        clientSocket.getOos().flush();
+                    } catch (IOException e) {
+                        logger.error("Ошибка записи в поток");
+                    }
                 }
                 Object inputObject = null;
                 do {
@@ -374,5 +398,24 @@ public class FxController {
         stage.setTitle("Пользователи");
         stage.setScene(new Scene(root));
         stage.show();
+    }
+
+    public void onClickFilter() {
+        if (clientSocket == null)
+            return;
+        if (filterName.getText().equals("") && filterSinger.getText().equals("") && filterAlbum.getText().equals("") && filterGenre.getText().equals("")) {
+        } else {
+            onClickRefresh(null);
+        }
+    }
+
+    public void onClickFilterCancel() {
+        if (clientSocket == null)
+            return;
+        filterName.setText("");
+        filterSinger.setText("");
+        filterAlbum.setText("");
+        filterGenre.setText("");
+        onClickRefresh(null);
     }
 }

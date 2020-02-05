@@ -51,6 +51,10 @@ public class MusicLibServerSocket implements Runnable {
                             find(out, in);
                             break;
                         }
+                        case filter: {
+                            filter(out, in);
+                            break;
+                        }
                         case getAll: {
                             getAll(out);
                             break;
@@ -108,6 +112,58 @@ public class MusicLibServerSocket implements Runnable {
             logger.error("Ошибка класс не найден");
         } catch (IOException e) {
             logger.error("Ошибка чтения/записи в поток");
+        }
+    }
+
+    private void filter(ObjectOutputStream out, ObjectInputStream in) throws IOException, ClassNotFoundException {
+        Object inputObject;
+        String filterName, filterSinger, filterAlbum, filterGenreName;
+        inputObject = in.readObject();
+        if (inputObject instanceof String) {
+            filterName = (String) inputObject;
+            inputObject = in.readObject();
+            if (inputObject instanceof String) {
+                filterSinger = (String) inputObject;
+                inputObject = in.readObject();
+                if (inputObject instanceof String) {
+                    filterAlbum = (String) inputObject;
+                    inputObject = in.readObject();
+                    if (inputObject instanceof String) {
+                        filterGenreName = (String) inputObject;
+                        try {
+                            out.reset();
+                        } catch (IOException e) {
+                            logger.error("Ошибка при отчистки потока на запись");
+                        }
+                        List<Track> trackList = model.filter(filterName, filterSinger, filterAlbum, filterGenreName);
+                        for (Track track : trackList) {
+                            try {
+                                logger.info(track.toString());
+                                out.writeObject(track);
+                            } catch (IOException e) {
+                                logger.error("Ошибка при записи в поток");
+                            }
+                            try {
+                                out.flush();
+                            } catch (IOException e) {
+                                logger.error("Ошибка при отправки потока");
+                            }
+                        }
+                        try {
+                            out.writeObject(ConstProtocol.finish);
+                        } catch (IOException e) {
+                            logger.error("Ошибка при записи в поток");
+                        }
+                        try {
+                            out.flush();
+                        } catch (IOException e) {
+                            logger.error("Ошибка при отправки потока");
+                        }
+
+
+                    }
+                }
+            }
         }
     }
 

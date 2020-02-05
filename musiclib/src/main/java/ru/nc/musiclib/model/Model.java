@@ -41,4 +41,6 @@ public interface Model {
     FileInputStream getFIle(String fileName);
 
     void setSort(int numberField, boolean isRevers);
+
+    List<Track> filter(String filterName, String filterSinger, String filterAlbum, String filterGenreName);
 }
