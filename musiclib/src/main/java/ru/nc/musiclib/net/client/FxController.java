@@ -103,7 +103,10 @@ public class FxController {
         if (clientSocket != null) {
             if (!clientSocket.getSocket().isOutputShutdown()) {
                 logger.info("Отправляем на сервер exit");
-
+                filterName.setText("");
+                filterSinger.setText("");
+                filterAlbum.setText("");
+                filterGenre.setText("");
                 try {
                     clientSocket.getOos().writeObject(ConstProtocol.exit);
                 } catch (IOException e) {
