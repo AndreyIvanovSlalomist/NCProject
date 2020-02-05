@@ -321,9 +321,7 @@ public class MusicModel implements Model, Observable {
     public List<Track> find(int colNumber, String findValue) {
         List<Track> trackList = new ArrayList<>();
         String curValue;
-        findValue = findValue.replaceAll("\\*", ".*");
-        findValue = findValue.replaceAll("\\?", ".?");
-
+        findValue = replaceFindValue(findValue);
         if (colNumber > 0) {
             for (Track track : tracks.getTracks()) {
                 switch (colNumber) {
@@ -339,10 +337,6 @@ public class MusicModel implements Model, Observable {
                         curValue = track.getAlbum();
                         break;
                     }
-                  /*  case 4: {
-                        curValue = track.getLength();
-                        break;
-                    }*/
                     case 4: {
                         curValue = track.getGenreName();
                         break;
@@ -350,9 +344,7 @@ public class MusicModel implements Model, Observable {
                     default:
                         curValue = "";
                 }
-                Pattern pattern = Pattern.compile(findValue);
-                Matcher matcher = pattern.matcher(curValue);
-                if (matcher.find()) {
+                if (matcherFind(findValue, curValue)) {
                     trackList.add(track);
                 }
             }
@@ -396,22 +388,18 @@ public class MusicModel implements Model, Observable {
         return findValue.toUpperCase();
     }
 
-    private boolean matcherFind (String findValue, String currentValue){
+    private boolean matcherFind(String findValue, String currentValue) {
         if (findValue.equals(""))
             return true;
+        currentValue = currentValue.toUpperCase();
         Pattern pattern = Pattern.compile(findValue);
         Matcher matcher = pattern.matcher(currentValue);
         return matcher.find();
     }
 
     private boolean checkForFind(Track track, String name, String singer, String album, String genreName) {
-        String currentName, currentSinger, currentAlbum, currentGenreName;
-        currentName = track.getName().toUpperCase();
-        currentSinger = track.getSinger().toUpperCase();
-        currentAlbum = track.getAlbum().toUpperCase();
-        currentGenreName = track.getGenreName().toUpperCase();
-        return matcherFind(name, currentName) && matcherFind(singer, currentSinger) &&
-                matcherFind(album, currentAlbum) && matcherFind(genreName, currentGenreName);
+        return matcherFind(name, track.getName()) && matcherFind(singer, track.getSinger()) &&
+                matcherFind(album, track.getAlbum()) && matcherFind(genreName, track.getGenreName());
     }
 
     @Override
