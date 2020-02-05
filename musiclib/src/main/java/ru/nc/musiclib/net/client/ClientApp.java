@@ -14,11 +14,11 @@ public class ClientApp extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        String fxmlFile = "/fxml/main.fxml";
+        String fxmlFile = "/fxml/authorization.fxml";
         FXMLLoader loader = new FXMLLoader();
         Parent root = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
         stage.setResizable(false);
-        stage.setTitle("Музыкальная библиотека");
+        stage.setTitle("Авторизация");
         stage.setScene(new Scene(root));
         stage.show();
     }

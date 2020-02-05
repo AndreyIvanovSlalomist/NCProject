@@ -6,7 +6,7 @@ import ru.nc.musiclib.net.Role;
 import java.util.List;
 
 public interface UserModel {
-    void add(String userName, String password);
+    boolean add(String userName, String password);
     void setRole(String userName, Role role);
     Role getRole(String userName);
     User findUser(String userName);

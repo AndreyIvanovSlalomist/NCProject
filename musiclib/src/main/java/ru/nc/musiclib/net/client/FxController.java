@@ -35,7 +35,6 @@ public class FxController {
     public TextField filterGenre;
     public Button filterBtn;
     public Button filterCancelBtn;
-    private Role currentRole = null;
     public static boolean edit;
     public static String name;
     public static String singer;
@@ -51,87 +50,35 @@ public class FxController {
     public TableColumn<Track, Integer> lengthColumn;
     public TableColumn<Track, String> genreColumn;
     @FXML
-    public MenuItem connect;
-    @FXML
     public MenuItem add;
     @FXML
     public MenuItem update;
     @FXML
     public MenuItem delete;
     @FXML
-    public MenuItem exit;
-    @FXML
     public TableView<Track> table;
     private ClientSocket clientSocket;
 
-    private void setCurrentRole(Role role){
-        currentRole = role;
-        add.setVisible(currentRole.equals(Role.administrator)||currentRole.equals(Role.moderator));
-        update.setVisible(currentRole.equals(Role.administrator)||currentRole.equals(Role.moderator));
-        delete.setVisible(currentRole.equals(Role.administrator)||currentRole.equals(Role.moderator));
-        saveToFile.setVisible(currentRole.equals(Role.administrator)||currentRole.equals(Role.moderator));
-        loadFromFile.setVisible(currentRole.equals(Role.administrator)||currentRole.equals(Role.moderator));
-        refresh.setVisible(currentRole.equals(Role.administrator)||currentRole.equals(Role.moderator)||currentRole.equals(Role.user));
-
-        users.setVisible(currentRole.equals(Role.administrator));
+    public void setCurrentRole(Role role){
+        final boolean value = role.equals(Role.administrator) || role.equals(Role.moderator);
+        add.setVisible(value);
+        update.setVisible(value);
+        delete.setVisible(value);
+        saveToFile.setVisible(value);
+        loadFromFile.setVisible(value);
+        refresh.setVisible(value || role.equals(Role.user));
+        users.setVisible(role.equals(Role.administrator));
     }
-
-
 
     @FXML
     void initialize() {
-      // для тестов setCurrentRole(Role.moderator);
     }
 
-
-    @FXML
-    public void onClickConnect(ActionEvent actionEvent) {
-        if (clientSocket == null) {
-            try {
-                clientSocket = new ClientSocket(InetAddress.getLocalHost(), 4444);
-            } catch (UnknownHostException e) {
-                logger.error("Ошибка Неизвестен хост");
-            }
-            if (!clientSocket.getSocket().isOutputShutdown()) {
-                onClickRefresh(null);
-            }
-        }
+    public void setConnection(ClientSocket clientSocket){
+        this.clientSocket = clientSocket;
     }
-
-    @FXML
-    public void onClickExit(ActionEvent actionEvent) {
-        if (clientSocket != null) {
-            if (!clientSocket.getSocket().isOutputShutdown()) {
-                logger.info("Отправляем на сервер exit");
-                filterName.setText("");
-                filterSinger.setText("");
-                filterAlbum.setText("");
-                filterGenre.setText("");
-                try {
-                    clientSocket.getOos().writeObject(ConstProtocol.exit);
-                } catch (IOException e) {
-                    logger.error("Ошибка при записи в поток" + e.getLocalizedMessage());
-                }
-                try {
-                    clientSocket.getOos().flush();
-                } catch (IOException e) {
-                    logger.error("Ошибка при отправке");
-                }
-                try {
-                    clientSocket.getOis().close();
-                } catch (IOException e) {
-
-                    logger.error("Ошибка при закрытии потока на чтение");
-                }
-                try {
-                    clientSocket.getOos().close();
-                } catch (IOException e) {
-                    logger.error("Ошибка при закрытии потока на запись");
-                }
-                clientSocket = null;
-                table.getItems().clear();
-            }
-        }
+    public void refresh(){
+        onClickRefresh(null);
     }
 
     @FXML
@@ -148,13 +95,14 @@ public class FxController {
         }
         Stage stage = new Stage();
         stage.setResizable(false);
+        stage.setOnCloseRequest(event -> {
+            AddFormController.isCanceled = true;
+        });
         stage.setOnShown(event -> {
             add.getParentMenu().setDisable(true);
-            connect.getParentMenu().setDisable(true);
         });
         stage.setOnHiding(event -> {
             add.getParentMenu().setDisable(false);
-            connect.getParentMenu().setDisable(false);
             if (!AddFormController.isCanceled) {
                 try {
                     clientSocket.getOos().writeObject(ConstProtocol.add);
@@ -175,7 +123,6 @@ public class FxController {
         stage.show();
 
     }
-
     @FXML
     public void onClickUpdate(ActionEvent actionEvent) {
         if (clientSocket == null)
@@ -191,7 +138,7 @@ public class FxController {
             FXMLLoader loader = new FXMLLoader();
             Parent root = null;
             try {
-                root = (Parent) loader.load(getClass().getResourceAsStream("/fxml/addForm.fxml"));
+                root = loader.load(getClass().getResourceAsStream("/fxml/addForm.fxml"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -199,11 +146,9 @@ public class FxController {
             stage.setResizable(false);
             stage.setOnShown(event -> {
                 add.getParentMenu().setDisable(true);
-                connect.getParentMenu().setDisable(true);
             });
             stage.setOnHiding(event -> {
                 add.getParentMenu().setDisable(false);
-                connect.getParentMenu().setDisable(false);
                 if (!AddFormController.isCanceled) {
                     try {
                         clientSocket.getOos().writeObject(ConstProtocol.update);
@@ -216,7 +161,7 @@ public class FxController {
                         clientSocket.getOos().flush();
                         onClickRefresh(null);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.error("Ошибка записи в поток");
                     }
                 }
             });
@@ -320,7 +265,7 @@ public class FxController {
                 try {
                     clientSocket.getOos().flush();
                 } catch (IOException e) {
-                    logger.error("Ошибка при отправки потока");
+                    logger.error("Ошибка при отправке потока");
                 }
                 if (isFiltered) {
                     try {
@@ -343,7 +288,7 @@ public class FxController {
                     } catch (ClassNotFoundException e) {
                         logger.error("Ошибка класс не найден");
                     } catch (IOException e) {
-                        logger.error("Ошибка чтения из поток");
+                        logger.error("Ошибка чтения из потока");
                     }
 
                     if (inputObject instanceof Track) {
@@ -353,7 +298,6 @@ public class FxController {
                 } while (!((inputObject instanceof ConstProtocol) && ((ConstProtocol) inputObject == ConstProtocol.finish)));
             }
         }
-
     }
 
     public void onClickUsers(ActionEvent actionEvent) {
@@ -392,11 +336,9 @@ public class FxController {
         stage.setResizable(false);
         stage.setOnShown(event -> {
             add.getParentMenu().setDisable(true);
-            connect.getParentMenu().setDisable(true);
         });
         stage.setOnHiding(event -> {
             add.getParentMenu().setDisable(false);
-            connect.getParentMenu().setDisable(false);
         });
         stage.setTitle("Пользователи");
         stage.setScene(new Scene(root));

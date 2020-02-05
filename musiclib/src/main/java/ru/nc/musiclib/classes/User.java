@@ -16,20 +16,19 @@ public class User implements Serializable {
     @XmlElement(name = "role")
     private Role role;
 
-    public User(String userName, String password) {
+    public User(String userName, String password, Role role) {
         this.userName = userName;
         this.password = password;
+        this.role = role;
+    }
+    public User() {
     }
     @Override
     public String toString() {
-        return "user [userName=" + userName + ", password= секрет, Role=" + role.toString() + "]";
+        return "user [userName=" + userName + ", password = секрет, Role=" + role.toString() + "]";
     }
     public void setRole(Role role) {
         this.role = role;
-    }
-
-
-    public User() {
     }
 
     public String getUserName() {

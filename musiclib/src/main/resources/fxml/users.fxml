@@ -16,7 +16,7 @@
         <children>
           <TableView fx:id="usersTable" layoutX="-1.0" prefHeight="346.0" prefWidth="590.0">
             <columns>
-               <TableColumn fx:id="name" prefWidth="278.0" text="Пользовотель" />
+               <TableColumn fx:id="name" prefWidth="278.0" text="Пользователь" />
                <TableColumn fx:id="role" prefWidth="217.0" text="Роль" />
             </columns></TableView>
         </children>

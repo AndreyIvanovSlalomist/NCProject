@@ -15,8 +15,6 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Файл">
                     <items>
-                        <MenuItem fx:id="connect" mnemonicParsing="false" onAction="#onClickConnect" text="Подключиться" />
-                        <MenuItem fx:id="exit" mnemonicParsing="false" onAction="#onClickExit" text="Отключиться" />
                         <MenuItem fx:id="saveToFile" mnemonicParsing="false" onAction="#onClickSaveToFile" text="Сохранить в файл" />
                         <MenuItem fx:id="loadFromFile" mnemonicParsing="false" onAction="#onClickLoadFromFile" text="Загрузить из файла" />
                         <MenuItem fx:id="users" mnemonicParsing="false" onAction="#onClickUsers" text="Пользователи" />

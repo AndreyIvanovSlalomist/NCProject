@@ -23,18 +23,22 @@ public class UsersModelImpl implements UserModel {
     public UsersModelImpl() {
         load();
         if (users.getUsers().size() == 0){
-            users.getUsers().add(new User("admin", "admin"));
-            setRole("admin", Role.administrator);
+            users.getUsers().add(new User("admin", "admin", Role.administrator));
+//            setRole("admin", Role.administrator);
             logger.info("UsersModelImpl add admin");
             save();
         }
     }
 
     @Override
-    public void add(String userName, String password) {
+    public boolean add(String userName, String password) {
         if (findUser(userName) == null) {
-            users.getUsers().add(new User(userName, password));
+            users.getUsers().add(new User(userName, password, Role.user));
+            logger.info("Пользователь "+userName+" добавлен");
             save();
+            return true;
+        }else {
+            return false;
         }
     }
 

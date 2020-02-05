@@ -15,4 +15,14 @@
         <password>user</password>
         <role>user</role>
     </users>
+    <users>
+        <userName>user1</userName>
+        <password>user</password>
+        <role>moderator</role>
+    </users>
+    <users>
+        <userName>user3</userName>
+        <password>user</password>
+        <role>user</role>
+    </users>
 </users>

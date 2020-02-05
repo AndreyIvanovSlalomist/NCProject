@@ -83,9 +83,8 @@ public class MusicLibServerSocket implements Runnable {
                             loadFromFile(in);
                             break;
                         }
-
                         case addUser: {
-                            addUser(in);
+                            addUser(in,out);
                             break;
                         }
                         case checkUser: {
@@ -109,7 +108,7 @@ public class MusicLibServerSocket implements Runnable {
             logger.info("Пользователь закрывает соединение");
         } catch (ClassNotFoundException e) {
 
-            logger.error("Ошибка класс не найден");
+            logger.error("Ошибка: Класс не найден");
         } catch (IOException e) {
             logger.error("Ошибка чтения/записи в поток");
         }
@@ -171,7 +170,7 @@ public class MusicLibServerSocket implements Runnable {
         try {
             out.reset();
         } catch (IOException e) {
-            logger.error("Ошибка при отчистки потока на запись");
+            logger.error("Ошибка при очистке потока на запись");
         }
         List<User> userList = userModel.getAllUser();
         for (User user : userList) {
@@ -220,26 +219,31 @@ public class MusicLibServerSocket implements Runnable {
         if (userName instanceof String &&
                 password instanceof String) {
             if (userModel.checkUser((String) userName, (String) password)) {
-                out.writeObject(ConstProtocol.errorUser);
-            } else {
                 try {
                     out.reset();
                 } catch (IOException e) {
-                    logger.error("Ошибка при отчистки потока на запись");
+                    logger.error("Ошибка при очистке потока на запись");
                 }
                 out.writeObject(userModel.findUser((String) userName).getRole());
+            } else {
+                out.writeObject(ConstProtocol.errorUser);
             }
         }
     }
 
-    private void addUser(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        Object userName;
-        Object password;
+    private void addUser(ObjectInputStream in, ObjectOutputStream out) throws IOException, ClassNotFoundException {
+        Object userName, password;
         userName = in.readObject();
         password = in.readObject();
         if (userName instanceof String &&
                 password instanceof String) {
-            userModel.add((String) userName, (String) password);
+            if(userModel.add((String) userName, (String) password)){
+                out.writeObject("OK");
+                out.flush();
+            }else{
+                out.writeObject("Cancel");
+            }
+
         }
     }
 
@@ -247,7 +251,7 @@ public class MusicLibServerSocket implements Runnable {
         try {
             out.reset();
         } catch (IOException e) {
-            logger.error("Ошибка при отчистки потока на запись");
+            logger.error("Ошибка при очистке потока на запись");
         }
         List<Track> trackList = model.getAll();
         for (Track track : trackList) {
@@ -323,7 +327,7 @@ public class MusicLibServerSocket implements Runnable {
                 try {
                     out.reset();
                 } catch (IOException e) {
-                    logger.error("Ошибка при отчистки потока на запись");
+                    logger.error("Ошибка при очистке потока на запись");
                 }
                 String findValue = (String) inputObject;
                 out.writeObject(model.find(inputInt, findValue));
