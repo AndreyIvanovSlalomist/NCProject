@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Track implements Serializable {
+public class Track implements Serializable, Cloneable {
     @XmlElement(name = "name")
     private String name;
     @XmlElement(name = "singer")
@@ -25,6 +25,22 @@ public class Track implements Serializable {
     }
 
     public Track() {
+    }
+
+    @Override
+    public Object clone()  {
+        Object track = null;
+        try {
+            track = super.clone();
+            ((Track) track).setName(this.getName());
+            ((Track) track).setSinger(this.getSinger());
+            ((Track) track).setAlbum(this.getAlbum());
+            ((Track) track).setLength(this.getLengthInt());
+            ((Track) track).setGenre(new Genre(this.getGenreName()));
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return track;
     }
 
     public Track(String name, String singer, String album, int length, Genre genre) {

@@ -2,14 +2,13 @@ package ru.nc.musiclib.net.client;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import ru.nc.musiclib.net.ConstProtocol;
 import ru.nc.musiclib.net.Role;
 
-import java.io.IOException;
+import static ru.nc.musiclib.net.ClientUtils.alertSelectedItem;
+import static ru.nc.musiclib.net.ClientUtils.setRole;
 
 public class SetRole {
 
@@ -35,23 +34,11 @@ public class SetRole {
     }
 
     public void onClickSave(ActionEvent actionEvent) {
-        if (newRole == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Ошибка!");
-            alert.setHeaderText(null);
-            alert.setContentText("Роль не выбрана!");
-            alert.showAndWait();
+        if (!alertSelectedItem(newRole, "Ошибка!", "Роль не выбрана!")) {
             return;
         }
-        try {
-            clientSocket.getOos().writeObject(ConstProtocol.setRole);
-            clientSocket.getOos().writeObject(name);
-            clientSocket.getOos().writeObject(newRole);
-            clientSocket.getOos().flush();
-            saveBtn.getScene().getWindow().hide();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        setRole(clientSocket, name, newRole);
+        saveBtn.getScene().getWindow().hide();
     }
 
     @FXML
