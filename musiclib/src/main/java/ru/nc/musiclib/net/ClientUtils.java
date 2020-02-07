@@ -35,7 +35,7 @@ public class ClientUtils {
         try {
             return new ClientSocket(InetAddress.getLocalHost(), 4444);
         } catch (UnknownHostException e) {
-            logger.error("Ошибка: Неизвестен хост");
+            logger.error("Ошибка: Неизвестен хост. " + e.toString());
         }
         return null;
     }
@@ -48,16 +48,16 @@ public class ClientUtils {
             clientSocket.getOos().writeObject(password);
             clientSocket.getOos().flush();
         } catch (IOException e) {
-            logger.error("Ошибка записи в поток!");
+            logger.error("Ошибка записи в поток!. " + e.toString());
             return null;
         }
         try {
             return clientSocket.getOis().readObject();
         } catch (IOException e) {
-            logger.error("Ошибка чтения из потока!");
+            logger.error("Ошибка чтения из потока!. " + e.toString());
             return null;
         } catch (ClassNotFoundException e) {
-            logger.error("Ошибка класс не найден!");
+            logger.error("Ошибка класс не найден!. " + e.toString());
             return null;
         }
     }
@@ -73,7 +73,7 @@ public class ClientUtils {
             clientSocket.getOos().writeObject(track);
             clientSocket.getOos().flush();
         } catch (IOException e) {
-            logger.error("Ошибка записи в поток");
+            logger.error("Ошибка записи в поток. " + e.toString());
         }
     }
 
@@ -87,7 +87,7 @@ public class ClientUtils {
             clientSocket.getOos().writeObject(genre);
             clientSocket.getOos().flush();
         } catch (IOException e) {
-            logger.error("Ошибка записи в поток");
+            logger.error("Ошибка записи в поток. " + e.toString());
         }
     }
 
@@ -98,16 +98,16 @@ public class ClientUtils {
             clientSocket.getOos().writeObject(password);
             clientSocket.getOos().flush();
         } catch (IOException e) {
-            logger.error("Ошибка записи в поток!");
+            logger.error("Ошибка записи в поток!. " + e.toString());
             return null;
         }
         try {
             return clientSocket.getOis().readObject();
         } catch (IOException e) {
-            logger.error("Ошибка чтения из потока!");
+            logger.error("Ошибка чтения из потока!. " + e.toString());
             return null;
         } catch (ClassNotFoundException e) {
-            logger.error("Ошибка класс не найден!");
+            logger.error("Ошибка класс не найден!. " + e.toString());
             return null;
         }
     }
@@ -122,7 +122,7 @@ public class ClientUtils {
             clientSocket.getOos().writeObject(track.getGenreName());
             clientSocket.getOos().flush();
         } catch (IOException e) {
-            logger.error("Ошибка записи в поток");
+            logger.error("Ошибка записи в поток. " + e.toString());
         }
     }
 
@@ -139,7 +139,7 @@ public class ClientUtils {
             }
             clientSocket.getOos().flush();
         } catch (IOException e) {
-            logger.error("Ошибка при отправке потока");
+            logger.error("Ошибка при отправке потока. " + e.toString());
             return new ArrayList<>();
         }
         if (isFiltered) {
@@ -150,7 +150,7 @@ public class ClientUtils {
                 clientSocket.getOos().writeObject(genre);
                 clientSocket.getOos().flush();
             } catch (IOException e) {
-                logger.error("Ошибка записи в поток");
+                logger.error("Ошибка записи в поток. " + e.toString());
                 return new ArrayList<>();
             }
         }
@@ -159,10 +159,10 @@ public class ClientUtils {
             try {
                 inputObject = clientSocket.getOis().readObject();
             } catch (ClassNotFoundException e) {
-                logger.error("Ошибка класс не найден");
+                logger.error("Ошибка класс не найден. " + e.toString());
                 return new ArrayList<>();
             } catch (IOException e) {
-                logger.error("Ошибка чтения из потока");
+                logger.error("Ошибка чтения из потока. " + e.toString());
                 return new ArrayList<>();
             }
             if (inputObject instanceof Track) {
@@ -180,21 +180,21 @@ public class ClientUtils {
         try {
             clientSocket.getOos().writeObject(ConstProtocol.getAllUsers);
         } catch (IOException e) {
-            logger.error("Ошибка записи в поток");
+            logger.error("Ошибка записи в поток. " + e.toString());
         }
         try {
             clientSocket.getOos().flush();
         } catch (IOException e) {
-            logger.error("Ошибка при отправки потока");
+            logger.error("Ошибка при отправки потока. " + e.toString());
         }
         Object inputObject = null;
         do {
             try {
                 inputObject = clientSocket.getOis().readObject();
             } catch (ClassNotFoundException e) {
-                logger.error("Ошибка класс не найден");
+                logger.error("Ошибка класс не найден. " + e.toString());
             } catch (IOException e) {
-                logger.error("Ошибка чтения из поток");
+                logger.error("Ошибка чтения из поток. " + e.toString());
             }
 
             if (inputObject instanceof User) {
@@ -213,7 +213,16 @@ public class ClientUtils {
             clientSocket.getOos().writeObject(role);
             clientSocket.getOos().flush();
         } catch (IOException e) {
-            logger.error("Ошибка записи в поток");
+            logger.error("Ошибка записи в поток. " + e.toString());
+        }
+    }
+    public static void deleteUser(ClientSocket clientSocket, String name) {
+        try {
+            clientSocket.getOos().writeObject(ConstProtocol.deleteUser);
+            clientSocket.getOos().writeObject(name);
+            clientSocket.getOos().flush();
+        } catch (IOException e) {
+            logger.error("Ошибка записи в поток. " + e.toString());
         }
     }
 }

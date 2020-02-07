@@ -1,5 +1,6 @@
 package ru.nc.musiclib.net.client;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -12,6 +13,7 @@ import ru.nc.musiclib.net.ClientUtils;
 import java.util.concurrent.Callable;
 
 import static ru.nc.musiclib.net.ClientUtils.alertSelectedItem;
+import static ru.nc.musiclib.net.ClientUtils.deleteUser;
 import static ru.nc.musiclib.net.LoaderFX.getStage;
 
 public class UsersController {
@@ -21,6 +23,7 @@ public class UsersController {
     public TableView<User> usersTable;
     public TableColumn<Object, Object> name;
     public TableColumn<Object, Object> role;
+    public Button deleteBtn;
 
 
     UsersController(ClientSocket clientSocket) {
@@ -70,7 +73,15 @@ public class UsersController {
             showUsers();
         });
         stage.show();
-
     }
 
+    public void onClickDelete(ActionEvent actionEvent) {
+        if (clientSocket == null)
+            return;
+        if (!alertSelectedItem(getSelectedItemFromTable(), "Ошибка!", "Пользователь не выбран!")) {
+            return;
+        }
+        deleteUser(clientSocket, getSelectedItemFromTable().getUserName());
+        showUsers();
+    }
 }
