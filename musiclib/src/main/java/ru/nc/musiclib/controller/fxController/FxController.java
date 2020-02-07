@@ -10,7 +10,7 @@ import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.net.client.ClientSocket;
 import ru.nc.musiclib.utils.ConstProtocol;
 import ru.nc.musiclib.utils.Role;
-import ru.nc.musiclib.utils.StreamFile;
+import ru.nc.musiclib.utils.StreamUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -134,7 +134,7 @@ public class FxController {
         if (file == null)
             return;
         clientSocket.getOos().writeObject(ConstProtocol.getFile);
-        StreamFile.streamToFile(clientSocket.getOis(), file.getPath());
+        StreamUtils.streamToFile(clientSocket.getOis(), file.getPath());
         onClickRefresh(null);
     }
 
@@ -149,7 +149,7 @@ public class FxController {
         if (file == null)
             return;
         clientSocket.getOos().writeObject(ConstProtocol.loadFromFile);
-        StreamFile.fileToStream(clientSocket.getOos(), file.getPath());
+        StreamUtils.fileToStream(clientSocket.getOos(), file.getPath());
 
         onClickRefresh(null);
     }

@@ -4,9 +4,9 @@ import ru.nc.musiclib.logger.MusicLibLogger;
 
 import java.io.*;
 
-public class StreamFile {
+public class StreamUtils {
 
-    private final static MusicLibLogger logger = new MusicLibLogger(StreamFile.class);
+    private final static MusicLibLogger logger = new MusicLibLogger(StreamUtils.class);
 
     public static void streamToFile(ObjectInputStream inputStream, String fileName) {
         File file = new File(fileName);
@@ -79,5 +79,36 @@ public class StreamFile {
         }
     }
 
+    public static void saveToSerializable(Object object, String fileName) {
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fileName));
+            out.writeObject(object);
+            out.close();
+        } catch (IOException e) {
+            logger.error("Ошибка при сохранении!");
+        }
+    }
+
+    public static  Object loadObjectFromFileInputStream(String fileName) {
+        Object object = null;
+        try {
+            ObjectInputStream in = new ObjectInputStream(getFIle(fileName));
+            object = in.readObject();
+            in.close();
+        } catch (IOException e) {
+            logger.error("Ошибка ввода/вывода при загрузке!");
+        } catch (ClassNotFoundException e) {
+            logger.error("Ошибка при загрузке, класс не найден!");
+        }
+        return object;
+    }
+    public static FileInputStream getFIle(String fileName) {
+        try {
+            return new FileInputStream(fileName);
+        } catch (FileNotFoundException e) {
+            logger.error("Ошибка при чтении из файла");
+        }
+        return null;
+    }
 
 }

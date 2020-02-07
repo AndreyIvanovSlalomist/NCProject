@@ -2,82 +2,36 @@ package ru.nc.musiclib.model.impl;
 
 import ru.nc.musiclib.classes.Genre;
 import ru.nc.musiclib.classes.Track;
+import ru.nc.musiclib.classes.Tracks;
 import ru.nc.musiclib.exceptions.InvalidFieldValueException;
 import ru.nc.musiclib.interfaces.Observable;
 import ru.nc.musiclib.interfaces.Observer;
 import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.model.Model;
 
-import javax.xml.bind.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import static ru.nc.musiclib.utils.StreamUtils.loadObjectFromFileInputStream;
+import static ru.nc.musiclib.utils.XMLUtils.loadFromXml;
+import static ru.nc.musiclib.utils.XMLUtils.saveToXML;
 
 public class MusicModel implements Model, Observable {
+    private static final String TRACKS_XML = "tracks.xml";
+    private static final String TRACKS_TXT = "tracks.txt";
     private final static MusicLibLogger logger = new MusicLibLogger(MusicModel.class);
-    List<Observer> observers = new ArrayList<>();
-    //List<Track> tracks = new ArrayList<>();
-    Tracks tracks = new Tracks();
-    List<Genre> genres = new ArrayList<>();
+    private List<Observer> observers = new ArrayList<>();
+    private Tracks tracks = new Tracks();
+    private List<Genre> genres = new ArrayList<>();
 
     public MusicModel() {
-        addFromFile("tracks.xml");
-        //tracks.setTracks(loadTrack("tracks.txt"));
+        addFromFile(TRACKS_XML);
         for (Track track : tracks.getTracks()) {
             if (findGenre(track.getGenre().getGenreName()) == null) {
                 genres.add(track.getGenre());
             }
         }
-    }
-
-    private static void saveToXML(Tracks tracks) {
-
-        JAXBContext jaxbContext = null;
-        try {
-            jaxbContext = JAXBContext.newInstance(Tracks.class, Track.class, Genre.class);
-        } catch (JAXBException e) {
-            logger.error("newInstance Exception");
-            return;
-        }
-        Marshaller jaxbMarshaller = null;
-        try {
-            jaxbMarshaller = jaxbContext.createMarshaller();
-        } catch (JAXBException e) {
-            logger.error("createMarshaller Exception");
-            return;
-        }
-
-        try {
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        } catch (PropertyException e) {
-            logger.error("setProperty Exception");
-            return;
-        }
-
-        try {
-            jaxbMarshaller.marshal(tracks, new File("tracks.xml"));
-        } catch (JAXBException e) {
-            logger.error("marshal Exception");
-            return;
-        }
-
-    }
-
-    @Override
-    public FileInputStream getFIle(String fileName) {
-        try {
-            return new FileInputStream(fileName);
-        } catch (FileNotFoundException e) {
-            logger.error("Ошибка при чтении из файла");
-        }
-        return null;
     }
 
     @Override
@@ -104,132 +58,67 @@ public class MusicModel implements Model, Observable {
 
     @Override
     public void saveTrack() {
-        saveToXML(tracks);
-    }
-
-    public void saveToSerializable() {
-        try {
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("tracks.txt"));
-            out.writeObject(tracks.getTracks());
-            out.close();
-        } catch (IOException e) {
-            logger.error("Ошибка при сохранении!");
-            notifyObservers("Ошибка при сохранении!");
-        }
+        saveToXML(tracks, TRACKS_XML, Tracks.class, Track.class, Genre.class);
     }
 
     @Override
     public void setSort(int numberField, boolean isRevers) {
+        Comparator comparator = null;
         switch (numberField) {
             case 1:
-                if (isRevers) {
-                    tracks.getTracks().sort(Comparator.comparing(Track::getName).reversed());
-                } else {
-                    tracks.getTracks().sort(Comparator.comparing(Track::getName));
-                }
+            default:
+                comparator = Comparator.comparing(Track::getName);
                 break;
             case 2:
-                if (isRevers) {
-                    tracks.getTracks().sort(Comparator.comparing(Track::getSinger).reversed());
-                } else {
-                    tracks.getTracks().sort(Comparator.comparing(Track::getSinger));
-                }
+                comparator = Comparator.comparing(Track::getSinger);
                 break;
             case 3:
-                if (isRevers) {
-                    tracks.getTracks().sort(Comparator.comparing(Track::getAlbum).reversed());
-                } else {
-                    tracks.getTracks().sort(Comparator.comparing(Track::getAlbum));
-                }
+                comparator = Comparator.comparing(Track::getAlbum);
                 break;
             case 4:
-                if (isRevers) {
-                    tracks.getTracks().sort(Comparator.comparing(Track::getLengthInt).reversed());
-                } else {
-                    tracks.getTracks().sort(Comparator.comparing(Track::getLengthInt));
-                }
+                comparator = Comparator.comparing(Track::getLengthInt);
                 break;
             case 5:
-                if (isRevers) {
-                    tracks.getTracks().sort(Comparator.comparing(Track::getGenreName).reversed());
-                } else {
-                    tracks.getTracks().sort(Comparator.comparing(Track::getGenreName));
-                }
+                comparator = Comparator.comparing(Track::getGenreName);
                 break;
         }
-    }
-
-    private Tracks loadFromXml(String fileName) {
-        JAXBContext jaxbContext = null;
-        try {
-            jaxbContext = JAXBContext.newInstance(Tracks.class, Track.class, Genre.class);
-        } catch (JAXBException e) {
-            logger.error("newInstance Exception");
-            return null;
+        if (isRevers) {
+            comparator = comparator.reversed();
         }
-        Unmarshaller jaxbUnmarshaller = null;
-        try {
-            jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        } catch (JAXBException e) {
-            logger.error("createUnmarshaller Exception");
-            return null;
-        }
-
-        try {
-            return (Tracks) jaxbUnmarshaller.unmarshal(new FileInputStream(fileName));
-        } catch (JAXBException | FileNotFoundException e) {
-            logger.error("unmarshal Exception");
-            return null;
-        }
-    }
-
-    private List<Track> loadTrack(FileInputStream fileInputStream) {
-        List<Track> trackList = new ArrayList<>();
-        try {
-            ObjectInputStream in = new ObjectInputStream(fileInputStream);
-            trackList = (List<Track>) in.readObject();
-            in.close();
-        } catch (IOException e) {
-            logger.error("Ошибка ввода/вывода при загрузке!");
-            notifyObservers("Ошибка ввода/вывода при загрузке!");
-        } catch (ClassNotFoundException e) {
-            logger.error("Ошибка при загрузке, класс не найден!");
-            notifyObservers("Ошибка при загрузке, класс не найден!");
-        }
-        return trackList;
+        tracks.getTracks().sort(comparator);
     }
 
     @Override
     public boolean add(String name, String singer, String album, int length, String genreName, boolean isSendNotify) {
 
-        if (findTrack(name, singer, album, length) == null) {
-            Track track = new Track();
-            track.setName(name);
-            track.setSinger(singer);
-            track.setAlbum(album);
-            try {
-                track.setLength(length);
-            } catch (InvalidFieldValueException ex) {
-                if (isSendNotify) {
-                    logger.error("Неверный формат длины трека");
-                    notifyObservers("Неверный формат длины трека");
-                }
-                return false;
-            }
-            Genre genre = findGenre(genreName);
-            if (genre == null) {
-                genre = new Genre(genreName);
-                genres.add(genre);
-            }
-            track.setGenre(genre);
-            tracks.getTracks().add(track);
-        } else {
+        if (findTrack(name, singer, album, length) != null) {
             if (isSendNotify) {
                 logger.error("Трек уже существует.");
                 notifyObservers("Трек уже существует.");
             }
             return false;
         }
+        Track track = new Track();
+        track.setName(name);
+        track.setSinger(singer);
+        track.setAlbum(album);
+        try {
+            track.setLength(length);
+        } catch (InvalidFieldValueException ex) {
+            if (isSendNotify) {
+                logger.error("Неверный формат длины трека");
+                notifyObservers("Неверный формат длины трека");
+            }
+            return false;
+        }
+        Genre genre = findGenre(genreName);
+        if (genre == null) {
+            genre = new Genre(genreName);
+            genres.add(genre);
+        }
+        track.setGenre(genre);
+        tracks.getTracks().add(track);
+
         if (isSendNotify) {
             logger.info("Трек добавлен.");
             notifyObservers("Трек добавлен.");
@@ -249,13 +138,18 @@ public class MusicModel implements Model, Observable {
         return true;
     }
 
-
     private List<Track> addFromXMLFile(String fileName) {
-        return loadFromXml(fileName).getTracks();
+        Object object = loadFromXml(fileName, Tracks.class, Track.class, Genre.class);
+        if (object instanceof Tracks)
+            return ((Tracks) object).getTracks();
+        return null;
     }
 
-    private List<Track> addFromSerializableFile(FileInputStream fileInputStream) {
-        return loadTrack(fileInputStream);
+    private List<Track> addFromSerializableFile(String fileName) {
+        Object object = loadObjectFromFileInputStream(fileName);
+        if (object instanceof Tracks)
+            return ((Tracks) object).getTracks();
+        return null;
     }
 
     @Override
@@ -311,7 +205,6 @@ public class MusicModel implements Model, Observable {
                 break;
             }
         }
-
         logger.info("Трек изменен.");
         notifyObservers("Трек изменен.");
         return true;
@@ -344,7 +237,7 @@ public class MusicModel implements Model, Observable {
                     default:
                         curValue = "";
                 }
-                if (matcherFind(findValue, curValue)) {
+                if (curValue.matches(findValue)) {
                     trackList.add(track);
                 }
             }
@@ -380,7 +273,7 @@ public class MusicModel implements Model, Observable {
     }
 
     private String replaceFindValue(String findValue) {
-        if (findValue.equals(""))
+        if (findValue.isEmpty())
             return findValue;
         findValue = findValue.replaceAll("\\*", ".*");
         findValue = findValue.replaceAll("\\?", ".?");
@@ -388,29 +281,14 @@ public class MusicModel implements Model, Observable {
         return findValue.toUpperCase();
     }
 
-    private boolean matcherFind(String findValue, String currentValue) {
-        if (findValue.equals(""))
-            return true;
-        currentValue = currentValue.toUpperCase();
-        Pattern pattern = Pattern.compile(findValue);
-        Matcher matcher = pattern.matcher(currentValue);
-        return matcher.find();
-    }
-
-    private boolean checkForFind(Track track, String name, String singer, String album, String genreName) {
-        return matcherFind(name, track.getName()) && matcherFind(singer, track.getSinger()) &&
-                matcherFind(album, track.getAlbum()) && matcherFind(genreName, track.getGenreName());
-    }
-
     @Override
     public List<Track> filter(String name, String singer, String album, String genreName) {
         List<Track> trackList = new ArrayList<>();
-        name = replaceFindValue(name);
-        singer = replaceFindValue(singer);
-        album = replaceFindValue(album);
-        genreName = replaceFindValue(genreName);
         for (Track track : tracks.getTracks()) {
-            if (checkForFind(track, name, singer, album, genreName)) {
+            if ((name.isEmpty() || track.getName().toUpperCase().matches(replaceFindValue(name))) &&
+                    (singer.isEmpty() || track.getSinger().toUpperCase().matches(replaceFindValue(singer))) &&
+                    (album.isEmpty() || track.getAlbum().toUpperCase().matches(replaceFindValue(album))) &&
+                    (genreName.isEmpty() || track.getGenreName().toUpperCase().matches(replaceFindValue(genreName)))) {
                 trackList.add(track);
             }
         }
@@ -423,25 +301,5 @@ public class MusicModel implements Model, Observable {
                 return genre;
             }
         return null;
-    }
-
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlRootElement(name = "musiclib")
-    public static class Tracks {
-        @XmlElement(name = "track")
-        private List<Track> tracks = new ArrayList<>();
-
-        public synchronized List<Track> getTracks() {
-            return tracks;
-        }
-
-        public void setTracks(List<Track> tracks) {
-            this.tracks = tracks;
-        }
-
-        @Override
-        public String toString() {
-            return "musiclib [tracks=" + tracks + "]";
-        }
     }
 }

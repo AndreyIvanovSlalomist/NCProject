@@ -8,7 +8,7 @@ import ru.nc.musiclib.model.Model;
 import ru.nc.musiclib.model.UserModel;
 import ru.nc.musiclib.utils.ConstProtocol;
 import ru.nc.musiclib.utils.Role;
-import ru.nc.musiclib.utils.StreamFile;
+import ru.nc.musiclib.utils.StreamUtils;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -216,13 +216,13 @@ public class MusicLibServerSocket implements Runnable {
     }
 
     private void loadFromFile(ObjectInputStream inputStream) {
-        StreamFile.streamToFile(inputStream, "loadFile.xml");
+        StreamUtils.streamToFile(inputStream, "loadFile.xml");
         model.addFromFile("loadFile.xml");
         model.saveTrack();
     }
 
     private void getFile(ObjectOutputStream out) {
-        StreamFile.fileToStream(out, "tracks.xml");
+        StreamUtils.fileToStream(out, "tracks.xml");
         logger.info("Файл передан");
     }
 
