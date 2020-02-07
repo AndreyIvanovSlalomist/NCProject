@@ -43,6 +43,11 @@ public class UsersModelImpl implements UserModel {
     }
 
     @Override
+    public void delete(String userName) {
+        users.getUsers().remove(findUser(userName));
+    }
+
+    @Override
     public void setRole(String userName, Role role) {
         findUser(userName).setRole(role);
         save();
