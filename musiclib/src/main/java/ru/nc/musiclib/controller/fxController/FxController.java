@@ -1,4 +1,4 @@
-package ru.nc.musiclib.net.client;
+package ru.nc.musiclib.controller.fxController;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,18 +7,17 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ru.nc.musiclib.classes.Track;
-import ru.nc.musiclib.net.ConstProtocol;
-import ru.nc.musiclib.net.Role;
-import ru.nc.musiclib.net.StreamFile;
+import ru.nc.musiclib.net.client.ClientSocket;
+import ru.nc.musiclib.utils.ConstProtocol;
+import ru.nc.musiclib.utils.Role;
+import ru.nc.musiclib.utils.StreamFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
-import static ru.nc.musiclib.net.ClientUtils.*;
-import static ru.nc.musiclib.net.LoaderFX.getStage;
+import static ru.nc.musiclib.utils.ClientUtils.*;
+import static ru.nc.musiclib.utils.LoaderFX.getStage;
 
 public class FxController {
 

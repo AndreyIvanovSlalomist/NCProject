@@ -1,13 +1,13 @@
-package ru.nc.musiclib.net.client;
+package ru.nc.musiclib.controller.fxController;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import ru.nc.musiclib.classes.Track;
+import ru.nc.musiclib.net.client.ClientSocket;
 
-import static ru.nc.musiclib.net.ClientUtils.*;
+import static ru.nc.musiclib.utils.ClientUtils.*;
 
 public class AddFormController {
     @FXML

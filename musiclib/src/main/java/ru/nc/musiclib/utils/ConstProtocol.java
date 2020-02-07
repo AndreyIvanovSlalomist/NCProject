@@ -1,4 +1,4 @@
-package ru.nc.musiclib.net;
+package ru.nc.musiclib.utils;
 
 /**Перечень команд которыми обмениваются клиент и сервер
  * прежде чем начать передавать наддые

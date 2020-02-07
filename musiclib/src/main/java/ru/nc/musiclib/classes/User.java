@@ -1,6 +1,6 @@
 package ru.nc.musiclib.classes;
 
-import ru.nc.musiclib.net.Role;
+import ru.nc.musiclib.utils.Role;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

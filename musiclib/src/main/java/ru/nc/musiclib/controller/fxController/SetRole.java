@@ -1,14 +1,15 @@
-package ru.nc.musiclib.net.client;
+package ru.nc.musiclib.controller.fxController;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import ru.nc.musiclib.net.Role;
+import ru.nc.musiclib.net.client.ClientSocket;
+import ru.nc.musiclib.utils.Role;
 
-import static ru.nc.musiclib.net.ClientUtils.alertSelectedItem;
-import static ru.nc.musiclib.net.ClientUtils.setRole;
+import static ru.nc.musiclib.utils.ClientUtils.alertSelectedItem;
+import static ru.nc.musiclib.utils.ClientUtils.setRole;
 
 public class SetRole {
 

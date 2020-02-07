@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="324.0" prefWidth="441.0" style="-fx-background-color: #E0FFFF;" xmlns="http://javafx.com/javafx/8.0.241" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nc.musiclib.net.client.AuthorizationController">
+<AnchorPane prefHeight="324.0" prefWidth="441.0" style="-fx-background-color: #E0FFFF;" xmlns="http://javafx.com/javafx/8.0.241" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nc.musiclib.controller.fxController.AuthorizationController">
    <children>
       <TextField fx:id="login" layoutX="54.0" layoutY="108.0" prefHeight="31.0" prefWidth="333.0" promptText="Логин">
          <font>

@@ -1,4 +1,4 @@
-package ru.nc.musiclib.net.client;
+package ru.nc.musiclib.controller.fxController;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -8,13 +8,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import ru.nc.musiclib.classes.User;
-import ru.nc.musiclib.net.ClientUtils;
+import ru.nc.musiclib.net.client.ClientSocket;
+import ru.nc.musiclib.utils.ClientUtils;
 
 import java.util.concurrent.Callable;
 
-import static ru.nc.musiclib.net.ClientUtils.alertSelectedItem;
-import static ru.nc.musiclib.net.ClientUtils.deleteUser;
-import static ru.nc.musiclib.net.LoaderFX.getStage;
+import static ru.nc.musiclib.utils.ClientUtils.alertSelectedItem;
+import static ru.nc.musiclib.utils.ClientUtils.deleteUser;
+import static ru.nc.musiclib.utils.LoaderFX.getStage;
 
 public class UsersController {
     private final ClientSocket clientSocket;

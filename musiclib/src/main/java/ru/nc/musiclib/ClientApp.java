@@ -1,4 +1,4 @@
-package ru.nc.musiclib.net.client;
+package ru.nc.musiclib;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

@@ -1,4 +1,4 @@
-package ru.nc.musiclib.net;
+package ru.nc.musiclib.utils;
 
 import javafx.scene.control.Alert;
 import ru.nc.musiclib.classes.Track;

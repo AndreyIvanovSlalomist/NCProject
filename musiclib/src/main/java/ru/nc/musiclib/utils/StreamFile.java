@@ -1,9 +1,8 @@
-package ru.nc.musiclib.net;
+package ru.nc.musiclib.utils;
 
 import ru.nc.musiclib.logger.MusicLibLogger;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 
 public class StreamFile {
 

@@ -18,7 +18,7 @@
     <users>
         <userName>user1</userName>
         <password>user</password>
-        <role>moderator</role>
+        <role>user</role>
     </users>
     <users>
         <userName>user3</userName>

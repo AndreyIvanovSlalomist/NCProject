@@ -3,7 +3,7 @@ package ru.nc.musiclib.model.impl;
 import ru.nc.musiclib.classes.User;
 import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.model.UserModel;
-import ru.nc.musiclib.net.Role;
+import ru.nc.musiclib.utils.Role;
 
 import javax.xml.bind.*;
 import javax.xml.bind.annotation.XmlAccessType;

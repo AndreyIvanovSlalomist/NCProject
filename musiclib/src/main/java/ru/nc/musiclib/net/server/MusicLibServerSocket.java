@@ -6,9 +6,9 @@ import ru.nc.musiclib.controller.Controller;
 import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.model.Model;
 import ru.nc.musiclib.model.UserModel;
-import ru.nc.musiclib.net.ConstProtocol;
-import ru.nc.musiclib.net.Role;
-import ru.nc.musiclib.net.StreamFile;
+import ru.nc.musiclib.utils.ConstProtocol;
+import ru.nc.musiclib.utils.Role;
+import ru.nc.musiclib.utils.StreamFile;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

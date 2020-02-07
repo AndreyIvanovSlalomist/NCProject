@@ -1,7 +1,6 @@
-package ru.nc.musiclib.net.client;
+package ru.nc.musiclib.controller.fxController;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -11,17 +10,16 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import ru.nc.musiclib.net.ClientUtils;
-import ru.nc.musiclib.net.ConstProtocol;
-import ru.nc.musiclib.net.Role;
+import ru.nc.musiclib.net.client.ClientSocket;
+import ru.nc.musiclib.utils.ClientUtils;
+import ru.nc.musiclib.utils.ConstProtocol;
+import ru.nc.musiclib.utils.Role;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
-import static ru.nc.musiclib.net.LoaderFX.getStage;
+import static ru.nc.musiclib.utils.LoaderFX.getStage;
 
 public class AuthorizationController {
     @FXML
