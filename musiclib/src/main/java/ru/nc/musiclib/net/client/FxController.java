@@ -128,6 +128,7 @@ public class FxController {
         if (clientSocket == null)
             return;
         FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir") + File.separator));
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extensionFilter);
         File file = fileChooser.showSaveDialog(null);
@@ -141,8 +142,8 @@ public class FxController {
     public void onClickLoadFromFile(ActionEvent actionEvent) throws IOException {
         if (clientSocket == null)
             return;
-
         FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir") + File.separator));
         FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml");
         fileChooser.getExtensionFilters().add(extensionFilter);
         File file = fileChooser.showOpenDialog(null);
