@@ -22,7 +22,6 @@ public class MusicLibServerSocket implements Runnable {
     private Model model;
     private Controller controller;
     private UserModel userModel;
-    private User currentUser;
 
     public MusicLibServerSocket(Socket client, Model model, Controller controller, UserModel userModel) {
         this.clientSocket = client;
@@ -33,135 +32,113 @@ public class MusicLibServerSocket implements Runnable {
 
     @Override
     public void run() {
-        try {
-            ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
-
+        try (ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
+             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
             logger.info("Клиент подключился");
             while (!clientSocket.isClosed()) {
-                Object inputObject = in.readObject();
+                Object inputObject = readObject(in);
                 logger.info("От клиента получен запрос " + inputObject);
+                if (inputObject == null)
+                    break;
                 if (inputObject instanceof ConstProtocol) {
-                    ConstProtocol inputConstProtocol = (ConstProtocol) inputObject;
-                    if (inputObject == ConstProtocol.exit) {
-                        break;
-                    }
-                    switch (inputConstProtocol) {
-                        case find: {
-                            find(out, in);
-                            break;
-                        }
-                        case filter: {
-                            filter(out, in);
-                            break;
-                        }
-                        case getAll: {
-                            getAll(out);
-                            break;
-                        }
-                        case add: {
-                            add(in);
-                            break;
-                        }
-                        case delete: {
-                            delete(in);
-                            break;
-                        }
-                        case update: {
-                            update(in);
-                            break;
-                        }
-                        case sort: {
-                            sortList(out, in);
-                            break;
-                        }
-                        case getFile: {
-                            getFile(out);
-                            break;
-                        }
-                        case loadFromFile: {
-                            loadFromFile(in);
-                            break;
-                        }
-                        case addUser: {
-                            addUser(in,out);
-                            break;
-                        }
-                        case checkUser: {
-                            checkUser(out, in);
-                            break;
-                        }
-                        case setRole: {
-                            setRole(in);
-                            break;
-                        }
-                        case getAllUsers: {
-                            getAllUsers(out);
-                            break;
-                        }
-                    }
+                    if (actionSelection(out, in, (ConstProtocol) inputObject)) break;
                 }
             }
-            in.close();
-            out.close();
             clientSocket.close();
             logger.info("Пользователь закрывает соединение");
-        } catch (ClassNotFoundException e) {
-
-            logger.error("Ошибка: Класс не найден");
         } catch (IOException e) {
-            logger.error("Ошибка чтения/записи в поток");
+            logger.error("Ошибка чтения/записи в поток. " + e.toString());
         }
     }
 
-    private void filter(ObjectOutputStream out, ObjectInputStream in) throws IOException, ClassNotFoundException {
-        Object inputObject;
-        String filterName, filterSinger, filterAlbum, filterGenreName;
-        inputObject = in.readObject();
-        if (inputObject instanceof String) {
-            filterName = (String) inputObject;
-            inputObject = in.readObject();
-            if (inputObject instanceof String) {
-                filterSinger = (String) inputObject;
-                inputObject = in.readObject();
-                if (inputObject instanceof String) {
-                    filterAlbum = (String) inputObject;
-                    inputObject = in.readObject();
-                    if (inputObject instanceof String) {
-                        filterGenreName = (String) inputObject;
-                        try {
-                            out.reset();
-                        } catch (IOException e) {
-                            logger.error("Ошибка при отчистки потока на запись");
-                        }
-                        List<Track> trackList = model.filter(filterName, filterSinger, filterAlbum, filterGenreName);
-                        for (Track track : trackList) {
-                            try {
-                                logger.info(track.toString());
-                                out.writeObject(track);
-                            } catch (IOException e) {
-                                logger.error("Ошибка при записи в поток");
-                            }
-                            try {
-                                out.flush();
-                            } catch (IOException e) {
-                                logger.error("Ошибка при отправки потока");
-                            }
-                        }
-                        try {
-                            out.writeObject(ConstProtocol.finish);
-                        } catch (IOException e) {
-                            logger.error("Ошибка при записи в поток");
-                        }
-                        try {
-                            out.flush();
-                        } catch (IOException e) {
-                            logger.error("Ошибка при отправки потока");
-                        }
+    private boolean actionSelection(ObjectOutputStream out, ObjectInputStream in, ConstProtocol inputConstProtocol) {
+        switch (inputConstProtocol) {
+            case exit:
+                return true;
+            case find: {
+                find(out, in);
+                break;
+            }
+            case filter: {
+                filter(out, in);
+                break;
+            }
+            case getAll: {
+                getAll(out);
+                break;
+            }
+            case add: {
+                add(in);
+                break;
+            }
+            case delete: {
+                delete(in);
+                break;
+            }
+            case update: {
+                update(in);
+                break;
+            }
+            case sort: {
+                sortList(out, in);
+                break;
+            }
+            case getFile: {
+                getFile(out);
+                break;
+            }
+            case loadFromFile: {
+                loadFromFile(in);
+                break;
+            }
+            case addUser: {
+                addUser(in, out);
+                break;
+            }
+            case checkUser: {
+                checkUser(out, in);
+                break;
+            }
+            case setRole: {
+                setRole(in);
+                break;
+            }
+            case getAllUsers: {
+                getAllUsers(out);
+                break;
+            }
+            case deleteUser: {
+                deleteUser(in);
+                break;
+            }
+        }
+        return false;
+    }
 
+    private void deleteUser(ObjectInputStream in) {
+        String name = readObjectToString(in);
+        if (name != null) {
+            userModel.delete(name);
+        }
+    }
 
-                    }
+    private void filter(ObjectOutputStream out, ObjectInputStream in) {
+        String filterName = readObjectToString(in);
+        String filterSinger = readObjectToString(in);
+        String filterAlbum = readObjectToString(in);
+        String filterGenreName = readObjectToString(in);
+        if (filterName != null && filterSinger != null && filterAlbum != null && filterGenreName != null) {
+            try {
+                out.reset();
+                List<Track> trackList = model.filter(filterName, filterSinger, filterAlbum, filterGenreName);
+                for (Track track : trackList) {
+                    logger.info(track.toString());
+                    out.writeObject(track);
                 }
+                out.writeObject(ConstProtocol.finish);
+                out.flush();
+            } catch (IOException e) {
+                logger.error(e.toString());
             }
         }
     }
@@ -169,114 +146,72 @@ public class MusicLibServerSocket implements Runnable {
     private void getAllUsers(ObjectOutputStream out) {
         try {
             out.reset();
-        } catch (IOException e) {
-            logger.error("Ошибка при очистке потока на запись");
-        }
-        List<User> userList = userModel.getAllUser();
-        for (User user : userList) {
-
-            try {
+            List<User> userList = userModel.getAllUser();
+            for (User user : userList) {
                 logger.info(user.toString());
                 out.writeObject(user);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-            try {
-                out.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
             out.writeObject(ConstProtocol.finish);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             out.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.toString());
         }
     }
 
-    private void setRole(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        Object userName;
-        Object role;
-        userName = in.readObject();
-        role = in.readObject();
-        if (userName instanceof String &&
-                role instanceof Role) {
-            userModel.setRole((String) userName, (Role) role);
+    private void setRole(ObjectInputStream in) {
+        String userName = readObjectToString(in);
+        Object role = readObject(in);
+        if (userName != null && role instanceof Role) {
+            userModel.setRole(userName, (Role) role);
         }
-
     }
 
-    private void checkUser(ObjectOutputStream out, ObjectInputStream in) throws IOException, ClassNotFoundException {
-        Object userName;
-        Object password;
-        userName = in.readObject();
-        password = in.readObject();
-        if (userName instanceof String &&
-                password instanceof String) {
-            if (userModel.checkUser((String) userName, (String) password)) {
-                try {
+    private void checkUser(ObjectOutputStream out, ObjectInputStream in) {
+        String userName = readObjectToString(in);
+        String password = readObjectToString(in);
+        if (userName != null && password != null) {
+            try {
+                if (userModel.checkUser(userName, password)) {
                     out.reset();
-                } catch (IOException e) {
-                    logger.error("Ошибка при очистке потока на запись");
+                    out.writeObject(userModel.findUser(userName).getRole());
+                } else {
+                    out.writeObject(ConstProtocol.errorUser);
                 }
-                out.writeObject(userModel.findUser((String) userName).getRole());
-            } else {
-                out.writeObject(ConstProtocol.errorUser);
+            } catch (IOException e) {
+                logger.error(e.toString());
             }
         }
     }
 
-    private void addUser(ObjectInputStream in, ObjectOutputStream out) throws IOException, ClassNotFoundException {
-        Object userName, password;
-        userName = in.readObject();
-        password = in.readObject();
-        if (userName instanceof String &&
-                password instanceof String) {
-            if(userModel.add((String) userName, (String) password)){
-                out.writeObject("OK");
-                out.flush();
-            }else{
-                out.writeObject("Cancel");
+    private void addUser(ObjectInputStream in, ObjectOutputStream out) {
+        String userName = readObjectToString(in);
+        String password = readObjectToString(in);
+        if (userName != null && password != null) {
+            try {
+                if (userModel.add(userName, password)) {
+                    out.writeObject("OK");
+                    out.flush();
+                } else {
+                    out.writeObject("Cancel");
+                }
+            } catch (IOException e) {
+                logger.error( e.toString());
             }
-
         }
     }
 
     private void getAll(ObjectOutputStream out) {
         try {
             out.reset();
-        } catch (IOException e) {
-            logger.error("Ошибка при очистке потока на запись");
-        }
-        List<Track> trackList = model.getAll();
-        for (Track track : trackList) {
-
-            try {
+            List<Track> trackList = model.getAll();
+            for (Track track : trackList) {
                 logger.info(track.toString());
                 out.writeObject(track);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-            try {
-                out.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
             out.writeObject(ConstProtocol.finish);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
             out.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.toString());
         }
     }
 
@@ -294,88 +229,83 @@ public class MusicLibServerSocket implements Runnable {
     private void sortList(ObjectOutputStream out, ObjectInputStream in) {
     }
 
-    private void update(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        Object name;
-        Object singer;
-        Object album;
-        Object length;
-        Object genreName;
-        Object track;
-        name = in.readObject();
-        singer = in.readObject();
-        album = in.readObject();
-        length = in.readObject();
-        genreName = in.readObject();
-        track = in.readObject();
-        if (name instanceof String &&
-                singer instanceof String &&
-                album instanceof String &&
-                length instanceof Integer &&
-                genreName instanceof String &&
-                track instanceof Track) {
-            controller.isValidUpdate((Track) track, (String) name, (String) singer, (String) album, (Integer) length, (String) genreName);
+    private void update(ObjectInputStream in) {
+        String name = readObjectToString(in);
+        String singer = readObjectToString(in);
+        String album = readObjectToString(in);
+        Integer length = readObjectToInteger(in);
+        String genreName = readObjectToString(in);
+        Object track = readObject(in);
+        if (name != null && singer != null && album != null && length != null && genreName != null && track instanceof Track) {
+            controller.isValidUpdate((Track) track, name, singer, album, length, genreName);
         }
     }
 
-    private void find(ObjectOutputStream out, ObjectInputStream in) throws IOException, ClassNotFoundException {
-        Object inputObject;
-        inputObject = in.readObject();
-        if (inputObject instanceof Integer) {
-            int inputInt = (int) inputObject;
-            inputObject = in.readObject();
-            if (inputObject instanceof String) {
+    private void find(ObjectOutputStream out, ObjectInputStream in) {
+        Integer inputInt = readObjectToInteger(in);
+        if (inputInt != null) {
+            String findValue = readObjectToString(in);
+            if (findValue != null) {
                 try {
                     out.reset();
+                    out.writeObject(model.find(inputInt, findValue));
+                    out.flush();
                 } catch (IOException e) {
-                    logger.error("Ошибка при очистке потока на запись");
+                    logger.error(e.toString());
                 }
-                String findValue = (String) inputObject;
-                out.writeObject(model.find(inputInt, findValue));
-                out.flush();
             }
         }
     }
 
-    private void delete(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        Object name;
-        Object singer;
-        Object album;
-        Object length;
-        Object genreName;
-        name = in.readObject();
-        singer = in.readObject();
-        album = in.readObject();
-        length = in.readObject();
-        genreName = in.readObject();
-        if (name instanceof String &&
-                singer instanceof String &&
-                album instanceof String &&
-                length instanceof Integer &&
-                genreName instanceof String) {
-            controller.isValidDelete((String) name, (String) singer, (String) album, (Integer) length, (String) genreName);
+    private void delete(ObjectInputStream in) {
+        String name = readObjectToString(in);
+        String singer = readObjectToString(in);
+        String album = readObjectToString(in);
+        Integer length = readObjectToInteger(in);
+        String genreName = readObjectToString(in);
+        if (name != null && singer != null && album != null && length != null && genreName != null) {
+            controller.isValidDelete(name, singer, album, length, genreName);
         }
     }
 
-    private void add(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        Object name;
-        Object singer;
-        Object album;
-        Object length;
-        Object genreName;
-        name = in.readObject();
-        singer = in.readObject();
-        album = in.readObject();
-        length = in.readObject();
-        genreName = in.readObject();
-        if (name instanceof String &&
-                singer instanceof String &&
-                album instanceof String &&
-                length instanceof Integer &&
-                genreName instanceof String) {
-            controller.isValidAdd((String) name, (String) singer, (String) album, (Integer) length, (String) genreName);
+    private void add(ObjectInputStream in) {
+        String name = readObjectToString(in);
+        String singer = readObjectToString(in);
+        String album = readObjectToString(in);
+        Integer length = readObjectToInteger(in);
+        String genreName = readObjectToString(in);
+        if (name != null && singer != null && album != null && length != null && genreName != null) {
+            controller.isValidAdd(name, singer, album, length, genreName);
         }
-
     }
 
+
+    private Object readObject(ObjectInputStream in) {
+        Object object = null;
+        try {
+            object = in.readObject();
+        } catch (IOException e) {
+            logger.error("Ошибка ввода вывода. " + e.toString());
+        } catch (ClassNotFoundException e) {
+            logger.error("Ошибка. Класс не найден. " + e.toString());
+        }
+        return object;
+    }
+
+    private String readObjectToString(ObjectInputStream in) {
+        Object string = readObject(in);
+        if (string instanceof String)
+            return (String) string;
+        logger.error("Ошибка. Тип не соответствует. Ожидается String");
+        return null;
+    }
+
+    private Integer readObjectToInteger(ObjectInputStream in) {
+        Object integer = readObject(in);
+        if (integer instanceof Integer)
+            return (Integer) integer;
+        logger.error("Ошибка. Тип не соответствует. Ожидается Integer");
+        return null;
+    }
 
 }
