@@ -18,6 +18,7 @@ import java.util.List;
 
 public class MusicLibServerSocket implements Runnable {
     private final static MusicLibLogger logger = new MusicLibLogger(MusicLibServerSocket.class);
+    private static final String LOAD_FILE_XML = "loadFile.xml";
     private Socket clientSocket;
     private Model model;
     private Controller controller;
@@ -216,7 +217,7 @@ public class MusicLibServerSocket implements Runnable {
     }
 
     private void loadFromFile(ObjectInputStream inputStream) {
-        StreamUtils.streamToFile(inputStream, "loadFile.xml");
+        StreamUtils.streamToFile(inputStream, LOAD_FILE_XML);
         model.addFromFile("loadFile.xml");
         model.saveTrack();
     }
