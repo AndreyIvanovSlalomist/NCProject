@@ -10,37 +10,27 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-public class MusicLibServer {
-    static ExecutorService executeIt = Executors.newFixedThreadPool(20);
 
+public class MusicLibServer {
     private final static MusicLibLogger logger = new MusicLibLogger(MusicLibServer.class);
+    private static ExecutorService executeIt = Executors.newFixedThreadPool(20);
 
     public void startServer(int port, Model model, Controller controller, UserModel userModel) {
         logger.info("Сервер запускается на порту: " + port);
         ServerSocket server = null;
         try {
             server = new ServerSocket(port);
-        } catch (IOException e) {
-            logger.error("Не удалось запустить сервер на порту: " + port);
-        }
-
-        while (!server.isClosed()) {
-            Socket client = null;
-            try {
-                client = server.accept();
-            } catch (IOException e) {
-                logger.error("Ошибка при подключении пользователя через порт: " + port);
-                break;
+            while (!server.isClosed()) {
+                Socket client = server.accept();
+                logger.info("Подключился пользователь");
+                executeIt.execute(new MusicLibServerSocket(client, model, controller, userModel));
             }
-            logger.info("Подключился пользователь");
-
-            executeIt.execute(new MusicLibServerSocket(client, model, controller, userModel));
+        } catch (IOException e) {
+            logger.error(e.toString());
         }
-
         executeIt.shutdown();
         logger.info("Сервер выключается");
     }
-
 
 
 }
