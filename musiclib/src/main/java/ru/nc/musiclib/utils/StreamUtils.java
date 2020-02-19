@@ -19,7 +19,8 @@ public class StreamUtils {
 
         Object line = null;
         logger.info("Start while (true)");
-        while (true) {
+        while(true){
+//        while ((line = inputStream.readObject()) != null) {
             try {
                 try {
                     line = inputStream.readObject();

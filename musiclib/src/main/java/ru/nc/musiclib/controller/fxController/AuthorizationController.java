@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import ru.nc.musiclib.net.client.ClientSocket;
 import ru.nc.musiclib.utils.ClientUtils;
 import ru.nc.musiclib.utils.ConstProtocol;
+import ru.nc.musiclib.utils.PasswordUtils;
 import ru.nc.musiclib.utils.Role;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -38,12 +39,8 @@ public class AuthorizationController {
 
     @FXML
     void initialize() {
-        login.setOnMouseClicked(event -> {
-            clear();
-        });
-        password.setOnMouseClicked(event -> {
-            clear();
-        });
+        login.setOnMouseClicked(event -> clear());
+        password.setOnMouseClicked(event -> clear());
         signIn.setOnAction(event -> {
             String loginText = login.getText().trim();
             String passwordText = password.getText().trim();
@@ -55,7 +52,7 @@ public class AuthorizationController {
                 setBorder(password);
             } else {
                 clear();
-                signInUser(loginText, passwordText);
+                checkUser(loginText,passwordText);
             }
         });
         signUp.setOnAction(event -> {
@@ -79,12 +76,24 @@ public class AuthorizationController {
         }
     }
 
-    private void signInUser(String login, String password) {
+    private void checkUser(String login, String password) {
         connect();
-        Object object = ClientUtils.signInUser(clientSocket, login, password);
+        Object object = ClientUtils.signInUser(clientSocket, login);
         if (object == ConstProtocol.errorUser) {
+            loginErrorLabel.setText("Неверный логин или пароль!");
+        }else if(object instanceof String){
+            String storedPassword = (String) object;
+            if(PasswordUtils.verifyPassword(password,storedPassword)){
+                signInUser(login);
+            }else{
                 loginErrorLabel.setText("Неверный логин или пароль!");
-        } else if (object instanceof Role) {
+            }
+        }
+    }
+
+    private void signInUser(String login){
+        Object object = ClientUtils.getRole(clientSocket, login);
+        if (object instanceof Role) {
             Role role = (Role) object;
             Stage stage = getStage(FxController.class, (Callable<FxController>) () -> new FxController(clientSocket, role), "/fxml/main.fxml", false, "Музыкальная библиотека");
             stage.setOnShown(event -> {
@@ -96,7 +105,7 @@ public class AuthorizationController {
 
     private void signUpUser(String login, String password) {
         connect();
-        Object object = ClientUtils.signUpUser(clientSocket, login, password);
+        Object object = ClientUtils.signUpUser(clientSocket, login, PasswordUtils.hashPassword(password));
         if (object instanceof String) {
             String answer = (String) object;
             if (answer.equals("OK")) {
@@ -129,30 +138,4 @@ public class AuthorizationController {
         password.setBorder(null);
         login.setBorder(null);
     }
-
-    private String hash(String password) {
-        String hashedPassword = null;
-        try {
-            byte[] salt = getSalt();
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(salt);
-            byte[] bytes = md.digest(password.getBytes());
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < bytes.length; i++) {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            hashedPassword = sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return hashedPassword;
-    }
-
-    private byte[] getSalt() throws NoSuchAlgorithmException {
-        SecureRandom sr = SecureRandom.getInstance("SHA256PRNG");
-        byte[] salt = new byte[16];
-        sr.nextBytes(salt);
-        return salt;
-    }
-
 }

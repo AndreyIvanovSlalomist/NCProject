@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <users>
     <users>
+        <userName>user1</userName>
+        <password>jm7fTZht68FfRnq9h+h1fw==$WxhlkRETgAeETSaGysR/Mg==</password>
+        <role>user</role>
+    </users>
+    <users>
         <userName>admin</userName>
-        <password>admin</password>
+        <password>EzugHZIxeAEP1vSevF/ZYg==$y7H0PIvi45nyqGR/yxzu7w==</password>
         <role>administrator</role>
     </users>
     <users>
-        <userName>mod</userName>
-        <password>mod</password>
+        <userName>moderator</userName>
+        <password>VoMezr/xuGEb+WD5mWUf0w==$Uhba2C6qHff4UVQCLabu9A==</password>
         <role>moderator</role>
     </users>
     <users>
         <userName>user</userName>
-        <password>user</password>
-        <role>user</role>
-    </users>
-    <users>
-        <userName>user1</userName>
-        <password>user</password>
-        <role>user</role>
-    </users>
-    <users>
-        <userName>user3</userName>
-        <password>user</password>
+        <password>Jfl88gIZE2fe1ZmtVUFb/w==$k0aZkEmB0MQ5IOUvJlLwoQ==</password>
         <role>user</role>
     </users>
 </users>

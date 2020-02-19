@@ -45,4 +45,40 @@
             <genreName>Soul</genreName>
         </genre>
     </track>
+    <track>
+        <name>lkhoi</name>
+        <singer>nliojo</singer>
+        <album>oijo</album>
+        <length>87</length>
+        <genre>
+            <genreName>kho</genreName>
+        </genre>
+    </track>
+    <track>
+        <name>Любимка</name>
+        <singer>NILETTO</singer>
+        <album>Любимка</album>
+        <length>229</length>
+        <genre>
+            <genreName>Хип-хоп</genreName>
+        </genre>
+    </track>
+    <track>
+        <name>Yung Hefner</name>
+        <singer>MORGENSHTERN56</singer>
+        <album>Yung Hefner</album>
+        <length>135</length>
+        <genre>
+            <genreName>Хип-хоп</genreName>
+        </genre>
+    </track>
+    <track>
+        <name>O'Children</name>
+        <singer>Nick Cave &amp; The Bad Seeds</singer>
+        <album>Abattoir Blues/The Lyre of Orpheus</album>
+        <length>345</length>
+        <genre>
+            <genreName>rock</genreName>
+        </genre>
+    </track>
 </musiclib>

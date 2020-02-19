@@ -63,7 +63,7 @@ public class MusicModel implements Model, Observable {
 
     @Override
     public void setSort(int numberField, boolean isRevers) {
-        Comparator comparator = null;
+        Comparator comparator;
         switch (numberField) {
             case 1:
             default:

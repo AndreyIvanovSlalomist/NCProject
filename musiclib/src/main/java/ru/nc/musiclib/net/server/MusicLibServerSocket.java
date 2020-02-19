@@ -104,6 +104,10 @@ public class MusicLibServerSocket implements Runnable {
                 setRole(in);
                 break;
             }
+            case getRole: {
+                getRole(out,in);
+                break;
+            }
             case getAllUsers: {
                 getAllUsers(out);
                 break;
@@ -166,15 +170,22 @@ public class MusicLibServerSocket implements Runnable {
             userModel.setRole(userName, (Role) role);
         }
     }
+    private void getRole(ObjectOutputStream out, ObjectInputStream in){
+        String login = readObjectToString(in);
+        try {
+            out.writeObject(userModel.getRole(login));
+        } catch (IOException e) {
+            logger.error(e.toString());
+        }
+    }
 
     private void checkUser(ObjectOutputStream out, ObjectInputStream in) {
         String userName = readObjectToString(in);
-        String password = readObjectToString(in);
-        if (userName != null && password != null) {
+        if (userName != null) {
             try {
-                if (userModel.checkUser(userName, password)) {
+                if (userModel.checkUser(userName)) {
                     out.reset();
-                    out.writeObject(userModel.findUser(userName).getRole());
+                    out.writeObject(userModel.findUser(userName).getPassword());
                 } else {
                     out.writeObject(ConstProtocol.errorUser);
                 }
@@ -194,6 +205,7 @@ public class MusicLibServerSocket implements Runnable {
                     out.flush();
                 } else {
                     out.writeObject("Cancel");
+                    out.flush();
                 }
             } catch (IOException e) {
                 logger.error( e.toString());

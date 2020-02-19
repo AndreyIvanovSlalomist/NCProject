@@ -40,26 +40,43 @@ public class ClientUtils {
         return null;
     }
 
-    public static Object signInUser(ClientSocket clientSocket, String login, String password) {
-
+    public static Object signInUser(ClientSocket clientSocket, String login) {
         try {
             clientSocket.getOos().writeObject(ConstProtocol.checkUser);
             clientSocket.getOos().writeObject(login);
-            clientSocket.getOos().writeObject(password);
             clientSocket.getOos().flush();
         } catch (IOException e) {
-            logger.error("Ошибка записи в поток!. " + e.toString());
+            logger.error("Ошибка записи в поток! " + e.toString());
             return null;
         }
         try {
             return clientSocket.getOis().readObject();
         } catch (IOException e) {
-            logger.error("Ошибка чтения из потока!. " + e.toString());
+            logger.error("Ошибка чтения из потока! " + e.toString());
             return null;
         } catch (ClassNotFoundException e) {
-            logger.error("Ошибка класс не найден!. " + e.toString());
+            logger.error("Ошибка класс не найден! " + e.toString());
             return null;
         }
+    }
+    public static Object getRole(ClientSocket clientSocket, String login){
+        try {
+            clientSocket.getOos().writeObject(ConstProtocol.getRole);
+            clientSocket.getOos().writeObject(login);
+            clientSocket.getOos().flush();
+        } catch (IOException e) {
+            logger.error("Ошибка записи в поток! "+e.toString());
+        }
+        try {
+            return clientSocket.getOis().readObject();
+        } catch (IOException e) {
+            logger.error("Ошибка чтения из потока! " + e.toString());
+            return null;
+        } catch (ClassNotFoundException e) {
+            logger.error("Ошибка класс не найден! " + e.toString());
+            return null;
+        }
+
     }
 
     public static void updateTrack(ClientSocket clientSocket, Track track, String name, String singer, String album, int lengthInt, String genre) {

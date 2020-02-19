@@ -13,18 +13,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class UsersModelImpl implements UserModel {
     private final static MusicLibLogger logger = new MusicLibLogger(UsersModelImpl.class);
-    Users users = new Users();
+    private Users users = new Users();
 
     public UsersModelImpl() {
         load();
-        if (users.getUsers().size() == 0){
+        if (users.getUsers().isEmpty()){
             users.getUsers().add(new User("admin", "admin", Role.administrator));
-//            setRole("admin", Role.administrator);
             logger.info("UsersModelImpl add admin");
             save();
         }
@@ -69,12 +71,8 @@ public class UsersModelImpl implements UserModel {
     }
 
     @Override
-    public boolean checkUser(String userName, String password) {
-        User user = findUser(userName);
-        if (user == null) {
-            return false;
-        }
-        return user.getPassword().equals(password);
+    public boolean checkUser(String login) {
+       return findUser(login)!=null;
     }
 
     @Override
