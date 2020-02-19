@@ -3,6 +3,7 @@ package ru.nc.musiclib.controller.fxController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
@@ -15,18 +16,14 @@ import ru.nc.musiclib.utils.ClientUtils;
 import ru.nc.musiclib.utils.ConstProtocol;
 import ru.nc.musiclib.utils.PasswordUtils;
 import ru.nc.musiclib.utils.Role;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.concurrent.Callable;
 
 import static ru.nc.musiclib.utils.LoaderFX.getStage;
 
 public class AuthorizationController {
+    public PasswordField password;
     @FXML
     private TextField login;
-    @FXML
-    private TextField password;
     @FXML
     private Button signIn;
     @FXML
@@ -42,6 +39,7 @@ public class AuthorizationController {
         login.setOnMouseClicked(event -> clear());
         password.setOnMouseClicked(event -> clear());
         signIn.setOnAction(event -> {
+            clear();
             String loginText = login.getText().trim();
             String passwordText = password.getText().trim();
             if (loginText.isEmpty()) {
@@ -51,11 +49,11 @@ public class AuthorizationController {
                 passwordErrorLabel.setText("Введите пароль!");
                 setBorder(password);
             } else {
-                clear();
                 checkUser(loginText,passwordText);
             }
         });
         signUp.setOnAction(event -> {
+            clear();
             String loginText = login.getText().trim();
             String passwordText = password.getText().trim();
             if (loginText.equals("")) {
