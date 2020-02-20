@@ -68,14 +68,7 @@ public class AuthorizationController {
         });
     }
 
-    private void connect() {
-        if (clientSocket == null) {
-            clientSocket = ClientUtils.connect();
-        }
-    }
-
     private void checkUser(String login, String password) {
-        connect();
         Object object = ClientUtils.signInUser(clientSocket, login);
         if (object == ConstProtocol.errorUser) {
             loginErrorLabel.setText("Неверный логин или пароль!");
@@ -93,16 +86,13 @@ public class AuthorizationController {
         Object object = ClientUtils.getRole(clientSocket, login);
         if (object instanceof Role) {
             Role role = (Role) object;
-            Stage stage = getStage(FxController.class, (Callable<FxController>) () -> new FxController(clientSocket, role), "/fxml/main.fxml", false, "Музыкальная библиотека");
-            stage.setOnShown(event -> {
-                this.login.getScene().getWindow().hide();
-            });
+            Stage stage = getStage(FxController.class, (Callable<FxController>) () -> new FxController(clientSocket, role, login), "/fxml/main.fxml", false, "Музыкальная библиотека");
+            stage.setOnShown(event -> this.login.getScene().getWindow().hide());
             stage.show();
         }
     }
 
     private void signUpUser(String login, String password) {
-        connect();
         Object object = ClientUtils.signUpUser(clientSocket, login, PasswordUtils.hashPassword(password));
         if (object instanceof String) {
             String answer = (String) object;
@@ -135,5 +125,8 @@ public class AuthorizationController {
         loginErrorLabel.setText("");
         password.setBorder(null);
         login.setBorder(null);
+    }
+    AuthorizationController(ClientSocket clientSocket){
+        this.clientSocket = clientSocket;
     }
 }

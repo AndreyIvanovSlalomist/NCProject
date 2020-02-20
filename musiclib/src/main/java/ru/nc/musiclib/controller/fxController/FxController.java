@@ -31,6 +31,8 @@ public class FxController {
     public MenuItem saveToFile;
     public MenuItem loadFromFile;
     public MenuItem refresh;
+    public MenuButton user;
+    public MenuItem signOut;
     public TableColumn<Track, String> nameColumn;
     public TableColumn<Track, String> singerColumn;
     public TableColumn<Track, String> albumColumn;
@@ -46,6 +48,7 @@ public class FxController {
     public TableView<Track> table;
     private ClientSocket clientSocket;
     private Role role;
+    private String login;
 
     private void setCurrentRole(Role role) {
         final boolean value = role.equals(Role.administrator) || role.equals(Role.moderator);
@@ -61,12 +64,14 @@ public class FxController {
     @FXML
     void initialize() {
         setCurrentRole(role);
+        user.setText(login);
         onClickRefresh(null);
     }
 
-    public FxController(ClientSocket clientSocket, Role role) {
+    FxController(ClientSocket clientSocket, Role role, String login) {
         this.clientSocket = clientSocket;
         this.role = role;
+        this.login = login;
     }
 
     @FXML
@@ -194,10 +199,18 @@ public class FxController {
     public void onClickFilterCancel() {
         if (clientSocket == null)
             return;
-        filterName.setText("");
-        filterSinger.setText("");
-        filterAlbum.setText("");
-        filterGenre.setText("");
+        filterName.clear();
+        filterSinger.clear();
+        filterAlbum.clear();
+        filterGenre.clear();
         onClickRefresh(null);
+    }
+
+    public void onClickSignOut(){
+        Stage stage = (Stage) table.getScene().getWindow();
+        stage.close();
+
+        stage = getStage(AuthorizationController.class, (Callable<AuthorizationController>) () -> new AuthorizationController(clientSocket), "/fxml/authorization.fxml", false, "Авторизация");
+        stage.show();
     }
 }
