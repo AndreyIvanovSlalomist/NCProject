@@ -81,4 +81,13 @@
             <genreName>rock</genreName>
         </genre>
     </track>
+    <track>
+        <name>Wish You Were Here</name>
+        <singer>Pink Floyd</singer>
+        <album>Wish You Were Here</album>
+        <length>340</length>
+        <genre>
+            <genreName>Progressive Rock</genreName>
+        </genre>
+    </track>
 </musiclib>

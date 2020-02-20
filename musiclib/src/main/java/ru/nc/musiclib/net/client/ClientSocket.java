@@ -33,23 +33,21 @@ public class ClientSocket {
     }
 
     private void startSocket(InetAddress inetAddress, int port) {
-
-        try {
+        try{
             socket = new Socket(inetAddress, port);
         } catch (IOException e) {
-            logger.error("Ошибка при открытии сокета на порту " + port);
+            logger.error("Ошибка при открытии сокета на порту: " + port);
+        }
+        if(socket != null) {
+            try {
+                oos = new ObjectOutputStream(socket.getOutputStream());
+                ois = new ObjectInputStream(socket.getInputStream());
+            } catch (IOException e) {
+                logger.error("Ошибка при открытии потока на запись/чтение. " + e.getMessage());
+            }
         }
 
-        try {
-            oos = new ObjectOutputStream(socket.getOutputStream());
-        } catch (IOException e) {
-            logger.error("Ошибка при открытии потока на запись ");
-        }
-        try {
-            ois = new ObjectInputStream(socket.getInputStream());
-        } catch (IOException e) {
-            logger.error("Ошибка при открытии потока на чтение ");
-        }
+
 
     }
 }

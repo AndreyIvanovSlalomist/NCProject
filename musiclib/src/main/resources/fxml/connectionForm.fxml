@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="ru.nc.musiclib.controller.fxController.ConnectionFormController"
+            prefHeight="150.0" prefWidth="270.0"
+            style="-fx-background-color: #4682B4;">
+
+    <children>
+        <AnchorPane layoutY="76.0" prefHeight="150.0" prefWidth="340.0" style="-fx-background-color: #E0FFFF;">
+            <children>
+                <TextField fx:id="hostField" layoutX="85.0" layoutY="9.0" promptText="Хост">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </TextField>
+                <TextField fx:id="portField" layoutX="85.0" layoutY="48.0" prefHeight="30.0" prefWidth="175.0" promptText="Порт">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </TextField>
+                <Button fx:id="connectButton" layoutX="110.0" layoutY="100.0" mnemonicParsing="false" onAction="#onClickConnect"  text="Подключиться" />
+            </children>
+        </AnchorPane>
+        <Label layoutX="85.0" layoutY="22.0" text="Подключение" textFill="#f0edf8">
+            <font>
+                <Font name="Arial Narrow Bold" size="30.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>

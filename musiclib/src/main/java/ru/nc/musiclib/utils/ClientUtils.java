@@ -31,12 +31,14 @@ public class ClientUtils {
         return true;
     }
 
-    public static ClientSocket connect() {
+    public static ClientSocket connect(String host, int port) {
         try {
-            return new ClientSocket(InetAddress.getLocalHost(), 4444);
+            return new ClientSocket(InetAddress.getByName(host), port);
         } catch (UnknownHostException e) {
             logger.error("Ошибка: Неизвестен хост. " + e.toString());
         }
+
+
         return null;
     }
 
