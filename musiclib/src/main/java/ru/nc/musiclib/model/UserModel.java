@@ -12,6 +12,8 @@ public interface UserModel {
     Role getRole(String userName);
     User findUser(String userName);
     boolean checkUser(String userName);
+    boolean checkPassword(String userName, String password);
+    String getSalt(String userName);
     void save();
     void load();
     List<User> getAllUser();

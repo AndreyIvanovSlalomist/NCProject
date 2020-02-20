@@ -61,6 +61,24 @@ public class ClientUtils {
             return null;
         }
     }
+    public static boolean checkPassword(ClientSocket clientSocket, String login, String password){
+        try {
+            clientSocket.getOos().writeObject(ConstProtocol.checkPassword);
+            clientSocket.getOos().writeObject(login);
+            clientSocket.getOos().writeObject(password);
+            clientSocket.getOos().flush();
+        } catch (IOException e) {
+            logger.error("Ошибка записи в поток! " + e.toString());
+            return false;
+        }
+        try {
+            return clientSocket.getOis().readBoolean();
+        } catch (IOException e) {
+            logger.error("Ошибка чтения из потока! " + e.toString());
+            return false;
+        }
+    }
+
     public static Object getRole(ClientSocket clientSocket, String login){
         try {
             clientSocket.getOos().writeObject(ConstProtocol.getRole);
@@ -173,7 +191,7 @@ public class ClientUtils {
                 return new ArrayList<>();
             }
         }
-        Object inputObject = null;
+        Object inputObject;
         do {
             try {
                 inputObject = clientSocket.getOis().readObject();

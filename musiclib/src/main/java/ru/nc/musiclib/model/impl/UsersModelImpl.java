@@ -3,6 +3,7 @@ package ru.nc.musiclib.model.impl;
 import ru.nc.musiclib.classes.User;
 import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.model.UserModel;
+import ru.nc.musiclib.utils.PasswordUtils;
 import ru.nc.musiclib.utils.Role;
 
 import javax.xml.bind.*;
@@ -13,10 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 public class UsersModelImpl implements UserModel {
@@ -55,6 +53,10 @@ public class UsersModelImpl implements UserModel {
         save();
     }
 
+    public String getSalt(String userName){
+        return PasswordUtils.getSalt(findUser(userName).getPassword());
+    }
+
     @Override
     public Role getRole(String userName) {
         return findUser(userName).getRole();
@@ -74,11 +76,14 @@ public class UsersModelImpl implements UserModel {
     public boolean checkUser(String login) {
        return findUser(login)!=null;
     }
+    public boolean checkPassword(String login, String password){
+        return PasswordUtils.verifyPassword(password, findUser(login).getPassword());
+    }
 
     @Override
     public void save() {
 
-        JAXBContext jaxbContext = null;
+        JAXBContext jaxbContext;
         try {
             jaxbContext = JAXBContext.newInstance(Users.class, User.class, Role.class);
         } catch (JAXBException e) {

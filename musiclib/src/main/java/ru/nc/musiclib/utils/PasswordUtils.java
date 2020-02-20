@@ -9,16 +9,28 @@ import java.security.spec.KeySpec;
 import java.util.Base64;
 
 public class PasswordUtils {
+    private PasswordUtils(){}
+
     public static String hashPassword(String password){
         byte[] salt = getSalt();
         String hashedPassword = hash(password,salt);
         return hashedPassword+"$"+ Base64.getEncoder().encodeToString(salt);
     }
+
+    public static String hashPassword(String password, String salt){
+        return hash(password, Base64.getDecoder().decode(salt));
+    }
+
     public static boolean verifyPassword(String password, String stored){
         String[] passwordAndSalt = stored.split("\\$");
-        String hashedPassword = hash(password, Base64.getDecoder().decode(passwordAndSalt[1]));
-        return hashedPassword.equals(passwordAndSalt[0]);
+        return password.equals(passwordAndSalt[0]);
     }
+
+    public static String getSalt(String storedPassword){
+        String[] str = storedPassword.split("\\$");
+        return str[1];
+    }
+
     private static String hash(String password, byte[] salt){
         KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
         SecretKeyFactory factory;
@@ -31,10 +43,12 @@ public class PasswordUtils {
         }
         return Base64.getEncoder().encodeToString(hash);
     }
+
     private static byte[] getSalt(){
         SecureRandom random = new SecureRandom();
         byte[]salt = new byte[16];
         random.nextBytes(salt);
         return salt;
     }
+
 }

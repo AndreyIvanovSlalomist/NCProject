@@ -73,8 +73,8 @@ public class AuthorizationController {
         if (object == ConstProtocol.errorUser) {
             loginErrorLabel.setText("Неверный логин или пароль!");
         }else if(object instanceof String){
-            String storedPassword = (String) object;
-            if(PasswordUtils.verifyPassword(password,storedPassword)){
+            String salt = (String) object;
+            if(ClientUtils.checkPassword(clientSocket, login, PasswordUtils.hashPassword(password,salt))){
                 signInUser(login);
             }else{
                 loginErrorLabel.setText("Неверный логин или пароль!");

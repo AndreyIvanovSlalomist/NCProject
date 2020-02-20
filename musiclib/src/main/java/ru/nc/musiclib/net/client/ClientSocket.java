@@ -46,9 +46,6 @@ public class ClientSocket {
                 logger.error("Ошибка при открытии потока на запись/чтение. " + e.getMessage());
             }
         }
-
-
-
     }
 }
 

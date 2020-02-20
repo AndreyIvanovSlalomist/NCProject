@@ -4,4 +4,4 @@ package ru.nc.musiclib.utils;
  * прежде чем начать передавать наддые
  *
  */
-public enum ConstProtocol {exit, add, find, delete, update, getAll, sort, getFile, loadFromFile, finish, addUser, checkUser, setRole, getRole, getAllUsers, filter, errorUser, deleteUser}
+public enum ConstProtocol {exit, add, find, delete, update, getAll, sort, getFile, loadFromFile, finish, addUser, checkUser, checkPassword, setRole, getRole, getAllUsers, filter, errorUser, deleteUser}
