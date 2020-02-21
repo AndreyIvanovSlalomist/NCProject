@@ -37,8 +37,6 @@ public class ClientUtils {
         } catch (UnknownHostException e) {
             logger.error("Ошибка: Неизвестен хост. " + e.toString());
         }
-
-
         return null;
     }
 
@@ -47,56 +45,40 @@ public class ClientUtils {
             clientSocket.getOos().writeObject(ConstProtocol.checkUser);
             clientSocket.getOos().writeObject(login);
             clientSocket.getOos().flush();
-        } catch (IOException e) {
-            logger.error("Ошибка записи в поток! " + e.toString());
-            return null;
-        }
-        try {
             return clientSocket.getOis().readObject();
-        } catch (IOException e) {
-            logger.error("Ошибка чтения из потока! " + e.toString());
-            return null;
         } catch (ClassNotFoundException e) {
             logger.error("Ошибка класс не найден! " + e.toString());
-            return null;
+        } catch (IOException e) {
+            logger.error("Ошибка записи в поток! " + e.toString());
         }
+        return null;
     }
-    public static boolean checkPassword(ClientSocket clientSocket, String login, String password){
+
+    public static boolean checkPassword(ClientSocket clientSocket, String login, String password) {
         try {
             clientSocket.getOos().writeObject(ConstProtocol.checkPassword);
             clientSocket.getOos().writeObject(login);
             clientSocket.getOos().writeObject(password);
             clientSocket.getOos().flush();
-        } catch (IOException e) {
-            logger.error("Ошибка записи в поток! " + e.toString());
-            return false;
-        }
-        try {
             return clientSocket.getOis().readBoolean();
         } catch (IOException e) {
             logger.error("Ошибка чтения из потока! " + e.toString());
-            return false;
         }
+        return false;
     }
 
-    public static Object getRole(ClientSocket clientSocket, String login){
+    public static Object getRole(ClientSocket clientSocket, String login) {
         try {
             clientSocket.getOos().writeObject(ConstProtocol.getRole);
             clientSocket.getOos().writeObject(login);
             clientSocket.getOos().flush();
-        } catch (IOException e) {
-            logger.error("Ошибка записи в поток! "+e.toString());
-        }
-        try {
             return clientSocket.getOis().readObject();
         } catch (IOException e) {
             logger.error("Ошибка чтения из потока! " + e.toString());
-            return null;
         } catch (ClassNotFoundException e) {
             logger.error("Ошибка класс не найден! " + e.toString());
-            return null;
         }
-
+        return null;
     }
 
     public static void updateTrack(ClientSocket clientSocket, Track track, String name, String singer, String album, int lengthInt, String genre) {
@@ -134,19 +116,13 @@ public class ClientUtils {
             clientSocket.getOos().writeObject(login);
             clientSocket.getOos().writeObject(password);
             clientSocket.getOos().flush();
-        } catch (IOException e) {
-            logger.error("Ошибка записи в поток!. " + e.toString());
-            return null;
-        }
-        try {
             return clientSocket.getOis().readObject();
         } catch (IOException e) {
             logger.error("Ошибка чтения из потока!. " + e.toString());
-            return null;
         } catch (ClassNotFoundException e) {
             logger.error("Ошибка класс не найден!. " + e.toString());
-            return null;
         }
+        return null;
     }
 
     public static void deleteTrack(ClientSocket clientSocket, Track track) {
@@ -164,9 +140,9 @@ public class ClientUtils {
     }
 
     public static List<Track> getAllTrack(ClientSocket clientSocket, String name, String singer, String album, String genre) {
-        List<Track> trackList = new ArrayList<>();
-        boolean isFiltered = !(name.isEmpty() && singer.isEmpty() && album.isEmpty() && genre.isEmpty());
         try {
+            List<Track> trackList = new ArrayList<>();
+            boolean isFiltered = !(name.isEmpty() && singer.isEmpty() && album.isEmpty() && genre.isEmpty());
             if (isFiltered) {
                 logger.info("get filter");
                 clientSocket.getOos().writeObject(ConstProtocol.filter);
@@ -175,72 +151,51 @@ public class ClientUtils {
                 clientSocket.getOos().writeObject(ConstProtocol.getAll);
             }
             clientSocket.getOos().flush();
-        } catch (IOException e) {
-            logger.error("Ошибка при отправке потока. " + e.toString());
-            return new ArrayList<>();
-        }
-        if (isFiltered) {
-            try {
+            if (isFiltered) {
                 clientSocket.getOos().writeObject(name);
                 clientSocket.getOos().writeObject(singer);
                 clientSocket.getOos().writeObject(album);
                 clientSocket.getOos().writeObject(genre);
                 clientSocket.getOos().flush();
-            } catch (IOException e) {
-                logger.error("Ошибка записи в поток. " + e.toString());
-                return new ArrayList<>();
             }
-        }
-        Object inputObject;
-        do {
-            try {
+            Object inputObject;
+            do {
                 inputObject = clientSocket.getOis().readObject();
-            } catch (ClassNotFoundException e) {
-                logger.error("Ошибка класс не найден. " + e.toString());
-                return new ArrayList<>();
-            } catch (IOException e) {
-                logger.error("Ошибка чтения из потока. " + e.toString());
-                return new ArrayList<>();
-            }
-            if (inputObject instanceof Track) {
-                logger.info((inputObject).toString());
-                trackList.add((Track) inputObject);
-            }
-        } while (!((inputObject == ConstProtocol.finish)));
-        return trackList;
+                if (inputObject instanceof Track) {
+                    logger.info((inputObject).toString());
+                    trackList.add((Track) inputObject);
+                }
+            } while (!((inputObject == ConstProtocol.finish)));
+            return trackList;
+        } catch (IOException e) {
+            logger.error("Ошибка при отправке потока. " + e.toString());
+        } catch (ClassNotFoundException e) {
+            logger.error("Ошибка класс не найден. " + e.toString());
+        }
+        return new ArrayList<>();
     }
 
     public static List<User> getAllUser(ClientSocket clientSocket) {
-        List<User> userList = new ArrayList<>();
-
-        logger.info("show Users");
         try {
+            List<User> userList = new ArrayList<>();
+            logger.info("show Users");
             clientSocket.getOos().writeObject(ConstProtocol.getAllUsers);
+            clientSocket.getOos().flush();
+            Object inputObject;
+            do {
+                inputObject = clientSocket.getOis().readObject();
+                if (inputObject instanceof User) {
+                    logger.info(inputObject.toString());
+                    userList.add((User) inputObject);
+                }
+            } while (!((inputObject == ConstProtocol.finish)));
+            return userList;
         } catch (IOException e) {
             logger.error("Ошибка записи в поток. " + e.toString());
+        } catch (ClassNotFoundException e) {
+            logger.error("Ошибка класс не найден. " + e.toString());
         }
-        try {
-            clientSocket.getOos().flush();
-        } catch (IOException e) {
-            logger.error("Ошибка при отправки потока. " + e.toString());
-        }
-        Object inputObject = null;
-        do {
-            try {
-                inputObject = clientSocket.getOis().readObject();
-            } catch (ClassNotFoundException e) {
-                logger.error("Ошибка класс не найден. " + e.toString());
-            } catch (IOException e) {
-                logger.error("Ошибка чтения из поток. " + e.toString());
-            }
-
-            if (inputObject instanceof User) {
-                logger.info(inputObject.toString());
-                userList.add((User) inputObject);
-            }
-        } while (!((inputObject == ConstProtocol.finish)));
-
-        return userList;
+        return new ArrayList<>();
     }
 
     public static void setRole(ClientSocket clientSocket, String name, Role role) {
@@ -253,6 +208,7 @@ public class ClientUtils {
             logger.error("Ошибка записи в поток. " + e.toString());
         }
     }
+
     public static void deleteUser(ClientSocket clientSocket, String name) {
         try {
             clientSocket.getOos().writeObject(ConstProtocol.deleteUser);
