@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import ru.nc.musiclib.net.client.ClientSocket;
-import ru.nc.musiclib.utils.Role;
+import ru.nc.musiclib.classes.Role;
 
 import static ru.nc.musiclib.utils.ClientUtils.alertSelectedItem;
 import static ru.nc.musiclib.utils.ClientUtils.setRole;
@@ -46,9 +46,9 @@ public class SetRole {
     void initialize() {
         newRole = null;
         userName.setText(name);
-        userRole.setSelected(role.equals(Role.user));
-        moderatorRole.setSelected(role.equals(Role.moderator));
-        administratorRole.setSelected(role.equals(Role.administrator));
+        userRole.setSelected(role.equals(Role.ROLE_USER));
+        moderatorRole.setSelected(role.equals(Role.ROLE_MODERATOR));
+        administratorRole.setSelected(role.equals(Role.ROLE_ADMINISTRATOR));
 
     }
 
@@ -56,11 +56,11 @@ public class SetRole {
         newRole = null;
         if (checkBox.isSelected()) {
             if (userRole.equals(checkBox))
-                newRole = Role.user;
+                newRole = new Role(Role.ROLE_USER);
             else if (moderatorRole.equals(checkBox))
-                newRole = Role.moderator;
+                newRole = new Role(Role.ROLE_MODERATOR);
             else if (administratorRole.equals(checkBox))
-                newRole = Role.administrator;
+                newRole = new Role(Role.ROLE_ADMINISTRATOR);
 
             userRole.setSelected(userRole.equals(checkBox));
             moderatorRole.setSelected(moderatorRole.equals(checkBox));

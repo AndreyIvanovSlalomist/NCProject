@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.net.client.ClientSocket;
 import ru.nc.musiclib.utils.ConstProtocol;
-import ru.nc.musiclib.utils.Role;
+import ru.nc.musiclib.classes.Role;
 import ru.nc.musiclib.utils.StreamUtils;
 
 import java.io.File;
@@ -51,14 +51,14 @@ public class FxController {
     private String login;
 
     private void setCurrentRole(Role role) {
-        final boolean value = role.equals(Role.administrator) || role.equals(Role.moderator);
+        final boolean value = role.isAdministrator() || role.isModerator();
         add.setVisible(value);
         update.setVisible(value);
         delete.setVisible(value);
         saveToFile.setVisible(value);
         loadFromFile.setVisible(value);
-        refresh.setVisible(value || role.equals(Role.user));
-        users.setVisible(role.equals(Role.administrator));
+        refresh.setVisible(value || role.isUser());
+        users.setVisible(role.isAdministrator());
     }
 
     @FXML

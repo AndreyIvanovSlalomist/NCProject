@@ -3,31 +3,57 @@
     <users>
         <userName>user1</userName>
         <password>jm7fTZht68FfRnq9h+h1fw==$WxhlkRETgAeETSaGysR/Mg==</password>
-        <role>user</role>
+        <role>
+            <roleName>moderator</roleName>
+        </role>
     </users>
     <users>
         <userName>admin</userName>
         <password>EzugHZIxeAEP1vSevF/ZYg==$y7H0PIvi45nyqGR/yxzu7w==</password>
-        <role>administrator</role>
+        <role>
+            <roleName>administrator</roleName>
+        </role>
     </users>
     <users>
         <userName>moderator</userName>
         <password>VoMezr/xuGEb+WD5mWUf0w==$Uhba2C6qHff4UVQCLabu9A==</password>
-        <role>moderator</role>
+        <role>
+            <roleName>moderator</roleName>
+        </role>
     </users>
     <users>
         <userName>user</userName>
         <password>Jfl88gIZE2fe1ZmtVUFb/w==$k0aZkEmB0MQ5IOUvJlLwoQ==</password>
-        <role>user</role>
+        <role>
+            <roleName>user</roleName>
+        </role>
     </users>
     <users>
         <userName>yana</userName>
         <password>vy/ODcuon+70SNafvtPrnA==$4fGt8nQR9zCTSMQLps1kJA==</password>
-        <role>user</role>
+        <role>
+            <roleName>user</roleName>
+        </role>
     </users>
     <users>
         <userName>krisloveshisalpaka</userName>
         <password>+8rE/bCBBJ7ryWHb7QoVyw==$qRMPlI53uZJiNmHr3gZBTQ==</password>
-        <role>user</role>
+        <role>
+            <roleName>administrator</roleName>
+        </role>
+    </users>
+    <users>
+        <userName>qwert</userName>
+        <password>tqMsD7SfWPvm1ofHjrMpQg==$TZWIOAsvcLN7JEyQ9JN6ig==</password>
+        <role>
+            <roleName>user</roleName>
+        </role>
+    </users>
+    <users>
+        <userName>qq</userName>
+        <password>8fjKa+7sfh7YSkHlCxGD4Q==$Sp6BqITEBC0XTNMui16pzg==</password>
+        <role>
+            <roleName>user</roleName>
+        </role>
     </users>
 </users>

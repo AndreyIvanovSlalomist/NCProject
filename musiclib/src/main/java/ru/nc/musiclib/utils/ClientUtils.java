@@ -1,6 +1,7 @@
 package ru.nc.musiclib.utils;
 
 import javafx.scene.control.Alert;
+import ru.nc.musiclib.classes.Role;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.classes.User;
 import ru.nc.musiclib.logger.MusicLibLogger;

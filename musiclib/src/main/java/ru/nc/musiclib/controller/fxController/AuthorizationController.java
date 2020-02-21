@@ -15,7 +15,7 @@ import ru.nc.musiclib.net.client.ClientSocket;
 import ru.nc.musiclib.utils.ClientUtils;
 import ru.nc.musiclib.utils.ConstProtocol;
 import ru.nc.musiclib.utils.PasswordUtils;
-import ru.nc.musiclib.utils.Role;
+import ru.nc.musiclib.classes.Role;
 import java.util.concurrent.Callable;
 
 import static ru.nc.musiclib.utils.LoaderFX.getStage;

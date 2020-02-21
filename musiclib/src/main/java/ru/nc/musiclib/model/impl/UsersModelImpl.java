@@ -5,7 +5,7 @@ import ru.nc.musiclib.classes.Users;
 import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.model.UserModel;
 import ru.nc.musiclib.utils.PasswordUtils;
-import ru.nc.musiclib.utils.Role;
+import ru.nc.musiclib.classes.Role;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class UsersModelImpl implements UserModel {
     public UsersModelImpl() {
         load();
         if (users.getUsers().isEmpty()) {
-            users.getUsers().add(new User("admin", PasswordUtils.hashPassword("admin"), Role.administrator));
+            users.getUsers().add(new User("admin", PasswordUtils.hashPassword("admin"), new Role(Role.ROLE_ADMINISTRATOR)));
             logger.info("UsersModelImpl add admin");
             save();
         }
@@ -29,7 +29,7 @@ public class UsersModelImpl implements UserModel {
     @Override
     public boolean add(String userName, String password) {
         if (findUser(userName) == null) {
-            users.getUsers().add(new User(userName, password, Role.user));
+            users.getUsers().add(new User(userName, password, new Role(Role.ROLE_USER)));
             logger.info("Пользователь " + userName + " добавлен");
             save();
             return true;

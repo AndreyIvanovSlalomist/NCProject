@@ -1,7 +1,7 @@
 package ru.nc.musiclib.model;
 
 import ru.nc.musiclib.classes.User;
-import ru.nc.musiclib.utils.Role;
+import ru.nc.musiclib.classes.Role;
 
 import java.util.List;
 
