@@ -84,7 +84,9 @@ public class UsersModelImpl implements UserModel {
 
     @Override
     public void load() {
-        loadFromXml(USERS_XML, Users.class, User.class, Role.class);
+        Object object = loadFromXml(USERS_XML, Users.class, User.class, Role.class);
+        if (object instanceof Users)
+            users.setUsers(((Users) object).getUsers());
     }
 
     @Override
