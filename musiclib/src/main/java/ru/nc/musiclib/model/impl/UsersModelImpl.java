@@ -1,30 +1,26 @@
 package ru.nc.musiclib.model.impl;
 
 import ru.nc.musiclib.classes.User;
+import ru.nc.musiclib.classes.Users;
 import ru.nc.musiclib.logger.MusicLibLogger;
 import ru.nc.musiclib.model.UserModel;
 import ru.nc.musiclib.utils.PasswordUtils;
 import ru.nc.musiclib.utils.Role;
 
-import javax.xml.bind.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
+
+import static ru.nc.musiclib.utils.XMLUtils.loadFromXml;
+import static ru.nc.musiclib.utils.XMLUtils.saveToXML;
 
 public class UsersModelImpl implements UserModel {
     private final static MusicLibLogger logger = new MusicLibLogger(UsersModelImpl.class);
+    private static final String USERS_XML = "users.xml";
     private Users users = new Users();
 
     public UsersModelImpl() {
         load();
-        if (users.getUsers().isEmpty()){
-            users.getUsers().add(new User("admin", "admin", Role.administrator));
+        if (users.getUsers().isEmpty()) {
+            users.getUsers().add(new User("admin", PasswordUtils.hashPassword("admin"), Role.administrator));
             logger.info("UsersModelImpl add admin");
             save();
         }
@@ -34,10 +30,10 @@ public class UsersModelImpl implements UserModel {
     public boolean add(String userName, String password) {
         if (findUser(userName) == null) {
             users.getUsers().add(new User(userName, password, Role.user));
-            logger.info("Пользователь "+userName+" добавлен");
+            logger.info("Пользователь " + userName + " добавлен");
             save();
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -53,7 +49,7 @@ public class UsersModelImpl implements UserModel {
         save();
     }
 
-    public String getSalt(String userName){
+    public String getSalt(String userName) {
         return PasswordUtils.getSalt(findUser(userName).getPassword());
     }
 
@@ -74,95 +70,25 @@ public class UsersModelImpl implements UserModel {
 
     @Override
     public boolean checkUser(String login) {
-       return findUser(login)!=null;
+        return findUser(login) != null;
     }
-    public boolean checkPassword(String login, String password){
+
+    public boolean checkPassword(String login, String password) {
         return PasswordUtils.verifyPassword(password, findUser(login).getPassword());
     }
 
     @Override
     public void save() {
-
-        JAXBContext jaxbContext;
-        try {
-            jaxbContext = JAXBContext.newInstance(Users.class, User.class, Role.class);
-        } catch (JAXBException e) {
-            logger.error("newInstance Exception");
-            return;
-        }
-        Marshaller jaxbMarshaller = null;
-        try {
-            jaxbMarshaller = jaxbContext.createMarshaller();
-        } catch (JAXBException e) {
-            logger.error("createMarshaller Exception");
-            return;
-        }
-
-        try {
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        } catch (PropertyException e) {
-            logger.error("setProperty Exception");
-            return;
-        }
-
-        try {
-            jaxbMarshaller.marshal(users, new File("users.xml"));
-        } catch (JAXBException e) {
-            logger.error("marshal Exception");
-            return;
-        }
-
+        saveToXML(users, USERS_XML, Users.class, User.class, Role.class);
     }
 
     @Override
     public void load() {
-
-        JAXBContext jaxbContext = null;
-        try {
-            jaxbContext = JAXBContext.newInstance(Users.class, User.class, Role.class);
-        } catch (JAXBException e) {
-            logger.error("newInstance Exception");
-            return;
-        }
-        Unmarshaller jaxbUnmarshaller = null;
-        try {
-            jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        } catch (JAXBException e) {
-            logger.error("createUnmarshaller Exception");
-            return;
-        }
-
-        try {
-            users.setUsers(((Users) jaxbUnmarshaller.unmarshal(new FileInputStream("users.xml"))).getUsers());
-        } catch (JAXBException | FileNotFoundException e) {
-            logger.error("unmarshal Exception"+ e.getLocalizedMessage());
-        }
-
-        logger.info("Пользователей Загружено = " + users.getUsers().size());
+        loadFromXml(USERS_XML, Users.class, User.class, Role.class);
     }
 
     @Override
     public List<User> getAllUser() {
         return users.getUsers();
-    }
-
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlRootElement(name = "users")
-    public static class Users {
-        @XmlElement(name = "users")
-        private List<User> users = new ArrayList<>();
-
-        public synchronized List<User> getUsers() {
-            return users;
-        }
-
-        public void setUsers(List<User> users) {
-            this.users = users;
-        }
-
-        @Override
-        public String toString() {
-            return "users [users=" + users + "]";
-        }
     }
 }
