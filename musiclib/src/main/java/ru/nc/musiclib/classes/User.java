@@ -11,8 +11,33 @@ public class User implements Serializable {
     private String userName;
     @XmlElement(name = "password")
     private String password;
+
+    public User(String userName, String password, Role role, Integer id) {
+        this.userName = userName;
+        this.password = password;
+        this.role = role;
+        this.id = id;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
     @XmlElement(name = "role")
     private Role role;
+    private Integer id;
 
     public User(String userName, String password, Role role) {
         this.userName = userName;

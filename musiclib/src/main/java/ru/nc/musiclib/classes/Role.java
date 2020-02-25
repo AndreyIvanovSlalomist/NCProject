@@ -14,6 +14,21 @@ public class Role implements Serializable {
     @XmlElement(name = "roleName")
     private String roleName;
 
+    private Integer id;
+
+    public Role(String roleName, Integer id) {
+        this.roleName = roleName;
+        this.id = id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
     public Role() {
     }
 
