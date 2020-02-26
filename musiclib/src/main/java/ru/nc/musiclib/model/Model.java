@@ -25,6 +25,8 @@ public interface Model {
 
     boolean addFromFile(String fileName);
 
+    boolean saveToFile(String fileName);
+
     boolean update(Track track, int colNumber, String newValue);
 
     boolean update(Track track, String name, String singer, String album, int length, String genreName);

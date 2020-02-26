@@ -127,6 +127,11 @@ public class MusicModel implements Model, Observable {
     }
 
     @Override
+    public boolean saveToFile(String fileName){
+        return true;
+    }
+
+    @Override
     public boolean addFromFile(String fileName) {
         List<Track> trackList = addFromXMLFile(fileName);
         if (trackList != null)
