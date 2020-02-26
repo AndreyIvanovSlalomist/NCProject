@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 /**
  * в конструкторе DAO'шки инициализируем Connection
- * Connection connection = ConnectionFormProperties.getConnection();
+ * Connection connection = connectionFormProperties().getConnection();
  *
  */
 public class ConnectionFormProperties {
