@@ -5,6 +5,7 @@ import ru.nc.musiclib.controller.impl.MusicLibController;
 import ru.nc.musiclib.model.Model;
 import ru.nc.musiclib.model.UserModel;
 import ru.nc.musiclib.model.impl.MusicModel;
+import ru.nc.musiclib.model.impl.MusicModelWithDao;
 import ru.nc.musiclib.model.impl.UsersModelImpl;
 import ru.nc.musiclib.net.server.MusicLibServer;
 
@@ -18,7 +19,8 @@ public class ServerMain {
         }
 
         Controller controller = new MusicLibController();
-        Model model = new MusicModel();
+        //Model model = new MusicModel();
+        Model model = new MusicModelWithDao();
         UserModel userModel = new UsersModelImpl();
         controller.setModel(model);
         MusicLibServer musicLibServer = new MusicLibServer();
