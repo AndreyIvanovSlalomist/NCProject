@@ -19,7 +19,8 @@ public class Track implements Serializable, Cloneable {
     @XmlElement(name = "genre")
     private Genre genre;
 
-    public Track(String name, String singer, String album, int length, Genre genre, Integer id) {
+
+    public Track(Integer id, String name, String singer, String album, int length, Genre genre) {
         this.name = name;
         this.singer = singer;
         this.album = album;

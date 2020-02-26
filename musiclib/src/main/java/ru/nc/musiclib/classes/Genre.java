@@ -12,7 +12,7 @@ public class Genre implements Serializable {
     private String genreName;
     private Integer id;
 
-    public Genre(String genreName, Integer id) {
+    public Genre(Integer id, String genreName) {
         this.genreName = genreName;
         this.id = id;
     }
