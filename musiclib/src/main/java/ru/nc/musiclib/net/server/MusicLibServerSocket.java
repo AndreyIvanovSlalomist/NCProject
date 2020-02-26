@@ -249,6 +249,7 @@ public class MusicLibServerSocket implements Runnable {
     }
 
     private void getFile(ObjectOutputStream out) {
+        model.saveToFile("tracks.xml");
         StreamUtils.fileToStream(out, "tracks.xml");
         logger.info("Файл передан");
     }
