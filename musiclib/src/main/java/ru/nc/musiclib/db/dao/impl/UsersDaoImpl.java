@@ -39,6 +39,13 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public void deleteByName(String name) {
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("delete from lib_user where userName = ?");
+            preparedStatement.setString(1, name);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
