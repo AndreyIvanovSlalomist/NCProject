@@ -4,10 +4,8 @@ import ru.nc.musiclib.classes.Role;
 import ru.nc.musiclib.classes.User;
 import ru.nc.musiclib.db.dao.UsersDao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,11 +54,29 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public void save(User model) {
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into lib_user (userName, password,id_rile) values (?, ?, ?)");
+            preparedStatement.setString(1, model.getUserName());
+            preparedStatement.setString(2, model.getPassword());
+            preparedStatement.setInt(3, model.getRole().getId());
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
     @Override
     public void update(User model) {
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("update lib_user set userName = ?, password = ?, id_rile = ? where id = ?");
+            preparedStatement.setString(1, model.getUserName());
+            preparedStatement.setString(2, model.getPassword());
+            preparedStatement.setInt(3, model.getRole().getId());
+            preparedStatement.setInt(4,model.getId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -76,7 +92,20 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public List<User> findAll() {
-        return null;
+        List<User> users = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("select * from lib_user");
+            while(resultSet.next()){
+                users.add(new User(resultSet.getString("userName"),
+                        resultSet.getString("password"),
+                        findRole(resultSet.getInt("id_rile")),
+                        resultSet.getInt("id")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
     private Role findRole(int id){
