@@ -54,8 +54,7 @@ public class UsersDaoImpl implements UsersDao {
 
     @Override
     public void save(User model) {
-        try{
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into lib_user (userName, password,id_rile) values (?, ?, ?)");
+        try(PreparedStatement preparedStatement = connection.prepareStatement("insert into lib_user (userName, password,id_rile) values (?, ?, ?)")){
             preparedStatement.setString(1, model.getUserName());
             preparedStatement.setString(2, model.getPassword());
             preparedStatement.setInt(3,getRoleByName(model.getRole().getRoleName()).getId());
@@ -74,6 +73,7 @@ public class UsersDaoImpl implements UsersDao {
             preparedStatement.setString(2, model.getPassword());
             preparedStatement.setInt(3, getRoleByName(model.getRole().getRoleName()).getId());
             preparedStatement.setInt(4,model.getId());
+            preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
