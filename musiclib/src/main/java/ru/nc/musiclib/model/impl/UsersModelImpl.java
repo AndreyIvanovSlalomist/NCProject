@@ -33,9 +33,8 @@ public class UsersModelImpl implements UserModel {
             logger.info("Пользователь " + userName + " добавлен");
             save();
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     @Override
@@ -77,13 +76,11 @@ public class UsersModelImpl implements UserModel {
         return PasswordUtils.verifyPassword(password, findUser(login).getPassword());
     }
 
-    @Override
-    public void save() {
+    private void save() {
         saveToXML(users, USERS_XML, Users.class, User.class, Role.class);
     }
 
-    @Override
-    public void load() {
+    private void load() {
         Object object = loadFromXml(USERS_XML, Users.class, User.class, Role.class);
         if (object instanceof Users)
             users.setUsers(((Users) object).getUsers());

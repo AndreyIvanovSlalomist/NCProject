@@ -14,7 +14,5 @@ public interface UserModel {
     boolean checkUser(String userName);
     boolean checkPassword(String userName, String password);
     String getSalt(String userName);
-    void save();
-    void load();
     List<User> getAllUser();
 }

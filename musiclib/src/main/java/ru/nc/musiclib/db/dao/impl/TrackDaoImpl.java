@@ -118,13 +118,13 @@ public class TrackDaoImpl implements TrackDao {
     }
 
     @Override
-    public void delete(Track mode) {
+    public void delete(Track model) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_TRACK);
-            preparedStatement.setString(1, mode.getName());
-            preparedStatement.setString(2, mode.getSinger());
-            preparedStatement.setString(3, mode.getAlbum());
-            preparedStatement.setInt(4, mode.getLengthInt());
+            preparedStatement.setString(1, model.getName());
+            preparedStatement.setString(2, model.getSinger());
+            preparedStatement.setString(3, model.getAlbum());
+            preparedStatement.setInt(4, model.getLengthInt());
             preparedStatement.execute();
 
         } catch (SQLException e) {

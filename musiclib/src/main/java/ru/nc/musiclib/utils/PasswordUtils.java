@@ -12,7 +12,7 @@ public class PasswordUtils {
     private PasswordUtils(){}
 
     public static String hashPassword(String password){
-        byte[] salt = getSalt();
+        byte[] salt = salt();
         String hashedPassword = hash(password,salt);
         return hashedPassword+"$"+ Base64.getEncoder().encodeToString(salt);
     }
@@ -44,7 +44,7 @@ public class PasswordUtils {
         return Base64.getEncoder().encodeToString(hash);
     }
 
-    private static byte[] getSalt(){
+    private static byte[] salt(){
         SecureRandom random = new SecureRandom();
         byte[]salt = new byte[16];
         random.nextBytes(salt);

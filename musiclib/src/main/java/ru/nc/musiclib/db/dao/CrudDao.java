@@ -12,6 +12,6 @@ public interface CrudDao<T> {
     void save(T model);
     void update(T model);
     void delete(Integer id);
-    void delete(T mode);
+    void delete(T model);
     List<T> findAll();
 }
