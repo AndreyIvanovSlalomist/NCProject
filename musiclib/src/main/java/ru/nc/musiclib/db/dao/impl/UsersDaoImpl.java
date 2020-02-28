@@ -68,11 +68,9 @@ public class UsersDaoImpl implements UsersDao {
     @Override
     public void update(User model) {
         try{
-            PreparedStatement preparedStatement = connection.prepareStatement("update lib_user set userName = ?, password = ?, id_rile = ? where id = ?");
-            preparedStatement.setString(1, model.getUserName());
-            preparedStatement.setString(2, model.getPassword());
-            preparedStatement.setInt(3, getRoleByName(model.getRole().getRoleName()).getId());
-            preparedStatement.setInt(4,model.getId());
+            PreparedStatement preparedStatement = connection.prepareStatement("update lib_user set id_rile = ? where id = ?");
+            preparedStatement.setInt(1, getRoleByName(model.getRole().getRoleName()).getId());
+            preparedStatement.setInt(2,model.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
