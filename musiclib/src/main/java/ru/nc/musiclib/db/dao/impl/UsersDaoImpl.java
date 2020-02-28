@@ -58,7 +58,7 @@ public class UsersDaoImpl implements UsersDao {
             PreparedStatement preparedStatement = connection.prepareStatement("insert into lib_user (userName, password,id_rile) values (?, ?, ?)");
             preparedStatement.setString(1, model.getUserName());
             preparedStatement.setString(2, model.getPassword());
-            preparedStatement.setInt(3, model.getRole().getId());
+            preparedStatement.setInt(3,getRoleByName(model.getRole().getRoleName()).getId());
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -72,7 +72,7 @@ public class UsersDaoImpl implements UsersDao {
             PreparedStatement preparedStatement = connection.prepareStatement("update lib_user set userName = ?, password = ?, id_rile = ? where id = ?");
             preparedStatement.setString(1, model.getUserName());
             preparedStatement.setString(2, model.getPassword());
-            preparedStatement.setInt(3, model.getRole().getId());
+            preparedStatement.setInt(3, getRoleByName(model.getRole().getRoleName()).getId());
             preparedStatement.setInt(4,model.getId());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -115,6 +115,21 @@ public class UsersDaoImpl implements UsersDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             if(resultSet.next()) return new Role(resultSet.getString("roleName"),
                     resultSet.getInt("id"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Role getRoleByName(String name){
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from lib_role where roleName = ?");
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next())
+            {
+                return new Role(resultSet.getString("roleName"), resultSet.getInt("id"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
