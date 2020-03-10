@@ -1,4 +1,37 @@
-<style type="text/css">
+<style>
+.top-menu {
+    list-style-type: none;
+}
+.top-menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #e7e7e7;
+    background-color: #f3f3f3;
+}
+
+.top-menu ul li {
+    float: left;
+}
+
+.top-menu ul li a {
+    display: block;
+    color: #666;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.top-menu ul li a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+.top-menu ul li a.active {
+    color: white;
+    background-color: #4CAF50;
+}
+
 .form-style-2{
 	max-width: 500px;
 	padding: 20px 12px 10px 20px;
