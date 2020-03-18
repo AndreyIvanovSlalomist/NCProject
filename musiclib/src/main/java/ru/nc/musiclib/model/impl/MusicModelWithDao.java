@@ -1,5 +1,7 @@
 package ru.nc.musiclib.model.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.nc.musiclib.classes.Genre;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.classes.Tracks;
@@ -12,9 +14,10 @@ import java.util.List;
 
 import static ru.nc.musiclib.utils.XMLUtils.loadFromXml;
 import static ru.nc.musiclib.utils.XMLUtils.saveToXML;
-
+@Component
 public class MusicModelWithDao implements Model {
-    private TrackDao trackDao = new TrackDaoImpl();
+    @Autowired
+    private TrackDao trackDao;
 
     @Override
     public List<Track> getAll() {

@@ -22,6 +22,23 @@
 </nav>
 <div class="container">
   <h2>Треки</h2>
+
+<form method="get" action="/tracks" autocomplete="off" class="form-inline">
+    <div class="form-group" for="name">
+        <input autofocus type="text" class="form-control" name="name" id="name" placeholder="Название" value="${name}"">
+    </div>
+    <div class="form-group" for="singer">
+        <input autofocus type="text" class="form-control" name="singer" id="singer" placeholder="Исполнитель" value="${singer}"">
+    </div>
+    <div class="form-group" for="album">
+        <input autofocus type="text" class="form-control" name="album" id="album" placeholder="Альбом" value="${album}"">
+    </div>
+    <div class="form-group" for="genreName">
+        <input autofocus type="text" class="form-control" name="genreName" id="genreName" placeholder="Жанр" value="${genreName}">
+    </div>
+    <input type="submit" class="btn btn-primary" value="Искать">
+    <a href="/tracks"><div class="btn btn-primary">Отмена</div></a>
+</form>
   <table  class="table table-hover">
     <tr>
       <th>Название</th>

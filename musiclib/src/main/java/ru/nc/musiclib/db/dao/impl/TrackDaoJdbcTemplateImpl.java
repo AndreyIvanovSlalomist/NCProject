@@ -10,6 +10,7 @@ import ru.nc.musiclib.db.dao.TrackDao;
 import ru.nc.musiclib.logger.MusicLibLogger;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @Component
 public class TrackDaoJdbcTemplateImpl implements TrackDao {
     private static final String SQL_SELECT_ALL = "select * from track";
-    private static final String SQL_SELECT_TRACK = "select * from track where name = ? and singer = ? and album = ? and length = ?";
+    private static final String SQL_SELECT_TRACK = "select * from track where name = :name and singer = :singer and album = :album and length = :length";
     private static final String SQL_SELECT_BY_ID = "select * from track where id =?";
     private static final String SQL_SELECT_ALL_GENRE = "select * from lib_Genre";
     private static final String SQL_SELECT_GENRE_BY_ID = "select * from lib_Genre where id =?";
