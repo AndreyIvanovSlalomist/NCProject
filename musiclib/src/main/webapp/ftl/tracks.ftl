@@ -43,11 +43,17 @@
     <tr>
       <th>Название</th>
       <th>Исполнитель</th>
+      <th>Альбом</th>
+      <th>Длина трека</th>
+      <th>Жанр</th>
     </tr>
     <#list tracksFromServer as track>
     <tr>
       <td><a href="/track?id=${track.id}">${track.name}</a></td>
       <td>${track.singer}</td>
+      <td>${track.album}</td>
+      <td>${track.length}</td>
+      <td>${track.genreName}</td>
     </tr>
     </#list>
   </table>
