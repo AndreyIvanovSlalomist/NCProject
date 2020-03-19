@@ -41,11 +41,11 @@
 </form>
   <table  class="table table-hover" id="table">
     <tr>
-      <th onclick="sort(0)">Название</th>
-      <th onclick="sort(1)">Исполнитель</th>
-      <th onclick="sort(2)">Альбом</th>
-      <th onclick="sort(3)">Длина трека</th>
-      <th onclick="sort(4)">Жанр</th>
+      <th onclick="sort(0, this)">Название</th>
+      <th onclick="sort(1, this)">Исполнитель</th>
+      <th onclick="sort(2, this)">Альбом</th>
+      <th onclick="sort(3, this)">Длина трека</th>
+      <th onclick="sort(4, this)">Жанр</th>
     </tr>
     <#list tracksFromServer as track>
     <tr>
@@ -60,17 +60,33 @@
 </div>
 
   <script type="text/javascript">
-    function sort(number) {
+    function sort(number, ColHeader) {
       var elem = document.querySelector("#table");
+
+      var up = true;
+
+      if (ColHeader.classList.contains("up")) {
+        up = false;
+        ColHeader.classList.remove("up");
+      }else{
+        up = true;
+        ColHeader.classList.add("up");
+      }
+
+      var tbody = table.getElementsByTagName("tr").item(0);
+      for (var i = 0; (node = tbody.getElementsByTagName("th").item(i)); i++) {
+        node.classList.remove("up");
+      }
+
 
       let sortedRows = Array.from(table.rows)
         .slice(1)
         .sort((rowA, rowB) => rowA.cells[number].innerHTML > rowB.cells[number].innerHTML ? 1 : -1);
-      if (elem.classList.contains("up")) {
+      if (!up) {
         sortedRows.reverse();
-        elem.classList.remove("up");
+        ColHeader.classList.remove("up");
       }else{
-        elem.classList.add("up");
+        ColHeader.classList.add("up");
       }
       table.tBodies[0].append(...sortedRows);
     }
