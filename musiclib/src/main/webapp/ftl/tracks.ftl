@@ -39,13 +39,13 @@
     <input type="submit" class="btn btn-primary" value="Искать">
     <a href="/tracks"><div class="btn btn-primary">Отмена</div></a>
 </form>
-  <table  class="table table-hover">
+  <table  class="table table-hover" id="table">
     <tr>
-      <th>Название</th>
-      <th>Исполнитель</th>
-      <th>Альбом</th>
-      <th>Длина трека</th>
-      <th>Жанр</th>
+      <th onclick="sort(0)">Название</th>
+      <th onclick="sort(1)">Исполнитель</th>
+      <th onclick="sort(2)">Альбом</th>
+      <th onclick="sort(3)">Длина трека</th>
+      <th onclick="sort(4)">Жанр</th>
     </tr>
     <#list tracksFromServer as track>
     <tr>
@@ -58,5 +58,22 @@
     </#list>
   </table>
 </div>
+
+  <script type="text/javascript">
+    function sort(number) {
+      var elem = document.querySelector("#table");
+
+      let sortedRows = Array.from(table.rows)
+        .slice(1)
+        .sort((rowA, rowB) => rowA.cells[number].innerHTML > rowB.cells[number].innerHTML ? 1 : -1);
+      if (elem.classList.contains("up")) {
+        sortedRows.reverse();
+        elem.classList.remove("up");
+      }else{
+        elem.classList.add("up");
+      }
+      table.tBodies[0].append(...sortedRows);
+    }
+  </script>
 </body>
 </html>
