@@ -58,5 +58,9 @@ public class TracksController {
         model.addAttribute("tracksFromServer", tracks);
         return "tracks";
     }
+    @RequestMapping(value = "/tracks/add")
+    public String add(){
+        return "/addtrack";
+    }
 
 }
