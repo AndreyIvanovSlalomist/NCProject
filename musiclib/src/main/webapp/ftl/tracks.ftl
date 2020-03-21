@@ -2,8 +2,7 @@
 <#import "macros.ftl" as macros/>
        <html>
        <head>
-           <title>Title</title>
-
+           <title>Треки</title>
            <link href="/css/styles.css" rel="stylesheet" type="text/css">
        <!--    <link href="/css/bootstrap.min.css" rel="stylesheet"/>  если нет интернета (не рисует glyphicon)-->
            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
