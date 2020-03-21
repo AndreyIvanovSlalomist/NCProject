@@ -1,5 +1,7 @@
 package ru.nc.musiclib.model.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.nc.musiclib.classes.Role;
 import ru.nc.musiclib.classes.User;
 import ru.nc.musiclib.db.dao.UsersDao;
@@ -8,9 +10,10 @@ import ru.nc.musiclib.model.UserModel;
 import ru.nc.musiclib.utils.PasswordUtils;
 
 import java.util.List;
-
+@Component
 public class UsersModelWithDao  implements UserModel {
-    private UsersDao usersDao = new UsersDaoImpl();
+    @Autowired
+    private UsersDao usersDao;
 
     @Override
     public List<User> getAllUser() {

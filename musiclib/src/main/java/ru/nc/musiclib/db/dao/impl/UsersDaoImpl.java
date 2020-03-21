@@ -1,5 +1,6 @@
 package ru.nc.musiclib.db.dao.impl;
 
+import org.springframework.stereotype.Component;
 import ru.nc.musiclib.classes.Role;
 import ru.nc.musiclib.classes.User;
 import ru.nc.musiclib.db.dao.UsersDao;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static ru.nc.musiclib.db.ConnectionFormProperties.connectionFormProperties;
-
+@Component
 public class UsersDaoImpl implements UsersDao {
 
     private final static MusicLibLogger logger = new MusicLibLogger(UsersDaoImpl.class);
