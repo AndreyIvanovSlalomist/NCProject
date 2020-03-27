@@ -77,27 +77,37 @@ public class TrackDaoJdbcTemplateImpl implements TrackDao {
 
     @Override
     public void save(Track model) {
-
-
+        jdbcTemplate.update(SQL_INSERT_TRACK, model.getName(), model.getSinger(), model.getAlbum(),model.getLengthInt(), findOrSaveGenre(model.getGenreName()).getId());
     }
 
     @Override
     public void update(Track model) {
-
+        jdbcTemplate.update(SQL_UPDATE_TRACK_BY_ID, model.getName(), model.getSinger(), model.getAlbum(),model.getLengthInt(), findOrSaveGenre(model.getGenreName()).getId(), model.getId());
     }
 
     @Override
     public void delete(Integer id) {
-
+        jdbcTemplate.update(SQL_DELETE_BY_ID, id);
     }
 
     @Override
     public void delete(Track model) {
-
+        jdbcTemplate.update(SQL_DELETE_TRACK, model.getName(), model.getSinger(), model.getAlbum(), model.getLengthInt());
     }
 
     @Override
     public List<Track> findAll() {
         return jdbcTemplate.query(SQL_SELECT_ALL, trackRowMapper);
+    }
+
+    private Genre findOrSaveGenre(String name){
+        Genre genre = jdbcTemplate.queryForObject(SQL_SELECT_GENRE_BY_NAME, new Object[]{name}, genreRowMapper);
+        if (genre != null){
+            return genre;
+        }
+        else{
+            jdbcTemplate.update(SQL_INSERT_GENRE, name);
+            return findOrSaveGenre(name);
+        }
     }
 }
