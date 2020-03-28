@@ -3,9 +3,7 @@ package ru.nc.musiclib.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.db.dao.TrackDao;
 import ru.nc.musiclib.model.Model;
@@ -16,6 +14,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+@RequestMapping("/tracks")
 @Controller
 public class TracksController {
     @Autowired
@@ -23,7 +22,7 @@ public class TracksController {
     @Autowired
     private Model trackModel;
 
-    @RequestMapping(value = "/tracks", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public String getAllTracks(ModelMap model, @RequestParam(name = "name", required = false, defaultValue = "") String name,
                                @RequestParam(name = "singer", required = false, defaultValue = "") String singer,
                                @RequestParam(name = "album", required = false, defaultValue = "") String album,
@@ -58,9 +57,19 @@ public class TracksController {
         model.addAttribute("tracksFromServer", tracks);
         return "tracks";
     }
-    @RequestMapping(value = "/tracks/add")
-    public String add(){
-        return "/addtrack";
+
+    @RequestMapping(value="/{id}", params = "form", method = RequestMethod.GET)
+    public String updateForm(ModelMap model, @PathVariable("id") Integer id){
+        if(trackModel.find(id).isPresent())
+            model.addAttribute("track",trackModel.find(id).get());
+        return "edit";
+    }
+
+    @RequestMapping(value = "/{id}",method = RequestMethod.GET)
+    public String show(ModelMap model, @PathVariable("id") Integer id){
+        if(trackModel.find(id).isPresent())
+            model.addAttribute("track",trackModel.find(id).get());
+        return "show";
     }
 
 }

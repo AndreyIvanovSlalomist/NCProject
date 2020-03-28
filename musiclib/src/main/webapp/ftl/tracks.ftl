@@ -39,7 +39,7 @@
            </tr>
            <#list tracksFromServer as track>
            <tr>
-             <td><a href="/track?id=${track.id}">${track.name}</a></td>
+             <td><a href="/tracks/${track.id}">${track.name}</a></td>
              <td>${track.singer}</td>
              <td>${track.album}</td>
              <td>${track.length}</td>
