@@ -4,6 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import ru.nc.musiclib.classes.Genre;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.db.dao.TrackDao;
 import ru.nc.musiclib.model.Model;
@@ -66,10 +71,21 @@ public class TracksController {
     }
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
-    public String show(ModelMap model, @PathVariable("id") Integer id){
-        if(trackModel.find(id).isPresent())
-            model.addAttribute("track",trackModel.find(id).get());
+    public String show(ModelMap model, @PathVariable("id") Integer id) {
+        if (trackModel.find(id).isPresent())
+            model.addAttribute("track", trackModel.find(id).get());
         return "show";
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    public String add(){
+        return "addtrack";
+    }
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public String add(ModelMap model, @ModelAttribute Track track, @ModelAttribute Genre genre){
+        trackModel.add(track.getName(),track.getSinger(),track.getAlbum(),track.getLengthInt(), genre.getGenreName(), false);
+        return "addtrack";
     }
 
 }

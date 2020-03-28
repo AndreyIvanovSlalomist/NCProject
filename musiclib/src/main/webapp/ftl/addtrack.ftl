@@ -10,7 +10,7 @@
 <@macros.navMenu/>
 <div class="container">
     <h2>Добавить трек</h2>
-    <form method="get" action="/tracks" autocomplete="off" class="form-inline">
+    <form action="add" method="POST" autocomplete="off" class="form-inline">
         <div class="form-group" for="name">
             <input autofocus type="text" class="form-control" name="name" id="name" placeholder="Название">
         </div>
