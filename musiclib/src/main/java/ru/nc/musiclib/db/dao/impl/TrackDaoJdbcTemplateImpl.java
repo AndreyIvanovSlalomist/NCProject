@@ -1,6 +1,7 @@
 package ru.nc.musiclib.db.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -101,11 +102,11 @@ public class TrackDaoJdbcTemplateImpl implements TrackDao {
     }
 
     private Genre findOrSaveGenre(String name){
-        Genre genre = jdbcTemplate.queryForObject(SQL_SELECT_GENRE_BY_NAME, new Object[]{name}, genreRowMapper);
-        if (genre != null){
+        try {
+            Genre genre = jdbcTemplate.queryForObject(SQL_SELECT_GENRE_BY_NAME, new Object[]{name}, genreRowMapper);
             return genre;
         }
-        else{
+        catch (DataAccessException ex){
             jdbcTemplate.update(SQL_INSERT_GENRE, name);
             return findOrSaveGenre(name);
         }
