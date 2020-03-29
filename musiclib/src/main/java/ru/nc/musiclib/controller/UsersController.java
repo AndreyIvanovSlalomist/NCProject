@@ -14,9 +14,7 @@ public class UsersController {
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public String getAllUsers(ModelMap model){
-
         model.addAttribute("usersFromServer", userModel.getAllUser());
-
         return "users";
     }
 }

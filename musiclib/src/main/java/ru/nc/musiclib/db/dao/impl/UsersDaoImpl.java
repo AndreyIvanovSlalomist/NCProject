@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static ru.nc.musiclib.db.ConnectionFormProperties.connectionFormProperties;
-@Component
+
 public class UsersDaoImpl implements UsersDao {
 
     private final static MusicLibLogger logger = new MusicLibLogger(UsersDaoImpl.class);
