@@ -77,6 +77,12 @@ public class TracksController {
         return "show";
     }
 
+    @RequestMapping(value = "/{id}/delete",method = RequestMethod.POST)
+    public String delete(@PathVariable("id") Integer id) {
+        trackModel.delete(id);
+        return "redirect:/tracks";
+    }
+
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(){
         return "addtrack";
@@ -85,7 +91,7 @@ public class TracksController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public String add(ModelMap model, @ModelAttribute Track track, @ModelAttribute Genre genre){
         trackModel.add(track.getName(),track.getSinger(),track.getAlbum(),track.getLengthInt(), genre.getGenreName(), false);
-        return "addtrack";
+        return "redirect:/tracks";
     }
 
 }
