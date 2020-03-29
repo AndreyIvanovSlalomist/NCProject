@@ -36,14 +36,22 @@
              <th onclick="sort(2, this)">Альбом</th>
              <th onclick="sort(3, this)">Длина трека</th>
              <th onclick="sort(4, this)">Жанр</th>
+             <th></th>
+             <th></th>
            </tr>
            <#list tracksFromServer as track>
            <tr>
-             <td><a href="/track?id=${track.id}">${track.name}</a></td>
+             <td><a href="/tracks/${track.id}">${track.name}</a></td>
              <td>${track.singer}</td>
              <td>${track.album}</td>
              <td>${track.length}</td>
              <td>${track.genreName}</td>
+             <form method = "get" action="/tracks/${track.id}/update">
+             <td><input type="submit" class="btn btn-primary" value="Редактировать"></td>
+             </form>
+             <form method = "post" action="/tracks/${track.id}/delete">
+             <td><input type="submit" class="btn btn-primary" value="Удалить"></td>
+             </form>
            </tr>
            </#list>
          </table>

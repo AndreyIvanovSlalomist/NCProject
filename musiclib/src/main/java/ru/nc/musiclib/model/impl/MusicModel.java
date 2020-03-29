@@ -12,6 +12,7 @@ import ru.nc.musiclib.model.Model;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import static ru.nc.musiclib.utils.StreamUtils.loadObjectFromFileInputStream;
 import static ru.nc.musiclib.utils.XMLUtils.loadFromXml;
@@ -298,6 +299,11 @@ public class MusicModel implements Model, Observable {
             }
         }
         return trackList;
+    }
+
+    @Override
+    public Optional<Track> find(Integer id) {
+        return null;
     }
 
     private Genre findGenre(String genreName) {

@@ -1,6 +1,8 @@
 package ru.nc.musiclib.db.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -19,7 +21,7 @@ import java.util.stream.Collectors;
 @Component
 public class TrackDaoJdbcTemplateImpl implements TrackDao {
     private static final String SQL_SELECT_ALL = "select * from track";
-    private static final String SQL_SELECT_TRACK = "select * from track where name = :name and singer = :singer and album = :album and length = :length";
+    private static final String SQL_SELECT_TRACK = "select * from track where name = ? and singer = ? and album = ? and length = ?";
     private static final String SQL_SELECT_BY_ID = "select * from track where id =?";
     private static final String SQL_SELECT_ALL_GENRE = "select * from lib_Genre";
     private static final String SQL_SELECT_GENRE_BY_ID = "select * from lib_Genre where id =?";
@@ -48,7 +50,11 @@ public class TrackDaoJdbcTemplateImpl implements TrackDao {
 
     @Override
     public Track findTrack(String name, String singer, String album, int length) {
-        return null;
+        try {
+            return jdbcTemplate.queryForObject(SQL_SELECT_TRACK, new Object[]{name, singer, album, length}, trackRowMapper);
+        }catch (EmptyResultDataAccessException ex){
+            return null;
+        }
     }
 
     @Override
@@ -101,11 +107,11 @@ public class TrackDaoJdbcTemplateImpl implements TrackDao {
     }
 
     private Genre findOrSaveGenre(String name){
-        Genre genre = jdbcTemplate.queryForObject(SQL_SELECT_GENRE_BY_NAME, new Object[]{name}, genreRowMapper);
-        if (genre != null){
+        try {
+            Genre genre = jdbcTemplate.queryForObject(SQL_SELECT_GENRE_BY_NAME, new Object[]{name}, genreRowMapper);
             return genre;
         }
-        else{
+        catch (DataAccessException ex){
             jdbcTemplate.update(SQL_INSERT_GENRE, name);
             return findOrSaveGenre(name);
         }

@@ -7,7 +7,9 @@
         <length>219</length>
         <genre>
             <genreName>инди-поп</genreName>
+            <id>1</id>
         </genre>
+        <id>1</id>
     </track>
     <track>
         <name>Credoqwe</name>
@@ -16,7 +18,9 @@
         <length>184</length>
         <genre>
             <genreName>Поп-музыка</genreName>
+            <id>2</id>
         </genre>
+        <id>2</id>
     </track>
     <track>
         <name>Hey You</name>
@@ -25,7 +29,9 @@
         <length>234</length>
         <genre>
             <genreName>Progressive Rock</genreName>
+            <id>3</id>
         </genre>
+        <id>3</id>
     </track>
     <track>
         <name>O'Children23452345</name>
@@ -34,7 +40,9 @@
         <length>345</length>
         <genre>
             <genreName>rock</genreName>
+            <id>4</id>
         </genre>
+        <id>4</id>
     </track>
     <track>
         <name>Blinding Lights</name>
@@ -43,16 +51,9 @@
         <length>246</length>
         <genre>
             <genreName>Soul</genreName>
+            <id>5</id>
         </genre>
-    </track>
-    <track>
-        <name>lkhoi</name>
-        <singer>nliojo</singer>
-        <album>oijo</album>
-        <length>87</length>
-        <genre>
-            <genreName>kho</genreName>
-        </genre>
+        <id>5</id>
     </track>
     <track>
         <name>Любимка</name>
@@ -61,7 +62,9 @@
         <length>229</length>
         <genre>
             <genreName>Хип-хоп</genreName>
+            <id>6</id>
         </genre>
+        <id>6</id>
     </track>
     <track>
         <name>Yung Hefner</name>
@@ -70,7 +73,9 @@
         <length>135</length>
         <genre>
             <genreName>Хип-хоп</genreName>
+            <id>6</id>
         </genre>
+        <id>7</id>
     </track>
     <track>
         <name>O'Children</name>
@@ -79,7 +84,9 @@
         <length>345</length>
         <genre>
             <genreName>rock</genreName>
+            <id>4</id>
         </genre>
+        <id>8</id>
     </track>
     <track>
         <name>Wish You Were Here</name>
@@ -88,6 +95,19 @@
         <length>340</length>
         <genre>
             <genreName>Progressive Rock</genreName>
+            <id>3</id>
         </genre>
+        <id>9</id>
+    </track>
+    <track>
+        <name>qweqqq</name>
+        <singer>qwe</singer>
+        <album>qwe</album>
+        <length>12</length>
+        <genre>
+            <genreName>rock</genreName>
+            <id>4</id>
+        </genre>
+        <id>11</id>
     </track>
 </musiclib>

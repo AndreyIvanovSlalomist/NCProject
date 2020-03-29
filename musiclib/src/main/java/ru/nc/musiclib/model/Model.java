@@ -2,9 +2,8 @@ package ru.nc.musiclib.model;
 
 import ru.nc.musiclib.classes.Track;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Интерфейс для моделей
@@ -43,4 +42,6 @@ public interface Model {
     void setSort(int numberField, boolean isRevers);
 
     List<Track> filter(String filterName, String filterSinger, String filterAlbum, String filterGenreName);
+
+    Optional<Track> find(Integer id);
 }

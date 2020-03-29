@@ -6,11 +6,11 @@ import ru.nc.musiclib.classes.Genre;
 import ru.nc.musiclib.classes.Track;
 import ru.nc.musiclib.classes.Tracks;
 import ru.nc.musiclib.db.dao.TrackDao;
-import ru.nc.musiclib.db.dao.impl.TrackDaoImpl;
 import ru.nc.musiclib.model.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static ru.nc.musiclib.utils.XMLUtils.loadFromXml;
 import static ru.nc.musiclib.utils.XMLUtils.saveToXML;
@@ -125,5 +125,10 @@ public class MusicModelWithDao implements Model {
             }
         }
         return trackList;
+    }
+
+    @Override
+    public Optional<Track> find(Integer id) {
+        return trackDao.find(id);
     }
 }
