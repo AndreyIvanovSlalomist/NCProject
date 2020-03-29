@@ -1,10 +1,13 @@
 package ru.nc.musiclib.classes;
 
+import javafx.util.Duration;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.sql.Time;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Track implements Serializable, Cloneable {
@@ -74,7 +77,15 @@ public class Track implements Serializable, Cloneable {
     public String getLength() {
         return String.format("%d:%02d:%02d", this.length / 3600, this.length % 3600 / 60, this.length % 60);
     }
-
+    public void setLength(String length){
+        String[] str = length.split(":");
+        if(str.length==3)
+            this.length = Integer.parseInt(str[0])*3600+Integer.parseInt(str[1])*60+Integer.parseInt(str[2]);
+        else if(str.length==2)
+            this.length = Integer.parseInt(str[0])*60+Integer.parseInt(str[1]);
+        else
+            this.length = Integer.parseInt(str[0]);
+    }
     public int getLengthInt() {
         return this.length;
     }

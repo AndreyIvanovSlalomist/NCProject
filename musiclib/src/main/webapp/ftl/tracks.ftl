@@ -27,7 +27,7 @@
            </div>
            <input type="submit" class="btn btn-primary" value="Искать">
            <a href="/tracks"><div class="btn btn-primary">Отмена</div></a>
-           <a href="/tracks/add"><div class="btn btn-primary">Добавить трек</div></a>
+           <a href="/tracks/add"><div class="btn btn-primary" style="float: right">Добавить трек</div></a>
        </form>
          <table  class="table table-hover" id="table">
            <tr>
@@ -37,7 +37,6 @@
              <th onclick="sort(3, this)">Длина трека</th>
              <th onclick="sort(4, this)">Жанр</th>
              <th></th>
-             <th></th>
            </tr>
            <#list tracksFromServer as track>
            <tr>
@@ -46,12 +45,14 @@
              <td>${track.album}</td>
              <td>${track.length}</td>
              <td>${track.genreName}</td>
-             <form method = "get" action="/tracks/${track.id}/update">
-             <td><input type="submit" class="btn btn-primary" value="Редактировать"></td>
+             <td align="right" nowrap>
+             <form>
+             <input type="submit" formaction="/tracks/${track.id}/update" class="btn btn-primary" value="&#9998" title="Редактировать">
+             <input type="submit" formaction="/tracks/${track.id}/delete" formmethod="post" class="btn btn-primary" value="&#10007" title="Удалить">
              </form>
-             <form method = "post" action="/tracks/${track.id}/delete">
-             <td><input type="submit" class="btn btn-primary" value="Удалить"></td>
-             </form>
+             </td>
+
+
            </tr>
            </#list>
          </table>
