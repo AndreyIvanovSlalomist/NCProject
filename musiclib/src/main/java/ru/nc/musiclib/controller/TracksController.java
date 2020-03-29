@@ -63,11 +63,18 @@ public class TracksController {
         return "tracks";
     }
 
-    @RequestMapping(value="/{id}", params = "form", method = RequestMethod.GET)
+    @RequestMapping(value="/{id}/update", method = RequestMethod.GET)
     public String updateForm(ModelMap model, @PathVariable("id") Integer id){
         if(trackModel.find(id).isPresent())
             model.addAttribute("track",trackModel.find(id).get());
         return "edit";
+    }
+    @RequestMapping(value="/{id}/update", method = RequestMethod.POST)
+    public String update(ModelMap model, @PathVariable("id") Integer id, @ModelAttribute Track track, @ModelAttribute Genre genre ){
+        if(trackModel.find(id).isPresent()){
+            trackModel.update(trackModel.find(id).get(),track.getName(),track.getSinger(),track.getAlbum(),track.getLengthInt(),genre.getGenreName());
+        }
+        return "redirect:/tracks";
     }
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)

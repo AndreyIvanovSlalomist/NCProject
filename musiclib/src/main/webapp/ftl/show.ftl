@@ -10,10 +10,7 @@
 <@macros.navMenu/>
 <div class="container">
     <h2 style="float: left">Информация о треке</h2>
-    <form action="/tracks/${track.id}/delete" method="POST">
-    <input type="submit" class="btn btn-primary" style="float: right; margin: 15px 0 0 5px" value="Удалить">
-    <a href="/tracks"><div class="btn btn-primary" style="float: right; margin: 15px 0 0 5px">Редактировать</div></a>
-    <form>
+    <a href="/tracks"><div class="btn btn-primary" style="float: right; margin: 15px 0 0 5px">Назад</div></a>
     <table class="table table-hover" id="table">
         <tr>
             <td>Название</td>

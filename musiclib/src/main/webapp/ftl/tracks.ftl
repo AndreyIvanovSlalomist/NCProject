@@ -37,6 +37,7 @@
              <th onclick="sort(3, this)">Длина трека</th>
              <th onclick="sort(4, this)">Жанр</th>
              <th></th>
+             <th></th>
            </tr>
            <#list tracksFromServer as track>
            <tr>
@@ -45,6 +46,9 @@
              <td>${track.album}</td>
              <td>${track.length}</td>
              <td>${track.genreName}</td>
+             <form method = "get" action="/tracks/${track.id}/update">
+             <td><input type="submit" class="btn btn-primary" value="Редактировать"></td>
+             </form>
              <form method = "post" action="/tracks/${track.id}/delete">
              <td><input type="submit" class="btn btn-primary" value="Удалить"></td>
              </form>
