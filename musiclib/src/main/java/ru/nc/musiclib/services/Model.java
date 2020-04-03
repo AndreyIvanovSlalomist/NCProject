@@ -22,9 +22,9 @@ public interface Model {
 
     boolean add(String name, String singer, String album, int length, String genreName, boolean isSendNotif);
 
-    boolean addFromFile(String fileName);
+    void addFromFile(String fileName);
 
-    boolean saveToFile(String fileName);
+    void saveToFile(String fileName);
 
     boolean update(Track track, int colNumber, String newValue);
 

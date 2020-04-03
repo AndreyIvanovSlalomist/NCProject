@@ -33,7 +33,7 @@ public class TrackDaoJdbcTemplateImpl implements TrackDao {
     private static final String SQL_DELETE_BY_ID = "Delete from track where id = ?";
     private static final String SQL_DELETE_TRACK = "Delete from track where name = ? and singer = ? and album = ? and length = ?";
     private final static MusicLibLogger logger = new MusicLibLogger(TrackDaoJdbcTemplateImpl.class);
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
     private RowMapper<Genre> genreRowMapper = (resultSet, i) -> new Genre(resultSet.getInt("id"),
             resultSet.getString("genreName"));
     private RowMapper<Track> trackRowMapper = (resultSet, i) -> new Track(resultSet.getInt("id"),
@@ -82,23 +82,23 @@ public class TrackDaoJdbcTemplateImpl implements TrackDao {
     }
 
     @Override
-    public void save(Track model) {
-        jdbcTemplate.update(SQL_INSERT_TRACK, model.getName(), model.getSinger(), model.getAlbum(),model.getLengthInt(), findOrSaveGenre(model.getGenreName()).getId());
+    public boolean save(Track model) {
+        return jdbcTemplate.update(SQL_INSERT_TRACK, model.getName(), model.getSinger(), model.getAlbum(), model.getLengthInt(), findOrSaveGenre(model.getGenreName()).getId()) != 0;
     }
 
     @Override
-    public void update(Track model) {
-        jdbcTemplate.update(SQL_UPDATE_TRACK_BY_ID, model.getName(), model.getSinger(), model.getAlbum(),model.getLengthInt(), findOrSaveGenre(model.getGenreName()).getId(), model.getId());
+    public boolean update(Track model) {
+        return jdbcTemplate.update(SQL_UPDATE_TRACK_BY_ID, model.getName(), model.getSinger(), model.getAlbum(),model.getLengthInt(), findOrSaveGenre(model.getGenreName()).getId(), model.getId()) != 0;
     }
 
     @Override
-    public void delete(Integer id) {
-        jdbcTemplate.update(SQL_DELETE_BY_ID, id);
+    public boolean delete(Integer id) {
+       return jdbcTemplate.update(SQL_DELETE_BY_ID, id) != 0;
     }
 
     @Override
-    public void delete(Track model) {
-        jdbcTemplate.update(SQL_DELETE_TRACK, model.getName(), model.getSinger(), model.getAlbum(), model.getLengthInt());
+    public boolean delete(Track model) {
+       return jdbcTemplate.update(SQL_DELETE_TRACK, model.getName(), model.getSinger(), model.getAlbum(), model.getLengthInt()) != 0;
     }
 
     @Override
@@ -108,8 +108,7 @@ public class TrackDaoJdbcTemplateImpl implements TrackDao {
 
     private Genre findOrSaveGenre(String name){
         try {
-            Genre genre = jdbcTemplate.queryForObject(SQL_SELECT_GENRE_BY_NAME, new Object[]{name}, genreRowMapper);
-            return genre;
+            return jdbcTemplate.queryForObject(SQL_SELECT_GENRE_BY_NAME, new Object[]{name}, genreRowMapper);
         }
         catch (DataAccessException ex){
             jdbcTemplate.update(SQL_INSERT_GENRE, name);

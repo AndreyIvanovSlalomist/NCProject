@@ -3,8 +3,8 @@ package ru.nc.musiclib.repositories.impl;
 import ru.nc.musiclib.model.Role;
 import ru.nc.musiclib.model.User;
 import ru.nc.musiclib.repositories.UsersDao;
-import ru.nc.musiclib.utils.exceptions.InvalidConnection;
 import ru.nc.musiclib.utils.MusicLibLogger;
+import ru.nc.musiclib.utils.exceptions.InvalidConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -55,18 +55,18 @@ public class UsersDaoImpl implements UsersDao {
     }
 
     @Override
-    public void deleteByName(String name) {
+    public boolean deleteByName(String name) {
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement(DELETE_USER_BY_NAME);
             preparedStatement.setString(1, name);
             preparedStatement.execute();
+            return true;
         } catch (SQLException e) {
             logger.error(e.getLocalizedMessage());
         } catch (InvalidConnection e) {
             logger.error(e.getLocalizedMessage());
         }
-
-
+        return false;
     }
 
     @Override
@@ -75,45 +75,47 @@ public class UsersDaoImpl implements UsersDao {
     }
 
     @Override
-    public void save(User model) {
+    public boolean save(User model) {
         try (PreparedStatement preparedStatement = getConnection().prepareStatement(INSERT_USER)) {
             preparedStatement.setString(1, model.getUserName());
             preparedStatement.setString(2, model.getPassword());
             preparedStatement.setInt(3, getRoleByName(model.getRole().getRoleName()).getId());
             preparedStatement.execute();
+            return true;
         } catch (SQLException e) {
             logger.error(e.getLocalizedMessage());
         } catch (InvalidConnection e) {
             logger.error(e.getLocalizedMessage());
         }
-
+        return false;
 
     }
 
     @Override
-    public void update(User model) {
+    public boolean update(User model) {
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement(UPDATE_RILE_BY_USER_ID);
             preparedStatement.setInt(1, getRoleByName(model.getRole().getRoleName()).getId());
             preparedStatement.setInt(2, model.getId());
             preparedStatement.execute();
-        }catch (SQLException e) {
+            return true;
+        } catch (SQLException e) {
             logger.error(e.getLocalizedMessage());
         } catch (InvalidConnection e) {
             logger.error(e.getLocalizedMessage());
         }
-
-
-    }
-
-    @Override
-    public void delete(Integer id) {
+        return false;
 
     }
 
     @Override
-    public void delete(User mode) {
+    public boolean delete(Integer id) {
+        return false;
+    }
 
+    @Override
+    public boolean delete(User mode) {
+        return false;
     }
 
     @Override

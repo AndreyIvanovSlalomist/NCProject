@@ -9,9 +9,9 @@ import java.util.Optional;
  */
 public interface CrudDao<T> {
     Optional<T> find(Integer id);
-    void save(T model);
-    void update(T model);
-    void delete(Integer id);
-    void delete(T model);
+    boolean save(T model);
+    boolean update(T model);
+    boolean delete(Integer id);
+    boolean delete(T model);
     List<T> findAll();
 }

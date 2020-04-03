@@ -17,7 +17,7 @@ public interface Controller {
 
     boolean isValidAdd(String name, String singer, String album, int length, String genreName);
 
-    boolean isValidAddFromFile(String fileName);
+    void isValidAddFromFile(String fileName);
 
     boolean isValidUpdate(Track track, int colNumber, String newValue);
 

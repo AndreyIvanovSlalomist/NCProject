@@ -265,7 +265,11 @@ public class MusicLibServerSocket implements Runnable {
         String genreName = readObjectToString(in);
         Object track = readObject(in);
         if (name != null && singer != null && album != null && length != null && genreName != null && track instanceof Track) {
-            controller.isValidUpdate((Track) track, name, singer, album, length, genreName);
+            if (controller.isValidUpdate((Track) track, name, singer, album, length, genreName)){
+                logger.info("Трек изменен.");
+            } else {
+                logger.error("Трек не изменен.");
+            }
         }
     }
 
@@ -292,7 +296,11 @@ public class MusicLibServerSocket implements Runnable {
         Integer length = readObjectToInteger(in);
         String genreName = readObjectToString(in);
         if (name != null && singer != null && album != null && length != null && genreName != null) {
-            controller.isValidDelete(name, singer, album, length, genreName);
+            if (controller.isValidDelete(name, singer, album, length, genreName)){
+                logger.info("Трек удален.");
+            } else {
+                logger.error("Трек не удален.");
+            }
         }
     }
 
@@ -303,7 +311,11 @@ public class MusicLibServerSocket implements Runnable {
         Integer length = readObjectToInteger(in);
         String genreName = readObjectToString(in);
         if (name != null && singer != null && album != null && length != null && genreName != null) {
-            controller.isValidAdd(name, singer, album, length, genreName);
+            if (controller.isValidAdd(name, singer, album, length, genreName)){
+                logger.info("Трек добавлен.");
+            } else {
+                logger.error("Трек не добавлен.");
+            }
         }
     }
 

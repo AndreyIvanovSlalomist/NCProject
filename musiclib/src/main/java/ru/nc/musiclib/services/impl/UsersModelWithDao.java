@@ -27,15 +27,14 @@ public class UsersModelWithDao  implements UserModel {
     @Override
     public boolean add(String userName, String password) {
         if(findUser(userName)==null){
-            usersDao.save(new User(userName, password, new Role(Role.ROLE_USER)));
-            return true;
+            return usersDao.save(new User(userName, password, new Role(Role.ROLE_USER)));
         }
         return false;
     }
 
     @Override
-    public void delete(String userName) {
-        usersDao.deleteByName(userName);
+    public boolean delete(String userName) {
+        return usersDao.deleteByName(userName);
     }
 
     @Override

@@ -45,10 +45,9 @@ public class MusicLibController implements Controller, Observer {
     }
 
     @Override
-    public boolean isValidAddFromFile(String fileName) {
+    public void isValidAddFromFile(String fileName) {
         model.addFromFile(fileName);
         model.saveTrack();
-        return true;
     }
 
     @Override

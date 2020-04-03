@@ -38,8 +38,8 @@ public class UsersModelImpl implements UserModel {
     }
 
     @Override
-    public void delete(String userName) {
-        users.getUsers().remove(findUser(userName));
+    public boolean delete(String userName) {
+        return users.getUsers().remove(findUser(userName));
     }
 
     @Override

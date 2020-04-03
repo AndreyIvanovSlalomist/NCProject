@@ -128,12 +128,11 @@ public class MusicModel implements Model, Observable {
     }
 
     @Override
-    public boolean saveToFile(String fileName){
-        return true;
+    public void saveToFile(String fileName){
     }
 
     @Override
-    public boolean addFromFile(String fileName) {
+    public void addFromFile(String fileName) {
         List<Track> trackList = addFromXMLFile(fileName);
         if (trackList != null)
             for (Track track : trackList) {
@@ -141,7 +140,6 @@ public class MusicModel implements Model, Observable {
             }
         logger.info("Загрузка завершена.");
         notifyObservers("Загрузка завершена.");
-        return true;
     }
 
     private List<Track> addFromXMLFile(String fileName) {

@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import static ru.nc.musiclib.utils.XMLUtils.loadFromXml;
 import static ru.nc.musiclib.utils.XMLUtils.saveToXML;
+
 @Service
 public class MusicModelWithDao implements Model {
     @Autowired
@@ -27,28 +28,25 @@ public class MusicModelWithDao implements Model {
     @Override
     public boolean add(String name, String singer, String album, int length, String genreName, boolean isSendNotif) {
         if (trackDao.findTrack(name, singer, album, length) == null) {
-            trackDao.save(new Track(name, singer, album, length, new Genre(genreName)));
-            return true;
+            return trackDao.save(new Track(name, singer, album, length, new Genre(genreName)));
         }
         return false;
     }
 
     @Override
-    public boolean addFromFile(String fileName) {
+    public void addFromFile(String fileName) {
         List<Track> trackList = addFromXMLFile(fileName);
         if (trackList != null)
             for (Track track : trackList) {
                 add(track.getName(), track.getSinger(), track.getAlbum(), track.getLengthInt(), track.getGenre().getGenreName(), false);
             }
-        return true;
     }
 
     @Override
-    public boolean saveToFile(String fileName) {
+    public void saveToFile(String fileName) {
         Tracks tracks = new Tracks();
         tracks.setTracks(trackDao.findAll());
         saveToXML(tracks, fileName, Tracks.class, Track.class, Genre.class);
-        return false;
     }
 
     private List<Track> addFromXMLFile(String fileName) {
@@ -73,8 +71,7 @@ public class MusicModelWithDao implements Model {
         track.setAlbum(album);
         track.setLength(length);
         track.setGenre(new Genre(genreName));
-        trackDao.update(track);
-        return true;
+        return trackDao.update(track);
     }
 
     @Override
@@ -84,14 +81,12 @@ public class MusicModelWithDao implements Model {
 
     @Override
     public boolean delete(int number) {
-        trackDao.delete(number);
-        return true;
+        return trackDao.delete(number);
     }
 
     @Override
     public boolean delete(String name, String singer, String album, int length, String genreName) {
-        trackDao.delete(new Track(name, singer, album, length, new Genre(genreName)));
-        return true;
+        return trackDao.delete(new Track(name, singer, album, length, new Genre(genreName)));
     }
 
     @Override

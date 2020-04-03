@@ -3,8 +3,8 @@ package ru.nc.musiclib.repositories.impl;
 import ru.nc.musiclib.model.Genre;
 import ru.nc.musiclib.model.Track;
 import ru.nc.musiclib.repositories.TrackDao;
-import ru.nc.musiclib.utils.exceptions.InvalidConnection;
 import ru.nc.musiclib.utils.MusicLibLogger;
+import ru.nc.musiclib.utils.exceptions.InvalidConnection;
 
 import java.sql.*;
 import java.util.*;
@@ -85,7 +85,7 @@ public class TrackDaoImpl implements TrackDao {
     }
 
     @Override
-    public void save(Track model) {
+    public boolean save(Track model) {
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement(SQL_INSERT_TRACK);
             preparedStatement.setString(1, model.getName());
@@ -94,15 +94,17 @@ public class TrackDaoImpl implements TrackDao {
             preparedStatement.setInt(4, model.getLengthInt());
             preparedStatement.setInt(5, findOrSaveGenre(model.getGenreName()).getId());
             preparedStatement.execute();
+            return true;
         } catch (SQLException e) {
             logger.error(e.getLocalizedMessage());
         } catch (InvalidConnection e) {
             logger.error(e.getLocalizedMessage());
         }
+        return false;
     }
 
     @Override
-    public void update(Track model) {
+    public boolean update(Track model) {
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement(SQL_UPDATE_TRACK_BY_ID);
             preparedStatement.setString(1, model.getName());
@@ -112,28 +114,32 @@ public class TrackDaoImpl implements TrackDao {
             preparedStatement.setInt(5, findOrSaveGenre(model.getGenreName()).getId());
             preparedStatement.setInt(6, model.getId());
             preparedStatement.execute();
+            return true;
         } catch (SQLException e) {
             logger.error(e.getLocalizedMessage());
         } catch (InvalidConnection e) {
             logger.error(e.getLocalizedMessage());
         }
+        return false;
     }
 
     @Override
-    public void delete(Integer id) {
+    public boolean delete(Integer id) {
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement(SQL_DELETE_BY_ID);
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
+            return true;
         } catch (SQLException e) {
             logger.error(e.getLocalizedMessage());
         } catch (InvalidConnection e) {
             logger.error(e.getLocalizedMessage());
         }
+        return false;
     }
 
     @Override
-    public void delete(Track model) {
+    public boolean delete(Track model) {
         try {
             PreparedStatement preparedStatement = getConnection().prepareStatement(SQL_DELETE_TRACK);
             preparedStatement.setString(1, model.getName());
@@ -141,11 +147,13 @@ public class TrackDaoImpl implements TrackDao {
             preparedStatement.setString(3, model.getAlbum());
             preparedStatement.setInt(4, model.getLengthInt());
             preparedStatement.execute();
+            return true;
         } catch (SQLException e) {
             logger.error(e.getLocalizedMessage());
         } catch (InvalidConnection e) {
             logger.error(e.getLocalizedMessage());
         }
+        return false;
     }
 
     private Genre findOrSaveGenre(String name) {

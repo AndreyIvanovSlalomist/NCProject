@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserModel {
     boolean add(String userName, String password);
-    void delete(String userName);
+    boolean delete(String userName);
     void setRole(String userName, Role role);
     Role getRole(String userName);
     User findUser(String userName);
