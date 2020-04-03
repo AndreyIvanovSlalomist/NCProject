@@ -6,10 +6,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ru.nc.musiclib.classes.Track;
+import ru.nc.musiclib.model.Track;
 import ru.nc.musiclib.net.client.ClientSocket;
 import ru.nc.musiclib.utils.ConstProtocol;
-import ru.nc.musiclib.classes.Role;
+import ru.nc.musiclib.model.Role;
 import ru.nc.musiclib.utils.StreamUtils;
 
 import java.io.File;

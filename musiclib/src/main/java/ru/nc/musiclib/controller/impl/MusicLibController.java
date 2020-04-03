@@ -5,13 +5,11 @@ package ru.nc.musiclib.controller.impl;
  * Для использования со стороны View используются методы валидации validAppend, validUpdate, validDelete
  */
 
-import ru.nc.musiclib.classes.Track;
+import ru.nc.musiclib.model.Track;
 import ru.nc.musiclib.controller.Controller;
-import ru.nc.musiclib.interfaces.Observer;
-import ru.nc.musiclib.model.Model;
-import ru.nc.musiclib.view.View;
-
-import java.util.List;
+import ru.nc.musiclib.utils.interfaces.Observer;
+import ru.nc.musiclib.services.Model;
+import ru.nc.musiclib.console.view.View;
 
 public class MusicLibController implements Controller, Observer {
     private Model model = null;

@@ -1,6 +1,6 @@
 package ru.nc.musiclib.net.client;
 
-import ru.nc.musiclib.logger.MusicLibLogger;
+import ru.nc.musiclib.utils.MusicLibLogger;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

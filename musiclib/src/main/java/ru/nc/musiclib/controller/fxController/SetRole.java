@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import ru.nc.musiclib.net.client.ClientSocket;
-import ru.nc.musiclib.classes.Role;
+import ru.nc.musiclib.model.Role;
 
 import static ru.nc.musiclib.utils.ClientUtils.alertSelectedItem;
 import static ru.nc.musiclib.utils.ClientUtils.setRole;

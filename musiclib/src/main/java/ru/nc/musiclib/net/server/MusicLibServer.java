@@ -1,9 +1,9 @@
 package ru.nc.musiclib.net.server;
 
 import ru.nc.musiclib.controller.Controller;
-import ru.nc.musiclib.logger.MusicLibLogger;
-import ru.nc.musiclib.model.Model;
-import ru.nc.musiclib.model.UserModel;
+import ru.nc.musiclib.utils.MusicLibLogger;
+import ru.nc.musiclib.services.Model;
+import ru.nc.musiclib.services.UserModel;
 
 import java.io.IOException;
 import java.net.ServerSocket;

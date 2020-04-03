@@ -7,7 +7,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import ru.nc.musiclib.classes.User;
+import ru.nc.musiclib.model.User;
 import ru.nc.musiclib.net.client.ClientSocket;
 import ru.nc.musiclib.utils.ClientUtils;
 

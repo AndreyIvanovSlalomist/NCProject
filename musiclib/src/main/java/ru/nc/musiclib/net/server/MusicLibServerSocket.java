@@ -1,13 +1,13 @@
 package ru.nc.musiclib.net.server;
 
-import ru.nc.musiclib.classes.Track;
-import ru.nc.musiclib.classes.User;
+import ru.nc.musiclib.model.Track;
+import ru.nc.musiclib.model.User;
 import ru.nc.musiclib.controller.Controller;
-import ru.nc.musiclib.logger.MusicLibLogger;
-import ru.nc.musiclib.model.Model;
-import ru.nc.musiclib.model.UserModel;
+import ru.nc.musiclib.utils.MusicLibLogger;
+import ru.nc.musiclib.services.Model;
+import ru.nc.musiclib.services.UserModel;
 import ru.nc.musiclib.utils.ConstProtocol;
-import ru.nc.musiclib.classes.Role;
+import ru.nc.musiclib.model.Role;
 import ru.nc.musiclib.utils.StreamUtils;
 
 import java.io.IOException;

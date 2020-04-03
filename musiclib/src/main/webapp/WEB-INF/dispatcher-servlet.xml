@@ -9,7 +9,7 @@
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="username" value="postgres"/>
-        <property name="password" value="diana1998"/>
+        <property name="password" value="qwerty"/>
         <property name="driverClassName" value="org.postgresql.Driver"/>
         <property name="url" value="jdbc:postgresql://localhost:5432/musiclibDB"/>
     </bean>

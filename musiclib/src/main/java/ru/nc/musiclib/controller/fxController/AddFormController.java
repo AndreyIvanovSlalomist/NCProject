@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import ru.nc.musiclib.classes.Track;
+import ru.nc.musiclib.model.Track;
 import ru.nc.musiclib.net.client.ClientSocket;
 
 import static ru.nc.musiclib.utils.ClientUtils.*;

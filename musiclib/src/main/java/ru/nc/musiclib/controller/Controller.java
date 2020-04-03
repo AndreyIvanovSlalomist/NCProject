@@ -1,10 +1,8 @@
 package ru.nc.musiclib.controller;
 
-import ru.nc.musiclib.classes.Track;
-import ru.nc.musiclib.view.View;
-import ru.nc.musiclib.model.Model;
-
-import java.util.List;
+import ru.nc.musiclib.model.Track;
+import ru.nc.musiclib.console.view.View;
+import ru.nc.musiclib.services.Model;
 
 /**
  * Интерфейс для контроллеров

@@ -2,12 +2,10 @@ package ru.nc.musiclib;
 
 import ru.nc.musiclib.controller.Controller;
 import ru.nc.musiclib.controller.impl.MusicLibController;
-import ru.nc.musiclib.model.Model;
-import ru.nc.musiclib.model.UserModel;
-import ru.nc.musiclib.model.impl.MusicModel;
-import ru.nc.musiclib.model.impl.MusicModelWithDao;
-import ru.nc.musiclib.model.impl.UsersModelImpl;
-import ru.nc.musiclib.model.impl.UsersModelWithDao;
+import ru.nc.musiclib.services.Model;
+import ru.nc.musiclib.services.UserModel;
+import ru.nc.musiclib.services.impl.MusicModelWithDao;
+import ru.nc.musiclib.services.impl.UsersModelWithDao;
 import ru.nc.musiclib.net.server.MusicLibServer;
 
 public class ServerMain {

@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.nc.musiclib.classes.Genre;
-import ru.nc.musiclib.classes.Track;
-import ru.nc.musiclib.db.dao.TrackDao;
-import ru.nc.musiclib.model.Model;
+import ru.nc.musiclib.model.Genre;
+import ru.nc.musiclib.model.Track;
+import ru.nc.musiclib.repositories.TrackDao;
+import ru.nc.musiclib.services.Model;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;

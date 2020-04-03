@@ -1,10 +1,9 @@
 package ru.nc.musiclib.utils;
 
 import javafx.scene.control.Alert;
-import ru.nc.musiclib.classes.Role;
-import ru.nc.musiclib.classes.Track;
-import ru.nc.musiclib.classes.User;
-import ru.nc.musiclib.logger.MusicLibLogger;
+import ru.nc.musiclib.model.Role;
+import ru.nc.musiclib.model.Track;
+import ru.nc.musiclib.model.User;
 import ru.nc.musiclib.net.client.ClientSocket;
 
 import java.io.IOException;
