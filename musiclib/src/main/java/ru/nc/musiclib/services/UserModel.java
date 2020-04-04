@@ -11,8 +11,10 @@ public interface UserModel {
     void setRole(String userName, Role role);
     Role getRole(String userName);
     User findUser(String userName);
+    User findUser(Integer id);
     boolean checkUser(String userName);
     boolean checkPassword(String userName, String password);
     String getSalt(String userName);
     List<User> getAllUser();
+    List<Role> getAllRole();
 }

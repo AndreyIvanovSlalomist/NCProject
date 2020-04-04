@@ -2,17 +2,23 @@ package ru.nc.musiclib.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.nc.musiclib.model.Role;
 import ru.nc.musiclib.model.User;
+import ru.nc.musiclib.repositories.RoleDao;
 import ru.nc.musiclib.repositories.UsersDao;
 import ru.nc.musiclib.services.UserModel;
 import ru.nc.musiclib.utils.PasswordUtils;
 
 import java.util.List;
-@Component
+import java.util.Optional;
+
+@Service
 public class UsersModelWithDao  implements UserModel {
     @Autowired
     private UsersDao usersDao;
+    @Autowired
+    private RoleDao roleDao;
 
     @Override
     public List<User> getAllUser() {
@@ -20,8 +26,19 @@ public class UsersModelWithDao  implements UserModel {
     }
 
     @Override
+    public List<Role> getAllRole() {
+        return roleDao.findAll();
+    }
+
+    @Override
     public User findUser(String userName) {
         return usersDao.findByName(userName);
+    }
+
+    @Override
+    public User findUser(Integer id) {
+        Optional<User> user = usersDao.find(id);
+        return user.orElse(null);
     }
 
     @Override

@@ -68,6 +68,11 @@ public class UsersModelImpl implements UserModel {
     }
 
     @Override
+    public User findUser(Integer id) {
+        return null;
+    }
+
+    @Override
     public boolean checkUser(String login) {
         return findUser(login) != null;
     }
@@ -89,5 +94,10 @@ public class UsersModelImpl implements UserModel {
     @Override
     public List<User> getAllUser() {
         return users.getUsers();
+    }
+
+    @Override
+    public List<Role> getAllRole() {
+        return null;
     }
 }
