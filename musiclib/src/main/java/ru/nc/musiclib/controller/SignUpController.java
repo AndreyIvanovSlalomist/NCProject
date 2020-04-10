@@ -33,7 +33,7 @@ public class SignUpController {
     @PostMapping("/signUp")
     public String signUp(UserForm userForm, ModelMap model){
         if (service.signUp(userForm)) {
-            return "redirect:/login";
+            return "redirect:/signIn";
         }else {
 
             model.addAttribute("error", true);
