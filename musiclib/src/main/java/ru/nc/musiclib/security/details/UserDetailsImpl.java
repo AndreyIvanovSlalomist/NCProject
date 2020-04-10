@@ -6,8 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import ru.nc.musiclib.model.User;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collections;
 
 
 public class UserDetailsImpl implements UserDetails {
@@ -20,10 +19,9 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getRoleName());
-        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-        authorities.add(authority);
-        return authorities;
+        String userRole = user.getRole().getRoleName();
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole);
+        return Collections.singletonList(authority);
     }
 
     @Override

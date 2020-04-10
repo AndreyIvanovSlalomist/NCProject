@@ -17,7 +17,7 @@
         <form action="" method="POST" autocomplete="off">
             <div class="form-group" for="username">
                 <label for="userName">Логин</label>
-                <input autofocus required = true type="text" class="form-control" name="username" id="userName" placeholder="Введите имя пользователя" >
+                <input autofocus required = true type="text" class="form-control" name="userName" id="userName" placeholder="Введите имя пользователя" >
             </div>
             <div class="form-group" for="password">
                 <label for="password">Пароль</label>

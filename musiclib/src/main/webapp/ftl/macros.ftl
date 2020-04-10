@@ -11,12 +11,13 @@
            <ul class="nav navbar-nav navbar-right">
 
 <@security.authorize access="isAuthenticated()">
-             <li><a href="/signUp"><span class="glyphicon glyphicon-user"></span>  <@security.authentication property="name" /></a></li>
+             <li><a href=""><span class="glyphicon glyphicon-user"></span>  <@security.authentication property="name" /> </a></li>
              <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Выйти</a></li>
 </@security.authorize>
+
 <@security.authorize access="! isAuthenticated()">
              <li><a href="/signUp"><span class="glyphicon glyphicon-user"></span> Регистрация</a></li>
-             <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Авторизация</a></li>
+             <li><a href="/signIn"><span class="glyphicon glyphicon-log-in"></span> Авторизация</a></li>
 </@security.authorize>
 
            </ul>

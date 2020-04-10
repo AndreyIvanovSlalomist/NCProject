@@ -21,21 +21,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/signUp").not().fullyAuthenticated()
-                .antMatchers("/tracks/**").hasAnyRole(Role.ROLE_ADMINISTRATOR, Role.ROLE_MODERATOR)
-                .antMatchers("/tracks", "/tracks/{id}").authenticated()
-                .antMatchers("/users").hasRole(Role.ROLE_ADMINISTRATOR)
+        http
+                .authorizeRequests()
+                .antMatchers("/users/**").hasAuthority(Role.ROLE_ADMINISTRATOR)
+                .antMatchers("/user/**").hasAuthority(Role.ROLE_ADMINISTRATOR)
+                //.antMatchers("/tracks/**").hasAnyAuthority(Role.ROLE_ADMINISTRATOR, Role.ROLE_MODERATOR)
+                .antMatchers("/signUp/**").permitAll()
+                .antMatchers("/").permitAll()
+                .antMatchers("/tracks").permitAll()
+                .antMatchers("/css/**").permitAll()
                 .and()
-                .formLogin().loginPage("/signIn")
+                .formLogin()
+                .usernameParameter("username")
+                .passwordParameter("password")
                 .defaultSuccessUrl("/tracks")
-                .permitAll()
-                .and()
-                .logout()
-                .permitAll()
-                .logoutSuccessUrl("/signIn")
-                .and()
-                .csrf().disable();
+                .loginPage("/signIn")
+                .permitAll();
+
+        http.csrf().disable();
     }
 
     @Override
