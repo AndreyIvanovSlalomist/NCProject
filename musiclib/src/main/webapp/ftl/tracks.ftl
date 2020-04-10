@@ -45,7 +45,7 @@
              <td>${track.album}</td>
              <td>${track.length}</td>
              <td>${track.genreName}</td>
-             <td align="right" nowrap>
+             <td align="right" nowrap >
              <form>
              <input type="submit" formaction="/tracks/${track.id}/update" class="btn btn-primary" value="&#9998" title="Редактировать">
              <input type="submit" formaction="/tracks/${track.id}/delete" formmethod="post" class="btn btn-primary" value="&#10007" title="Удалить">

@@ -242,6 +242,7 @@
                          page-break-after: avoid
                      }
 
+
                      .navbar {
                          display: none
                      }
@@ -284,6 +285,7 @@
                      -webkit-font-smoothing: antialiased;
                      -moz-osx-font-smoothing: grayscale
                  }
+
 
                  .glyphicon-asterisk:before {
                      content: "\002a"
@@ -3129,6 +3131,8 @@
                      height: auto
                  }
 
+
+
                  .form-group-lg .form-control {
                      height: 46px;
                      padding: 10px 16px;
@@ -3427,6 +3431,7 @@
                  a.btn.disabled, fieldset[disabled] a.btn {
                      pointer-events: none
                  }
+
 
                  .btn-default {
                      color: #333;
@@ -7192,7 +7197,11 @@
                      }
                  }
 
-                 .visible-print-inline-block {
+                 .visible-print-
+
+
+
+                 -block {
                      display: none !important
                  }
 
@@ -7207,5 +7216,7 @@
                          display: none !important
                      }
                  }
+
+
 
                  /*# sourceMappingURL=bootstrap.min.css.map */

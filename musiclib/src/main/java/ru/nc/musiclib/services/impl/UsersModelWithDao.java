@@ -1,6 +1,10 @@
 package ru.nc.musiclib.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.nc.musiclib.model.Role;
@@ -14,11 +18,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UsersModelWithDao  implements UserModel {
+public class UsersModelWithDao  implements UserModel, UserDetailsService {
     @Autowired
     private UsersDao usersDao;
     @Autowired
     private RoleDao roleDao;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public List<User> getAllUser() {
@@ -79,5 +85,15 @@ public class UsersModelWithDao  implements UserModel {
     @Override
     public String getSalt(String userName) {
         return PasswordUtils.getSalt(findUser(userName).getPassword());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = usersDao.findByName(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return (UserDetails) user;
     }
 }

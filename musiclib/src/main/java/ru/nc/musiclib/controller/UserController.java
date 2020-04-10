@@ -32,12 +32,26 @@ public class UserController {
         return "redirect:/users";
     }
 
-
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     public String setRole(ModelMap model, @RequestParam(name = "id") Integer id, @RequestParam(name = "id_role") Integer idRole) {
         Optional<Role> role = roleDao.find(idRole);
         role.ifPresent(value -> userModel.setRole(userModel.findUser(id).getUserName(), value));
         return "redirect:/users";
+    }
+
+    @RequestMapping(value = "/signIn", method = RequestMethod.GET)
+    public String signIn(){
+        return "authorization";
+    }
+
+    @RequestMapping(value = "/signUp", method = RequestMethod.GET)
+    public String signUp(ModelMap model){
+        return "registration";
+    }
+
+    @RequestMapping(value = "/signOut", method = RequestMethod.GET)
+    public String signOut(ModelMap model){
+        return "redirect:/authorization";
     }
 
 }

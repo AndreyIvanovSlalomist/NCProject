@@ -111,4 +111,39 @@
 	background: #EA7B00;
 	color: #fff;
 }
+.login-page
+{
+  background-color:#e5e7ed
+}
+.login-page main
+{
+  width:100%;
+  max-width:400px;
+  margin:6% auto 5%
+}
+.login-block
+{
+  background-color:#fff;
+  padding:50px;
+  -webkit-box-shadow:0 3px 50px 0 rgba(0,0,0,.1);
+  box-shadow:0 3px 50px 0 rgba(0,0,0,.1);
+  border-radius:5px
+}
+
+.login-block h2
+{
+  margin-bottom:40px;
+  margin-top:20px
+
+}
+.login-block .center {
+  text-align: center;
+}
+.login-block h6
+{
+  font-size:11px;
+  text-transform:uppercase;
+  margin-top:0
+}
+
 </style>
