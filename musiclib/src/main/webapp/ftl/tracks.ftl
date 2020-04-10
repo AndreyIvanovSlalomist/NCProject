@@ -1,5 +1,6 @@
 <#ftl encoding='UTF-8'>
 <#import "macros.ftl" as macros/>
+<#assign  security=JspTaglibs["http://www.springframework.org/security/tags"] />
        <html>
        <head>
            <title>Треки</title>
@@ -27,7 +28,9 @@
            </div>
            <input type="submit" class="btn btn-primary" value="Искать">
            <a href="/tracks"><div class="btn btn-primary">Отмена</div></a>
+           <@security.authorize url="/tracks/add">
            <a href="/tracks/add"><div class="btn btn-primary" style="float: right">Добавить трек</div></a>
+           </@security.authorize>
        </form>
          <table  class="table table-hover" id="table">
            <tr>
@@ -47,8 +50,12 @@
              <td>${track.genreName}</td>
              <td align="right" nowrap >
              <form>
+           <@security.authorize url="/tracks/{id}/update">
              <input type="submit" formaction="/tracks/${track.id}/update" class="btn btn-primary" value="&#9998" title="Редактировать">
+             </@security.authorize>
+           <@security.authorize url="/tracks/{id}/delete">
              <input type="submit" formaction="/tracks/${track.id}/delete" formmethod="post" class="btn btn-primary" value="&#10007" title="Удалить">
+             </@security.authorize>
              </form>
              </td>
 
