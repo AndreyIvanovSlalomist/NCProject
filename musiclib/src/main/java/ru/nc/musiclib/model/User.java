@@ -1,9 +1,11 @@
 package ru.nc.musiclib.model;
 
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
+
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class User implements Serializable {
@@ -58,11 +60,11 @@ public class User implements Serializable {
         return userName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public Role getRole() {
         return role;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

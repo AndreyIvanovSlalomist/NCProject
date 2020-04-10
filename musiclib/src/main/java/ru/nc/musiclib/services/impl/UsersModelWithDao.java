@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UsersModelWithDao  implements UserModel, UserDetailsService {
+public class UsersModelWithDao  implements UserModel {
     @Autowired
     private UsersDao usersDao;
     @Autowired
@@ -87,13 +87,5 @@ public class UsersModelWithDao  implements UserModel, UserDetailsService {
         return PasswordUtils.getSalt(findUser(userName).getPassword());
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = usersDao.findByName(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
 
-        return (UserDetails) user;
-    }
 }
