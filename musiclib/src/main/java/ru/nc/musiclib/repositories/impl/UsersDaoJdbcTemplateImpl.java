@@ -80,7 +80,7 @@ public class UsersDaoJdbcTemplateImpl implements UsersDao {
 
     @Override
     public boolean save(User model) {
-        return jdbcTemplate.update(INSERT_USER, model.getUserName(), model.getPassword(), getRoleByName(model.getRole().getRoleName())) != 0;
+        return jdbcTemplate.update(INSERT_USER, model.getUserName(), model.getPassword(), getRoleByName(model.getRole().getRoleName()).getId()) != 0;
     }
 
     @Override

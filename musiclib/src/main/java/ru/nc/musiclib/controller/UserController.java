@@ -39,19 +39,8 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @RequestMapping(value = "/signIn", method = RequestMethod.GET)
-    public String signIn(){
-        return "authorization";
-    }
 
-    @RequestMapping(value = "/signUp", method = RequestMethod.GET)
-    public String signUp(ModelMap model){
-        return "registration";
-    }
 
-    @RequestMapping(value = "/signOut", method = RequestMethod.GET)
-    public String signOut(ModelMap model){
-        return "redirect:/authorization";
-    }
+
 
 }

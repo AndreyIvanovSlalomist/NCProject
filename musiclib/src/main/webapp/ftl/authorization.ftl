@@ -6,6 +6,9 @@
     <link href="/css/styles.css" rel="stylesheet" type="text/css">
 </head>
 <body class= "login-page">
+<#if error??>
+<div class="alert alert-danger" role="alert">Пользователь уже существует</div>
+</#if>
 <main>
     <div class="login-block">
         <div class="center">
@@ -18,7 +21,7 @@
             </div>
             <div class="form-group" for="password">
                 <label for="password">Пароль</label>
-                <input autofocus required = true type="password" class="form-control" name="password" id="password" placeholder="Введите пароль" >
+                <input required = true type="password" class="form-control" name="password" id="password" placeholder="Введите пароль" >
             </div>
             <input type="submit" class="btn btn-primary form-control" value="Войти">
         </form>

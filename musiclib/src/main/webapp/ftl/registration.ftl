@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
 <body class= "login-page">
+<#if error??>
+<div class="alert alert-danger" role="alert">Пользователь уже существует</div>
+</#if>
 <main>
     <div class="login-block">
         <div class="center">
