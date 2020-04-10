@@ -22,7 +22,7 @@ public class SignUpController {
     @GetMapping("/signUp")
     public String getSignUpPage(Authentication authentication, ModelMap model, HttpServletRequest request){
         if (authentication != null){
-            return "redirect:/";
+            return "redirect:/tracks";
         }
         if (request.getParameterMap().containsKey("error")){
             model.addAttribute("error", true);
@@ -33,7 +33,7 @@ public class SignUpController {
     @PostMapping("/signUp")
     public String signUp(UserForm userForm, ModelMap model){
         if (service.signUp(userForm)) {
-            return "redirect:/login";
+            return "redirect:/signIn";
         }else {
 
             model.addAttribute("error", true);

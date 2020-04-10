@@ -12,7 +12,7 @@ public class SignInController {
     @GetMapping("/signIn")
     public String getLoginPage(Authentication authentication, ModelMap model, HttpServletRequest request) {
         if (authentication != null) {
-            return "redirect:/";
+            return "redirect:/tracks";
         }
         if (request.getParameterMap().containsKey("error")) {
             model.addAttribute("error", true);
