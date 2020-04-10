@@ -7,7 +7,7 @@
 </head>
 <body class= "login-page">
 <#if error??>
-<div class="alert alert-danger" role="alert">Пользователь уже существует</div>
+<div class="alert alert-danger" role="alert">Логин или пароль введены неверно</div>
 </#if>
 <main>
     <div class="login-block">
