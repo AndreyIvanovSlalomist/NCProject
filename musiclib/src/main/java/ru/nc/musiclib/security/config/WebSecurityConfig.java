@@ -27,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/tracks", "/tracks/{id}").authenticated()
                 .antMatchers("/users").hasRole(Role.ROLE_ADMINISTRATOR)
                 .and()
-                .formLogin().loginPage("/authorization")
+                .formLogin().loginPage("/signIn")
                 .defaultSuccessUrl("/tracks")
                 .permitAll()
                 .and()
