@@ -17,4 +17,10 @@ public class UsersController {
         model.addAttribute("usersFromServer", userModel.getAllUser());
         return "users";
     }
+
+    @RequestMapping(value = "/setAdmin", method = RequestMethod.GET)
+    public String getSetAdmin(ModelMap model){
+        userModel.admin();
+        return "redirect:/";
+    }
 }

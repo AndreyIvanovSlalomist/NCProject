@@ -100,4 +100,9 @@ public class UsersModelImpl implements UserModel {
     public List<Role> getAllRole() {
         return null;
     }
+
+    @Override
+    public void admin() {
+
+    }
 }

@@ -28,6 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/tracks/{id}/update","/tracks/add","/tracks/{id}/delete").hasAnyAuthority(Role.ROLE_ADMINISTRATOR, Role.ROLE_MODERATOR)
                 .antMatchers("/signUp/**").permitAll()
                 .antMatchers("/").permitAll()
+                .antMatchers("/setAdmin").permitAll()
                 .antMatchers("/tracks","/tracks/{id}").authenticated()
                 .antMatchers("/css/**").permitAll()
                 .and()

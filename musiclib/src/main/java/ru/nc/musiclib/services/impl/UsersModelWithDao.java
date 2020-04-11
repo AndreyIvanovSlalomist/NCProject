@@ -18,6 +18,8 @@ import ru.nc.musiclib.utils.PasswordUtils;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.nc.musiclib.DataSourceConfig.getProperty;
+
 @Service
 public class UsersModelWithDao  implements UserModel {
     @Autowired
@@ -26,6 +28,21 @@ public class UsersModelWithDao  implements UserModel {
     private RoleDao roleDao;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public void admin(){
+        String adminUsername = getProperty("admin.username");
+        String adminPassword = getProperty("admin.Password");
+
+        if (usersDao.findByName(adminUsername)==null){
+            System.out.println("Создаем нового администратора "+ adminUsername);
+            String hashPassword = passwordEncoder.encode(adminPassword);
+            User user = new User();
+            user.setPassword(hashPassword);
+            user.setUserName(adminUsername);
+            user.setRole(new Role(Role.ROLE_ADMINISTRATOR));
+            usersDao.save(user);
+        }
+    }
 
     @Override
     public List<User> getAllUser() {

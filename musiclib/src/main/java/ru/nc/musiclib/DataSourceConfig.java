@@ -26,7 +26,7 @@ public class DataSourceConfig {
         return null;
     }
 
-    private static String getProperty(String nameProperty) {
+    public static String getProperty(String nameProperty) {
         String filePath = System.getenv().get("CATALINA_HOME") + File.separator + "conf" + File.separator + CUSTOM_PROPERTIES_PATH;
         try {
             String valueProperty = getPropertiesInFile(nameProperty, filePath);
@@ -57,11 +57,8 @@ public class DataSourceConfig {
         dataSourceBuilder.username(username);
         dataSourceBuilder.password(password);
 
-        String adminUsername = getProperty("admin.username");
-        String adminPassword = getProperty("admin.Password");
-
-
-        return dataSourceBuilder.build();
+        DataSource dataSource = dataSourceBuilder.build();
+        return dataSource;
     }
 
 }

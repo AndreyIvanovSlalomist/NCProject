@@ -17,4 +17,5 @@ public interface UserModel {
     String getSalt(String userName);
     List<User> getAllUser();
     List<Role> getAllRole();
+    void admin();
 }
