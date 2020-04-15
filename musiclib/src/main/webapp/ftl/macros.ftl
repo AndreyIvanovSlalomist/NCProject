@@ -1,14 +1,16 @@
 <#macro navMenu>
 <#assign  security=JspTaglibs["http://www.springframework.org/security/tags"] />
- <nav class="navbar navbar-inverse">
+<nav class="navbar navbar-inverse">
          <div class="container-fluid">
-           <ul class="nav navbar-nav">
+         <ul class="nav navbar-nav">
+<@security.authorize access="isAuthenticated()">
              <li><a href="/tracks">Треки</a></li>
+</@security.authorize>
 <@security.authorize url="/users">
              <li><a href="/users">Пользователи</a></li>
 </@security.authorize>
-           </ul>
-           <ul class="nav navbar-nav navbar-right">
+         </ul>
+         <ul class="nav navbar-nav navbar-right">
 
 <@security.authorize access="isAuthenticated()">
              <li><a href=""><span class="glyphicon glyphicon-user"></span>  <@security.authentication property="name" /> </a></li>

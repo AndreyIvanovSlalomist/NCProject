@@ -145,5 +145,27 @@
   text-transform:uppercase;
   margin-top:0
 }
+.login-links
+{
+  padding:15px 5px 0;
+  font-size:14px;
+  color:#96a2b2
+}
+.login-links:after
+{
+  content:'';
+  display:table;
+  clear:both
+}
+.login-links a
+{
+  color:#96a2b2;
+  opacity:.9
+}
+.login-links a:hover
+{
+  color:#29aafe;
+  opacity:1
+}
 
 </style>

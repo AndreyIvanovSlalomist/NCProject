@@ -26,6 +26,10 @@
             <input type="submit" class="btn btn-primary form-control" value="Зарегистрироваться">
         </form>
     </div>
+    <div class="login-links">
+                <p class = "text-center">Уже зарегистрированы? <a href="/signIn">Войдите</a></p>
+                <p class="text-center"><a href = "/">На главную</a></p>
+    </div>
     </main>
 </body>
 </html>
