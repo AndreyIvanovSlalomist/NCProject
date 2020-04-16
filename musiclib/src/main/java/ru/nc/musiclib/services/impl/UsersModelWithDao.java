@@ -32,11 +32,17 @@ public class UsersModelWithDao  implements UserModel {
     public void admin(){
         String adminUsername = getProperty("admin.username");
         String adminPassword = getProperty("admin.Password");
-
-        if (usersDao.findByName(adminUsername)==null){
+        User user = usersDao.findByName(adminUsername);
+        if (user!=null) {
+            if (!passwordEncoder.matches(adminPassword, user.getPassword())){
+                delete(adminUsername);
+                user = null;
+            }
+        }
+        if (user==null){
             System.out.println("Создаем нового администратора "+ adminUsername);
             String hashPassword = passwordEncoder.encode(adminPassword);
-            User user = new User();
+            user = new User();
             user.setPassword(hashPassword);
             user.setUserName(adminUsername);
             user.setRole(new Role(Role.ROLE_ADMINISTRATOR));

@@ -1,6 +1,7 @@
 package ru.nc.musiclib.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,13 +14,14 @@ public class UsersController {
     private UserModel userModel;
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public String getAllUsers(ModelMap model){
+    public String getAllUsers(ModelMap model) {
         model.addAttribute("usersFromServer", userModel.getAllUser());
         return "users";
     }
 
     @RequestMapping(value = "/setAdmin", method = RequestMethod.GET)
-    public String getSetAdmin(ModelMap model){
+    public String getSetAdmin(ModelMap model) {
+
         userModel.admin();
         return "redirect:/";
     }
