@@ -27,8 +27,8 @@
         </form>
     </div>
     <div class="login-links">
-        <p class="text-center">Первый раз здесь? <a href="/signUp">Зарегистрируйтесь</a></p>
-        <p class="text-center"><a href = "/">На главную</a></p>
+        <p class="text-center">Первый раз здесь? <a href="${contextPath}/signUp">Зарегистрируйтесь</a></p>
+        <p class="text-center"><a href = "${contextPath}/">На главную</a></p>
     </div>
     </main>
 </body>

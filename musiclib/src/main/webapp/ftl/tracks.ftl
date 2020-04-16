@@ -13,7 +13,7 @@
        <div class="container">
          <h2>Треки</h2>
 
-       <form method="get" action="/tracks" autocomplete="off" class="form-inline">
+       <form method="get" action="${contextPath}/tracks" autocomplete="off" class="form-inline">
            <div class="form-group" for="name">
                <input autofocus type="text" class="form-control" name="name" id="name" placeholder="Название" value="${name}"">
            </div>
@@ -27,9 +27,9 @@
                <input autofocus type="text" class="form-control" name="genreName" id="genreName" placeholder="Жанр" value="${genreName}">
            </div>
            <input type="submit" class="btn btn-primary" value="Искать">
-           <a href="/tracks"><div class="btn btn-primary">Отмена</div></a>
+           <a href="${contextPath}/tracks"><div class="btn btn-primary">Отмена</div></a>
            <@security.authorize url="/tracks/add">
-           <a href="/tracks/add"><div class="btn btn-primary" style="float: right">Добавить трек</div></a>
+           <a href="${contextPath}/tracks/add"><div class="btn btn-primary" style="float: right">Добавить трек</div></a>
            </@security.authorize>
        </form>
          <table  class="table table-hover" id="table">
@@ -43,7 +43,7 @@
            </tr>
            <#list tracksFromServer as track>
            <tr>
-             <td><a href="/tracks/${track.id}">${track.name}</a></td>
+             <td><a href="${contextPath}/tracks/${track.id}">${track.name}</a></td>
              <td>${track.singer}</td>
              <td>${track.album}</td>
              <td>${track.length}</td>
@@ -51,15 +51,13 @@
              <td align="right" nowrap >
              <form>
            <@security.authorize url="/tracks/{id}/update">
-             <input type="submit" formaction="/tracks/${track.id}/update" class="btn btn-primary" value="&#9998" title="Редактировать">
+             <input type="submit" formaction="${contextPath}/tracks/${track.id}/update" class="btn btn-primary" value="&#9998" title="Редактировать">
              </@security.authorize>
            <@security.authorize url="/tracks/{id}/delete">
-             <input type="submit" formaction="/tracks/${track.id}/delete" formmethod="post" class="btn btn-primary" value="&#10007" title="Удалить">
+             <input type="submit" formaction="${contextPath}/tracks/${track.id}/delete" formmethod="post" class="btn btn-primary" value="&#10007" title="Удалить">
              </@security.authorize>
              </form>
              </td>
-
-
            </tr>
            </#list>
          </table>

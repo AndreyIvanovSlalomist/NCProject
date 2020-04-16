@@ -21,8 +21,8 @@
              <td>${user.userName}</td>
              <td>${user.role.roleName}</td>
              <td align="right" nowrap>
-                <a href="/user/?user_name=${user.userName}"><div class="btn btn-primary title="Редактировать">&#9998</div></a>
-                <a href="/user/?user_name_delete=${user.userName}"><div class="btn btn-primary title="Удалить">&#10007</div></a>
+                <a href="${contextPath}/user/?user_name=${user.userName}"><div class="btn btn-primary title="Редактировать">&#9998</div></a>
+                <a href="${contextPath}/user/?user_name_delete=${user.userName}"><div class="btn btn-primary title="Удалить">&#10007</div></a>
              </td>
            </tr>
            </#list>

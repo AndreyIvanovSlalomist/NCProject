@@ -10,7 +10,7 @@
 <@macros.navMenu/>
 <div class="container">
     <h2>Добавить трек</h2>
-    <form action="add" method="POST" autocomplete="off">
+    <form action="${contextPath}/add" method="POST" autocomplete="off">
         <div class="form-group" for="name">
             <input autofocus required = true type="text" class="form-control" name="name" id="name" placeholder="Название" >
         </div>
@@ -27,7 +27,7 @@
             <input autofocus required = true type="text" class="form-control" name="genreName" id="genreName" placeholder="Жанр" >
         </div>
         <input type="submit" class="btn btn-primary" value="Добавить">
-        <a href="/tracks"><div class="btn btn-primary">Отмена</div></a>
+        <a href="${contextPath}/tracks"><div class="btn btn-primary">Отмена</div></a>
     </form>
 </div>
 </body>

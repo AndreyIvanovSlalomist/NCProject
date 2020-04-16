@@ -10,13 +10,12 @@
 <@macros.navMenu/>
 <div class="container">
     <h2>Изменение роли</h2>
-    <form action="/user/?id=${user.id}" method="POST" autocomplete="off">
+    <form action="${contextPath}/user/?id=${user.id}" method="POST" autocomplete="off">
         <div class="form-group" for="name">
             <h2>${user.userName}</h2>
         </div>
         <div class="form-group" for="id_role">
             <select class="form-control" name="id_role" id="id_role">
-                <option disabled>Выберите роль</option>
                 <#list rolesFromServer as role>
                     <option
                         <#if role.roleName == user.role.roleName >selected</#if>
@@ -27,7 +26,7 @@
 
         </div>
         <input type="submit" class="btn btn-primary" value="Сохранить">
-        <a href="/users"><div class="btn btn-primary">Отмена</div></a>
+        <a href="${contextPath}/users"><div class="btn btn-primary">Отмена</div></a>
     </form>
 </div>
 </body>

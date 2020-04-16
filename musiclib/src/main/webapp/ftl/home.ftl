@@ -11,7 +11,7 @@
        <div class="container">
        <div class="text-center">
        <h1>Добро пожаловать в Музыкальную библиотеку!</h1>
-       <p><a href = "/signIn">Войдите</a>, чтобы продолжить, или <a href="/signUp">зарегистрируйтесь</a>.</p>
+       <p><a href = "${contextPath}/signIn">Войдите</a>, чтобы продолжить, или <a href="${contextPath}/signUp">зарегистрируйтесь</a>.</p>
        </div>
        </div>
       </body>

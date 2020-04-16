@@ -10,7 +10,7 @@
 <@macros.navMenu/>
 <div class="container">
     <h2 style="float: left">Информация о треке</h2>
-    <a href="/tracks"><div class="btn btn-primary" style="float: right; margin: 15px 0 0 5px">Назад</div></a>
+    <a href="${contextPath}/tracks"><div class="btn btn-primary" style="float: right; margin: 15px 0 0 5px">Назад</div></a>
     <table class="table table-hover" id="table">
         <tr>
             <td>Название</td>
