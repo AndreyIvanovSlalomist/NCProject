@@ -21,7 +21,7 @@
             <input autofocus required = true type="text" class="form-control" name="album" id="album" placeholder="Альбом" value = "${track.album}">
         </div>
         <div class="form-group" for="length">
-            <input autofocus required = true type="text" class="form-control" name="length" id="length" placeholder="Длительность" value = "${track.length}" pattern="^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$">
+            <input autofocus required = true type="text" class="form-control" name="length" id="length" placeholder="Длительность [ЧЧ:ММ:CC]" value = "${track.length}" pattern="^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$">
         </div>
         <div class="form-group" for="genreName">
             <input autofocus required = true type="text" class="form-control" name="genreName" id="genreName" placeholder="Жанр" value = "${track.genreName}">

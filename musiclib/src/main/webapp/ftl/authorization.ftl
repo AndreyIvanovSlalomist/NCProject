@@ -7,21 +7,21 @@
 </head>
 <body class= "login-page">
 <#if error??>
-<div class="alert alert-danger" role="alert">Логин или пароль введены неверно</div>
+<div class="alert alert-danger" role="alert">Неверный логин или пароль</div>
 </#if>
 <main>
     <div class="login-block">
         <div class="center">
         <h2>Авторизация</h2>
         </div>
-        <form action="" method="POST" autocomplete="off">
+        <form action="" method="POST">
             <div class="form-group" for="username">
                 <label for="username">Логин</label>
-                <input autofocus required = true type="text" class="form-control" name="username" id="username" placeholder="Введите имя пользователя" >
+                <input autofocus required = true type="text" class="form-control" name="username" id="username" placeholder="Введите имя пользователя" autocomplete="username" >
             </div>
             <div class="form-group" for="password">
                 <label for="password">Пароль</label>
-                <input required = true type="password" class="form-control" name="password" id="password" placeholder="Введите пароль" >
+                <input autofocus required = true type="password" class="form-control" name="password" id="password" placeholder="Введите пароль" autocomplete="password">
             </div>
             <input type="submit" class="btn btn-primary form-control" value="Войти">
         </form>

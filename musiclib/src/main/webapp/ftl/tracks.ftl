@@ -9,22 +9,24 @@
            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
        </head>
        <body>
-        <@macros.navMenu/>
+       <@macros.navMenu/>
        <div class="container">
-         <h2>Треки</h2>
-
+        <#if warning>
+          <div class="alert alert-warning" role="alert">Трек c указанным идентификатором отсутствует!</div>
+        </#if>
+       <h2>Треки</h2>
        <form method="get" action="${contextPath}/tracks" autocomplete="off" class="form-inline">
            <div class="form-group" for="name">
-               <input autofocus type="text" class="form-control" name="name" id="name" placeholder="Название" value="${name}"">
+               <input type="text" autofocus class="form-control" name="name" id="name" placeholder="Название" value="${name}"">
            </div>
            <div class="form-group" for="singer">
-               <input autofocus type="text" class="form-control" name="singer" id="singer" placeholder="Исполнитель" value="${singer}"">
+               <input type="text" class="form-control" name="singer" id="singer" placeholder="Исполнитель" value="${singer}"">
            </div>
            <div class="form-group" for="album">
-               <input autofocus type="text" class="form-control" name="album" id="album" placeholder="Альбом" value="${album}"">
+               <input type="text" class="form-control" name="album" id="album" placeholder="Альбом" value="${album}"">
            </div>
            <div class="form-group" for="genreName">
-               <input autofocus type="text" class="form-control" name="genreName" id="genreName" placeholder="Жанр" value="${genreName}">
+               <input type="text" class="form-control" name="genreName" id="genreName" placeholder="Жанр" value="${genreName}">
            </div>
            <input type="submit" class="btn btn-primary" value="Искать">
            <a href="${contextPath}/tracks"><div class="btn btn-primary">Отмена</div></a>
@@ -54,14 +56,29 @@
              <input type="submit" formaction="${contextPath}/tracks/${track.id}/update" class="btn btn-primary" value="&#9998" title="Редактировать">
              </@security.authorize>
            <@security.authorize url="/tracks/{id}/delete">
-             <input type="submit" formaction="${contextPath}/tracks/${track.id}/delete" formmethod="post" class="btn btn-primary" value="&#10007" title="Удалить">
+             <input type="button" data-toggle="modal" data-target="#confirmation" data-id="${track.id}" class="btn btn-primary" value="&#10007" title="Удалить">
              </@security.authorize>
              </form>
              </td>
            </tr>
            </#list>
          </table>
-       </div>
+
+         <div id="confirmation" class="modal fade" role="dialog">
+           <div class="modal-dialog modal-sm">
+             <div class="modal-content">
+               <div class="modal-body">
+                 <p>Удалить этот трек?</p>
+               </div>
+               <div class="modal-footer">
+               <form id = deleteForm action = "" method="post">
+                 <input type="submit" class="btn btn-primary" value = "Да">
+                 <input type="button" class="btn btn-secondary" data-dismiss="modal" value = "Отмена">
+               </form>
+               </div>
+             </div>
+           </div>
+         </div>
 
          <script type="text/javascript">
            function sort(number, ColHeader) {
@@ -82,7 +99,6 @@
                node.classList.remove("up");
              }
 
-
              let sortedRows = Array.from(table.rows)
                .slice(1)
                .sort((rowA, rowB) => rowA.cells[number].innerHTML > rowB.cells[number].innerHTML ? 1 : -1);
@@ -95,5 +111,15 @@
              table.tBodies[0].append(...sortedRows);
            }
          </script>
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+         <script src="/js/bootstrap.min.js"></script>
+         <script>
+            $('#confirmation').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                $('#deleteForm').attr("action", "${contextPath}/tracks/" + id + "/delete" );
+            })
+         </script >
+
        </body>
        </html>

@@ -31,7 +31,8 @@ public class TracksController {
     public String getAllTracks(ModelMap model, @RequestParam(name = "name", required = false, defaultValue = "") String name,
                                @RequestParam(name = "singer", required = false, defaultValue = "") String singer,
                                @RequestParam(name = "album", required = false, defaultValue = "") String album,
-                               @RequestParam(name = "genreName", required = false, defaultValue = "") String genreName) {
+                               @RequestParam(name = "genreName", required = false, defaultValue = "") String genreName,
+                               @RequestParam(name = "warning", required = false, defaultValue = "false") boolean warning) {
         List<Track> tracks;
         try {
             name = URLDecoder.decode(name, StandardCharsets.UTF_8.toString());
@@ -60,14 +61,21 @@ public class TracksController {
         model.addAttribute("album", album.replaceAll("\\+", " "));
         model.addAttribute("genreName", genreName.replaceAll("\\+", " "));
         model.addAttribute("tracksFromServer", tracks);
+        if(warning)
+            model.addAttribute("warning", true);
+        else
+            model.addAttribute("warning",false);
         return "tracks";
     }
 
     @RequestMapping(value="/{id}/update", method = RequestMethod.GET)
     public String updateForm(ModelMap model, @PathVariable("id") Integer id){
-        if(trackModel.find(id).isPresent())
-            model.addAttribute("track",trackModel.find(id).get());
-        return "edit";
+        if(trackModel.find(id).isPresent()) {
+            model.addAttribute("track", trackModel.find(id).get());
+            return "edit";
+        }
+        model.addAttribute("warning", true);
+        return "redirect:/tracks";
     }
     @RequestMapping(value="/{id}/update", method = RequestMethod.POST)
     public String update(ModelMap model, @PathVariable("id") Integer id, @ModelAttribute Track track, @ModelAttribute Genre genre ){
@@ -79,9 +87,12 @@ public class TracksController {
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
     public String show(ModelMap model, @PathVariable("id") Integer id) {
-        if (trackModel.find(id).isPresent())
+        if (trackModel.find(id).isPresent()){
             model.addAttribute("track", trackModel.find(id).get());
-        return "show";
+            return "show";
+        }
+        model.addAttribute("warning", true);
+        return "redirect:/tracks";
     }
 
     @RequestMapping(value = "/{id}/delete",method = RequestMethod.POST)

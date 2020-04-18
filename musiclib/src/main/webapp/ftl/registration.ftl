@@ -17,18 +17,18 @@
         <form action="" method="POST" autocomplete="off">
             <div class="form-group" for="username">
                 <label for="userName">Логин</label>
-                <input autofocus required = true type="text" class="form-control" name="userName" id="userName" placeholder="Введите имя пользователя" >
+                <input autofocus required = true type="text" class="form-control" name="userName" id="userName" placeholder="Введите имя пользователя" autocomplete="username" >
             </div>
             <div class="form-group" for="password">
                 <label for="password">Пароль</label>
-                <input autofocus required = true type="password" class="form-control" name="password" id="password" placeholder="Введите пароль" >
+                <input autofocus required = true type="password" class="form-control" name="password" id="password" placeholder="Введите пароль" autocomplete="new-password">
             </div>
             <input type="submit" class="btn btn-primary form-control" value="Зарегистрироваться">
         </form>
     </div>
     <div class="login-links">
-                <p class = "text-center">Уже зарегистрированы? <a href="${contextPath}/signIn">Войдите</a></p>
-                <p class="text-center"><a href = "${contextPath}/">На главную</a></p>
+         <p class = "text-center">Уже зарегистрированы? <a href="${contextPath}/signIn">Войдите</a></p>
+         <p class="text-center"><a href = "${contextPath}/">На главную</a></p>
     </div>
     </main>
 </body>
