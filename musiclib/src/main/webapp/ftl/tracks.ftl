@@ -11,8 +11,8 @@
        <body>
        <@macros.navMenu/>
        <div class="container">
-        <#if warning>
-          <div class="alert alert-warning" role="alert">Трек c указанным идентификатором отсутствует!</div>
+        <#if message??>
+          <div class="alert alert-${type}" role="alert">${message}</div>
         </#if>
        <h2>Треки</h2>
        <form method="get" action="${contextPath}/tracks" autocomplete="off" class="form-inline">
@@ -63,6 +63,7 @@
            </tr>
            </#list>
          </table>
+       </div>
 
          <div id="confirmation" class="modal fade" role="dialog">
            <div class="modal-dialog modal-sm">
@@ -71,7 +72,7 @@
                  <p>Удалить этот трек?</p>
                </div>
                <div class="modal-footer">
-               <form id = deleteForm action = "" method="post">
+               <form id = "deleteForm" action = "" method="post">
                  <input type="submit" class="btn btn-primary" value = "Да">
                  <input type="button" class="btn btn-secondary" data-dismiss="modal" value = "Отмена">
                </form>
@@ -120,6 +121,5 @@
                 $('#deleteForm').attr("action", "${contextPath}/tracks/" + id + "/delete" );
             })
          </script >
-
        </body>
        </html>

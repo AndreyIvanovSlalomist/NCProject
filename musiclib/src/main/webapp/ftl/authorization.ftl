@@ -21,7 +21,7 @@
             </div>
             <div class="form-group" for="password">
                 <label for="password">Пароль</label>
-                <input autofocus required = true type="password" class="form-control" name="password" id="password" placeholder="Введите пароль" autocomplete="password">
+                <input autofocus required = true type="password" class="form-control" name="password" id="password" placeholder="Введите пароль" autocomplete="current-password">
             </div>
             <input type="submit" class="btn btn-primary form-control" value="Войти">
         </form>

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.nc.musiclib.model.Genre;
 import ru.nc.musiclib.model.Track;
 import ru.nc.musiclib.repositories.TrackDao;
@@ -31,8 +32,7 @@ public class TracksController {
     public String getAllTracks(ModelMap model, @RequestParam(name = "name", required = false, defaultValue = "") String name,
                                @RequestParam(name = "singer", required = false, defaultValue = "") String singer,
                                @RequestParam(name = "album", required = false, defaultValue = "") String album,
-                               @RequestParam(name = "genreName", required = false, defaultValue = "") String genreName,
-                               @RequestParam(name = "warning", required = false, defaultValue = "false") boolean warning) {
+                               @RequestParam(name = "genreName", required = false, defaultValue = "") String genreName) {
         List<Track> tracks;
         try {
             name = URLDecoder.decode(name, StandardCharsets.UTF_8.toString());
@@ -61,43 +61,49 @@ public class TracksController {
         model.addAttribute("album", album.replaceAll("\\+", " "));
         model.addAttribute("genreName", genreName.replaceAll("\\+", " "));
         model.addAttribute("tracksFromServer", tracks);
-        if(warning)
-            model.addAttribute("warning", true);
-        else
-            model.addAttribute("warning",false);
         return "tracks";
     }
 
     @RequestMapping(value="/{id}/update", method = RequestMethod.GET)
-    public String updateForm(ModelMap model, @PathVariable("id") Integer id){
+    public String updateForm(ModelMap model, @PathVariable("id") Integer id, RedirectAttributes redirectAttributes){
         if(trackModel.find(id).isPresent()) {
             model.addAttribute("track", trackModel.find(id).get());
             return "edit";
         }
-        model.addAttribute("warning", true);
+        redirectAttributes.addFlashAttribute("type", "warning");
+        redirectAttributes.addFlashAttribute("message", "Трек с таким идентификатором не существует!");
         return "redirect:/tracks";
     }
+
     @RequestMapping(value="/{id}/update", method = RequestMethod.POST)
-    public String update(ModelMap model, @PathVariable("id") Integer id, @ModelAttribute Track track, @ModelAttribute Genre genre ){
+    public String update(ModelMap model, @PathVariable("id") Integer id, @ModelAttribute Track track,
+                         @ModelAttribute Genre genre, RedirectAttributes redirectAttributes ){
         if(trackModel.find(id).isPresent()){
-            trackModel.update(trackModel.find(id).get(),track.getName(),track.getSinger(),track.getAlbum(),track.getLengthInt(),genre.getGenreName());
+            if(trackModel.update(trackModel.find(id).get(),track.getName(),track.getSinger(),track.getAlbum(),track.getLengthInt(),genre.getGenreName())){
+                redirectAttributes.addFlashAttribute("type", "success");
+                redirectAttributes.addFlashAttribute("message", "Трек успешно изменен!");
+            }
         }
         return "redirect:/tracks";
     }
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
-    public String show(ModelMap model, @PathVariable("id") Integer id) {
+    public String show(ModelMap model, @PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
         if (trackModel.find(id).isPresent()){
             model.addAttribute("track", trackModel.find(id).get());
             return "show";
         }
-        model.addAttribute("warning", true);
+        redirectAttributes.addFlashAttribute("type", "warning");
+        redirectAttributes.addFlashAttribute("message", "Трек с таким идентификатором не существует!");
         return "redirect:/tracks";
     }
 
     @RequestMapping(value = "/{id}/delete",method = RequestMethod.POST)
-    public String delete(@PathVariable("id") Integer id) {
-        trackModel.delete(id);
+    public String delete(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+        if(trackModel.delete(id)){
+            redirectAttributes.addFlashAttribute("type", "success");
+            redirectAttributes.addFlashAttribute("message", "Трек успешно удален!");
+        }
         return "redirect:/tracks";
     }
 
@@ -107,8 +113,14 @@ public class TracksController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(ModelMap model, @ModelAttribute Track track, @ModelAttribute Genre genre){
-        trackModel.add(track.getName(),track.getSinger(),track.getAlbum(),track.getLengthInt(), genre.getGenreName(), false);
+    public String add(ModelMap model, @ModelAttribute Track track, @ModelAttribute Genre genre, RedirectAttributes redirectAttributes){
+        if(trackModel.add(track.getName(),track.getSinger(),track.getAlbum(),track.getLengthInt(), genre.getGenreName(), false)){
+            redirectAttributes.addFlashAttribute("type", "success");
+            redirectAttributes.addFlashAttribute("message", "Трек добавлен!");
+            return "redirect:/tracks";
+        }
+        redirectAttributes.addFlashAttribute("type", "warning");
+        redirectAttributes.addFlashAttribute("message", "Такой трек уже существует!");
         return "redirect:/tracks";
     }
 

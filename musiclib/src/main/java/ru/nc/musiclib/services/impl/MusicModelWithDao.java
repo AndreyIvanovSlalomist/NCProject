@@ -64,7 +64,8 @@ public class MusicModelWithDao implements Model {
     @Override
     public boolean update(Track oldTrack, String name, String singer, String album, int length, String genreName) {
         Track track = trackDao.findTrack(oldTrack.getName(), oldTrack.getSinger(), oldTrack.getAlbum(), oldTrack.getLengthInt());
-        if (track == null)
+        Track newTrack = trackDao.findTrack(name,singer,album,length);
+        if (track == null||newTrack!=null)
             return false;
         track.setName(name);
         track.setSinger(singer);
