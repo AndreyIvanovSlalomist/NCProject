@@ -18,7 +18,8 @@ import ru.nc.musiclib.utils.PasswordUtils;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.nc.musiclib.DataSourceConfig.getProperty;
+import static ru.nc.musiclib.utils.FindProperty.getProperty;
+
 
 @Service
 public class UsersModelWithDao  implements UserModel {

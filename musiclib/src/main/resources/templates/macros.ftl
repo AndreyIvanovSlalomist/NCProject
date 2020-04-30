@@ -18,8 +18,8 @@
 </@security.authorize>
 
 <@security.authorize access="! isAuthenticated()">
-             <li><a href="${contextPath}/signUp"><span class="glyphicon glyphicon-user"></span> Регистрация</a></li>
-             <li><a href="${contextPath}/signIn"><span class="glyphicon glyphicon-log-in"></span> Авторизация</a></li>
+             <li><a href="${contextPath!""}/signUp"><span class="glyphicon glyphicon-user"></span> Регистрация</a></li>
+             <li><a href="${contextPath!""}/signIn"><span class="glyphicon glyphicon-log-in"></span> Авторизация</a></li>
 </@security.authorize>
 
            </ul>

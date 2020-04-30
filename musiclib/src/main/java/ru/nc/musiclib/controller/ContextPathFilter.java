@@ -1,9 +1,11 @@
 package ru.nc.musiclib.controller;
 
+import org.springframework.stereotype.Component;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-
+@Component
 public class ContextPathFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
