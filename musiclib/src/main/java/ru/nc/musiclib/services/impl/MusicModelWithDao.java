@@ -70,7 +70,7 @@ public class MusicModelWithDao implements Model {
         track.setName(name);
         track.setSinger(singer);
         track.setAlbum(album);
-        track.setLength(length);
+        track.setLengthInt(length);
         track.setGenre(new Genre(genreName));
         return trackDao.update(track);
     }
@@ -126,5 +126,10 @@ public class MusicModelWithDao implements Model {
     @Override
     public Optional<Track> find(Integer id) {
         return trackDao.find(id);
+    }
+
+    @Override
+    public Track save(Track track) {
+        return null;
     }
 }

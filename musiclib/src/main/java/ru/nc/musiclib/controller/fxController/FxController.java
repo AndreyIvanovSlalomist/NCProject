@@ -68,7 +68,7 @@ public class FxController {
         onClickRefresh(null);
     }
 
-    FxController(ClientSocket clientSocket, Role role, String login) {
+    public FxController(ClientSocket clientSocket, Role role, String login) {
         this.clientSocket = clientSocket;
         this.role = role;
         this.login = login;
@@ -138,8 +138,8 @@ public class FxController {
         File file = fileChooser.showSaveDialog(null);
         if (file == null)
             return;
-        clientSocket.getOos().writeObject(ConstProtocol.getFile);
-        StreamUtils.streamToFile(clientSocket.getOis(), file.getPath());
+/*        clientSocket.getOos().writeObject(ConstProtocol.getFile);
+        StreamUtils.streamToFile(clientSocket.getOis(), file.getPath());*/
         onClickRefresh(null);
     }
 
@@ -153,8 +153,8 @@ public class FxController {
         File file = fileChooser.showOpenDialog(null);
         if (file == null)
             return;
-        clientSocket.getOos().writeObject(ConstProtocol.loadFromFile);
-        StreamUtils.fileToStream(clientSocket.getOos(), file.getPath());
+/*        clientSocket.getOos().writeObject(ConstProtocol.loadFromFile);
+        StreamUtils.fileToStream(clientSocket.getOos(), file.getPath());*/
 
         onClickRefresh(null);
     }
@@ -206,7 +206,7 @@ public class FxController {
         onClickRefresh(null);
     }
 
-    public void onClickSignOut(){
+    public void onClickSignOut() {
         Stage stage = (Stage) table.getScene().getWindow();
         stage.close();
 

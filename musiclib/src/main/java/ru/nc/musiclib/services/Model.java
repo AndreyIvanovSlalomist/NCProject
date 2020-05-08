@@ -44,4 +44,6 @@ public interface Model {
     List<Track> filter(String filterName, String filterSinger, String filterAlbum, String filterGenreName);
 
     Optional<Track> find(Integer id);
+
+    Track save(Track track);
 }

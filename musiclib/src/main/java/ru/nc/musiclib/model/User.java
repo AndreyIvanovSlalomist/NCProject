@@ -1,18 +1,41 @@
 package ru.nc.musiclib.model;
 
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
+import java.util.List;
 
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "lib_user")
 @XmlAccessorType(XmlAccessType.FIELD)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.PUBLIC_ONLY)
 public class User implements Serializable {
-    @XmlElement(name = "userName")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @XmlElement()
     private String userName;
-    @XmlElement(name = "password")
+    @XmlElement()
     private String password;
+/*    @OneToMany(mappedBy = "user")
+    List<Token> tokens;*/
+    @XmlElement()
+    @ManyToOne
+    @JoinColumn(name = "id_role")
+    private Role role;
 
     public User(String userName, String password, Role role, Integer id) {
         this.userName = userName;
@@ -37,17 +60,13 @@ public class User implements Serializable {
         return id;
     }
 
-    @XmlElement(name = "role")
-    private Role role;
-    private Integer id;
 
     public User(String userName, String password, Role role) {
         this.userName = userName;
         this.password = password;
         this.role = role;
     }
-    public User() {
-    }
+
     @Override
     public String toString() {
         return "user [userName=" + userName + ", password = секрет, Role=" + role.toString() + "]";

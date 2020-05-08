@@ -33,8 +33,9 @@ public class ConnectionFormController {
             return;
         }
 
-        clientSocket = ClientUtils.connect(host, port);
-        if((clientSocket != null) && (clientSocket.getSocket() != null)) {
+        ClientSocket clientSocket = new ClientSocket(host, port, "");
+        //clientSocket = ClientUtils.connect(host, port);
+        if((clientSocket != null) /*&& (clientSocket.getSocket() != null)*/) {
             Stage stage = getStage(AuthorizationController.class, (Callable<AuthorizationController>) () -> new AuthorizationController(clientSocket), "/fxml/authorization.fxml", false, "Авторизация");
             stage.setOnShown(event -> hostField.getScene().getWindow().hide());
             stage.show();

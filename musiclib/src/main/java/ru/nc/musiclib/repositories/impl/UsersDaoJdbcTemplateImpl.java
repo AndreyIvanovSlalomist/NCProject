@@ -19,8 +19,8 @@ public class UsersDaoJdbcTemplateImpl implements UsersDao {
     private static final String SELECT_USER_BY_NAME = "select * from lib_user where userName = ?";
     private static final String SELECT_USER_BY_ID = "select * from lib_user where id = ?";
     private static final String DELETE_USER_BY_NAME = "delete from lib_user where userName = ?";
-    private static final String INSERT_USER = "insert into lib_user (userName, password,id_rile) values (?, ?, ?)";
-    private static final String UPDATE_RILE_BY_USER_ID = "update lib_user set id_rile = ? where id = ?";
+    private static final String INSERT_USER = "insert into lib_user (userName, password,id_role) values (?, ?, ?)";
+    private static final String UPDATE_RILE_BY_USER_ID = "update lib_user set id_role = ? where id = ?";
     private static final String SELECT_ALL_USER = "select * from lib_user";
     private static final String SELECT_ROLE_BY_ID = "select * from lib_role where id = ?";
     private JdbcTemplate jdbcTemplate;
@@ -29,7 +29,7 @@ public class UsersDaoJdbcTemplateImpl implements UsersDao {
     private RowMapper<User> usersRowMapper = (resultSet, i) -> new User(
             resultSet.getString("userName"),
             resultSet.getString("password"),
-            findRole(resultSet.getInt("id_rile")).orElse(null),
+            findRole(resultSet.getInt("id_role")).orElse(null),
             resultSet.getInt("id"));
 
     @Autowired

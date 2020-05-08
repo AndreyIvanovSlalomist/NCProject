@@ -1,16 +1,30 @@
 package ru.nc.musiclib.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.control.Alert;
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 import ru.nc.musiclib.model.Role;
 import ru.nc.musiclib.model.Track;
 import ru.nc.musiclib.model.User;
 import ru.nc.musiclib.net.client.ClientSocket;
+import ru.nc.musiclib.transfer.*;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ClientUtils {
 
@@ -32,30 +46,44 @@ public class ClientUtils {
     }
 
     public static ClientSocket connect(String host, int port) {
-        try {
-            return new ClientSocket(InetAddress.getByName(host), port);
-        } catch (UnknownHostException e) {
-            logger.error("Ошибка: Неизвестен хост. " + e.toString());
-        }
-        return null;
+        return new ClientSocket(host, port, "");
+
     }
 
-    public static Object signInUser(ClientSocket clientSocket, String login) {
-        try {
-            clientSocket.getOos().writeObject(ConstProtocol.checkUser);
-            clientSocket.getOos().writeObject(login);
-            clientSocket.getOos().flush();
-            return clientSocket.getOis().readObject();
-        } catch (ClassNotFoundException e) {
-            logger.error("Ошибка класс не найден! " + e.toString());
+    private static String getBaseUrl(ClientSocket clientSocket) {
+        return "http://" + clientSocket.getHost() + ":" + clientSocket.getPort() + "/api";
+    }
+
+    private static void jsonToConnection(HttpURLConnection con, String jsonInputString ){
+        try (OutputStream os = con.getOutputStream()) {
+            byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
         } catch (IOException e) {
-            logger.error("Ошибка записи в поток! " + e.toString());
+            e.printStackTrace();
         }
-        return null;
+    }
+
+    public static boolean signInUser(ClientSocket clientSocket, String login, String password) {
+        try {
+            HttpURLConnection con = getHttpURLConnection(clientSocket, "POST", getBaseUrl(clientSocket) + "/login");
+            jsonToConnection(con, "{\"userName\": \"" + login + "\", \"password\": \"" + password + "\"}");
+
+            TokenDto tokenDto = (TokenDto) getObjectFromJSON(getJSONFromHttpURLConnection(con), TokenDto.class);
+            if (tokenDto != null) {
+                clientSocket.setToken(tokenDto.getValue());
+                return true;
+            } else {
+                return false;
+            }
+        } catch (IOException e) {
+            clientSocket.setToken("");
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static boolean checkPassword(ClientSocket clientSocket, String login, String password) {
-        try {
+/*        try {
             clientSocket.getOos().writeObject(ConstProtocol.checkPassword);
             clientSocket.getOos().writeObject(login);
             clientSocket.getOos().writeObject(password);
@@ -63,26 +91,64 @@ public class ClientUtils {
             return clientSocket.getOis().readBoolean();
         } catch (IOException e) {
             logger.error("Ошибка чтения из потока! " + e.toString());
-        }
+        }*/
         return false;
     }
 
-    public static Object getRole(ClientSocket clientSocket, String login) {
-        try {
-            clientSocket.getOos().writeObject(ConstProtocol.getRole);
-            clientSocket.getOos().writeObject(login);
-            clientSocket.getOos().flush();
-            return clientSocket.getOis().readObject();
+    private static HttpURLConnection getHttpURLConnection(ClientSocket clientSocket, String requestMethod, String urlString) throws IOException {
+        URL url = new URL(urlString);
+        HttpURLConnection con = null;
+        con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod(requestMethod);
+        con.setRequestProperty("Content-Type", "application/json; utf-8");
+        con.setRequestProperty("Accept", "application/json");
+        con.setDoOutput(true);
+        return con;
+    }
+
+    private static String getJSONFromHttpURLConnection(HttpURLConnection con) {
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
+            StringBuilder response = new StringBuilder();
+            String responseLine = null;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+            return response.toString();
         } catch (IOException e) {
-            logger.error("Ошибка чтения из потока! " + e.toString());
-        } catch (ClassNotFoundException e) {
-            logger.error("Ошибка класс не найден! " + e.toString());
+            e.printStackTrace();
+            return null;
         }
-        return null;
+    }
+
+    private static Object getObjectFromJSON(String jsonString, Class aClass) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonString, aClass);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Object getObjectFromUrl(ClientSocket clientSocket, String requestMethod, String addUrl, Class aClass) {
+        try {
+            String param = "token=" + clientSocket.getToken();
+            HttpURLConnection con = getHttpURLConnection(clientSocket, requestMethod, getBaseUrl(clientSocket) + addUrl + "?" + param);
+
+            return getObjectFromJSON(getJSONFromHttpURLConnection(con), aClass);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Role getRole(ClientSocket clientSocket, String login) {
+        return RoleDto.fromRoleDto((RoleDto) getObjectFromUrl(clientSocket, "GET", "/getRole/" + login, RoleDto.class));
     }
 
     public static void updateTrack(ClientSocket clientSocket, Track track, String name, String singer, String album, int lengthInt, String genre) {
-        try {
+/*        try {
             clientSocket.getOos().writeObject(ConstProtocol.update);
             clientSocket.getOos().writeObject(name);
             clientSocket.getOos().writeObject(singer);
@@ -93,11 +159,11 @@ public class ClientUtils {
             clientSocket.getOos().flush();
         } catch (IOException e) {
             logger.error("Ошибка записи в поток. " + e.toString());
-        }
+        }*/
     }
 
     public static void addTrack(ClientSocket clientSocket, String name, String singer, String album, int lengthInt, String genre) {
-        try {
+/*        try {
             clientSocket.getOos().writeObject(ConstProtocol.add);
             clientSocket.getOos().writeObject(name);
             clientSocket.getOos().writeObject(singer);
@@ -107,11 +173,11 @@ public class ClientUtils {
             clientSocket.getOos().flush();
         } catch (IOException e) {
             logger.error("Ошибка записи в поток. " + e.toString());
-        }
+        }*/
     }
 
     public static Object signUpUser(ClientSocket clientSocket, String login, String password) {
-        try {
+/*        try {
             clientSocket.getOos().writeObject(ConstProtocol.addUser);
             clientSocket.getOos().writeObject(login);
             clientSocket.getOos().writeObject(password);
@@ -121,101 +187,55 @@ public class ClientUtils {
             logger.error("Ошибка чтения из потока!. " + e.toString());
         } catch (ClassNotFoundException e) {
             logger.error("Ошибка класс не найден!. " + e.toString());
-        }
+        }*/
         return null;
     }
 
     public static void deleteTrack(ClientSocket clientSocket, Track track) {
-        try {
-            clientSocket.getOos().writeObject(ConstProtocol.delete);
-            clientSocket.getOos().writeObject(track.getName());
-            clientSocket.getOos().writeObject(track.getSinger());
-            clientSocket.getOos().writeObject(track.getAlbum());
-            clientSocket.getOos().writeObject(track.getLengthInt());
-            clientSocket.getOos().writeObject(track.getGenreName());
-            clientSocket.getOos().flush();
-        } catch (IOException e) {
-            logger.error("Ошибка записи в поток. " + e.toString());
-        }
+        getObjectFromUrl(clientSocket, "GET", "/tracks/" + track.getId() + "/delete", Integer.class);
     }
 
     public static List<Track> getAllTrack(ClientSocket clientSocket, String name, String singer, String album, String genre) {
-        try {
-            List<Track> trackList = new ArrayList<>();
-            boolean isFiltered = !(name.isEmpty() && singer.isEmpty() && album.isEmpty() && genre.isEmpty());
-            if (isFiltered) {
-                logger.info("get filter");
-                clientSocket.getOos().writeObject(ConstProtocol.filter);
-            } else {
-                logger.info("get all");
-                clientSocket.getOos().writeObject(ConstProtocol.getAll);
-            }
-            clientSocket.getOos().flush();
-            if (isFiltered) {
-                clientSocket.getOos().writeObject(name);
-                clientSocket.getOos().writeObject(singer);
-                clientSocket.getOos().writeObject(album);
-                clientSocket.getOos().writeObject(genre);
-                clientSocket.getOos().flush();
-            }
-            Object inputObject;
-            do {
-                inputObject = clientSocket.getOis().readObject();
-                if (inputObject instanceof Track) {
-                    logger.info((inputObject).toString());
-                    trackList.add((Track) inputObject);
-                }
-            } while (!((inputObject == ConstProtocol.finish)));
-            return trackList;
-        } catch (IOException e) {
-            logger.error("Ошибка при отправке потока. " + e.toString());
-        } catch (ClassNotFoundException e) {
-            logger.error("Ошибка класс не найден. " + e.toString());
+        String param = "token=" + clientSocket.getToken();
+        TrackListDto tracks = (TrackListDto) getObjectFromUrl(clientSocket, "GET", "/tracks", TrackListDto.class);
+        if (tracks != null) {
+            return TrackListDto.getTrackList(tracks);
+        } else {
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
     }
 
     public static List<User> getAllUser(ClientSocket clientSocket) {
-        try {
-            List<User> userList = new ArrayList<>();
-            logger.info("show Users");
-            clientSocket.getOos().writeObject(ConstProtocol.getAllUsers);
-            clientSocket.getOos().flush();
-            Object inputObject;
-            do {
-                inputObject = clientSocket.getOis().readObject();
-                if (inputObject instanceof User) {
-                    logger.info(inputObject.toString());
-                    userList.add((User) inputObject);
-                }
-            } while (!((inputObject == ConstProtocol.finish)));
-            return userList;
-        } catch (IOException e) {
-            logger.error("Ошибка записи в поток. " + e.toString());
-        } catch (ClassNotFoundException e) {
-            logger.error("Ошибка класс не найден. " + e.toString());
+
+        String param = "token=" + clientSocket.getToken();
+
+        UserDto[] userDtos = (UserDto[]) getObjectFromUrl(clientSocket, "GET", "/users", UserDto[].class);
+        if (userDtos != null) {
+            return Arrays.stream(userDtos).map(UserDto::fromUserDto).collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
+
     }
 
     public static void setRole(ClientSocket clientSocket, String name, Role role) {
-        try {
+/*        try {
             clientSocket.getOos().writeObject(ConstProtocol.setRole);
             clientSocket.getOos().writeObject(name);
             clientSocket.getOos().writeObject(role);
             clientSocket.getOos().flush();
         } catch (IOException e) {
             logger.error("Ошибка записи в поток. " + e.toString());
-        }
+        }*/
     }
 
     public static void deleteUser(ClientSocket clientSocket, String name) {
-        try {
+/*        try {
             clientSocket.getOos().writeObject(ConstProtocol.deleteUser);
             clientSocket.getOos().writeObject(name);
             clientSocket.getOos().flush();
         } catch (IOException e) {
             logger.error("Ошибка записи в поток. " + e.toString());
-        }
+        }*/
     }
 }

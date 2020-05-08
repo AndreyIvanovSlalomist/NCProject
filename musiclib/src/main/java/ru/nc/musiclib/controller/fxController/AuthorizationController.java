@@ -16,6 +16,7 @@ import ru.nc.musiclib.utils.ClientUtils;
 import ru.nc.musiclib.utils.ConstProtocol;
 import ru.nc.musiclib.utils.PasswordUtils;
 import ru.nc.musiclib.model.Role;
+
 import java.util.concurrent.Callable;
 
 import static ru.nc.musiclib.utils.LoaderFX.getStage;
@@ -49,7 +50,7 @@ public class AuthorizationController {
                 passwordErrorLabel.setText("Введите пароль!");
                 setBorder(password);
             } else {
-                checkUser(loginText,passwordText);
+                checkUser(loginText, passwordText);
             }
         });
         signUp.setOnAction(event -> {
@@ -69,23 +70,16 @@ public class AuthorizationController {
     }
 
     private void checkUser(String login, String password) {
-        Object object = ClientUtils.signInUser(clientSocket, login);
-        if (object == ConstProtocol.errorUser) {
+        if (ClientUtils.signInUser(clientSocket, login, password)) {
+            signInUser(login);
+        } else {
             loginErrorLabel.setText("Неверный логин или пароль!");
-        }else if(object instanceof String){
-            String salt = (String) object;
-            if(ClientUtils.checkPassword(clientSocket, login, PasswordUtils.hashPassword(password,salt))){
-                signInUser(login);
-            }else{
-                loginErrorLabel.setText("Неверный логин или пароль!");
-            }
         }
     }
 
-    private void signInUser(String login){
-        Object object = ClientUtils.getRole(clientSocket, login);
-        if (object instanceof Role) {
-            Role role = (Role) object;
+    private void signInUser(String login) {
+        Role role = ClientUtils.getRole(clientSocket, login);
+        if (role != null) {
             Stage stage = getStage(FxController.class, (Callable<FxController>) () -> new FxController(clientSocket, role, login), "/fxml/main.fxml", false, "Музыкальная библиотека");
             stage.setOnShown(event -> this.login.getScene().getWindow().hide());
             stage.show();
@@ -126,7 +120,8 @@ public class AuthorizationController {
         password.setBorder(null);
         login.setBorder(null);
     }
-    AuthorizationController(ClientSocket clientSocket){
+
+    AuthorizationController(ClientSocket clientSocket) {
         this.clientSocket = clientSocket;
     }
 }

@@ -1,10 +1,21 @@
 package ru.nc.musiclib.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
 
+@Data
+@Builder
+@Entity
+@Table(name = "lib_role")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Role implements Serializable {
     public static final String ROLE_ADMINISTRATOR = "administrator";
@@ -14,6 +25,8 @@ public class Role implements Serializable {
     @XmlElement(name = "roleName")
     private String roleName;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     public Role(String roleName, Integer id) {

@@ -1,5 +1,7 @@
 package ru.nc.musiclib.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -54,7 +56,7 @@ public class Track implements Serializable, Cloneable {
             ((Track) track).setName(this.getName());
             ((Track) track).setSinger(this.getSinger());
             ((Track) track).setAlbum(this.getAlbum());
-            ((Track) track).setLength(this.getLengthInt());
+            ((Track) track).setLengthInt(this.getLengthInt());
             ((Track) track).setGenre(new Genre(this.getGenreName()));
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
@@ -85,7 +87,7 @@ public class Track implements Serializable, Cloneable {
     public int getLengthInt() {
         return this.length;
     }
-    public void setLength(int length) {
+    public void setLengthInt(int length) {
         this.length = length;
     }
 
@@ -121,6 +123,7 @@ public class Track implements Serializable, Cloneable {
         this.genre = genre;
     }
 
+    @JsonIgnore
     public String getGenreName() {
         return genre.getGenreName();
     }

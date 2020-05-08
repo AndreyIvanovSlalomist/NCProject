@@ -104,7 +104,7 @@ public class MusicModel implements Model, Observable {
         track.setSinger(singer);
         track.setAlbum(album);
         try {
-            track.setLength(length);
+            track.setLengthInt(length);
         } catch (InvalidFieldValueException ex) {
             if (isSendNotify) {
                 logger.error("Неверный формат длины трека");
@@ -164,7 +164,7 @@ public class MusicModel implements Model, Observable {
         track.setName(name);
         track.setSinger(singer);
         track.setAlbum(album);
-        track.setLength(length);
+        track.setLengthInt(length);
         Genre genre = findGenre(genreName);
         if (genre == null) {
             genre = new Genre(genreName);
@@ -191,7 +191,7 @@ public class MusicModel implements Model, Observable {
             }
             case 4: {
                 try {
-                    track.setLength(Integer.parseInt(newValue));
+                    track.setLengthInt(Integer.parseInt(newValue));
                     break;
                 } catch (InvalidFieldValueException ex) {
                     logger.error("Неверный формат длины трека");
@@ -301,6 +301,11 @@ public class MusicModel implements Model, Observable {
 
     @Override
     public Optional<Track> find(Integer id) {
+        return null;
+    }
+
+    @Override
+    public Track save(Track track) {
         return null;
     }
 
