@@ -1,14 +1,25 @@
 package ru.nc.musiclib.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
-
+@Data
+@Builder
+@Entity
+@Table(name = "track")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Track implements Serializable, Cloneable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     @XmlElement(name = "name")
     private String name;
     @XmlElement(name = "singer")
@@ -18,6 +29,8 @@ public class Track implements Serializable, Cloneable {
     @XmlElement(name = "length")
     private int length;
     @XmlElement(name = "genre")
+    @ManyToOne
+    @JoinColumn(name = "id_genre")
     private Genre genre;
 
 
@@ -37,8 +50,6 @@ public class Track implements Serializable, Cloneable {
     public Integer getId() {
         return id;
     }
-
-    private Integer id;
 
     @Override
     public String toString() {

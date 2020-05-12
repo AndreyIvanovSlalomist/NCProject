@@ -1,15 +1,24 @@
 package ru.nc.musiclib.model;
 
+import lombok.Builder;
+import lombok.Data;
+
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-
+@Data
+@Builder
+@Entity
+@Table(name = "lib_genre")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Genre implements Serializable {
     @XmlElement(name = "genreName")
     private String genreName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     public Genre(Integer id, String genreName) {
