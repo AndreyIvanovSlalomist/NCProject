@@ -48,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/users/**", "/api/users/**").hasAuthority(Role.ROLE_ADMINISTRATOR)
                 .antMatchers("/user/**", "/api/user/**").hasAuthority(Role.ROLE_ADMINISTRATOR)
-                .antMatchers("/tracks/{id}/update","/tracks/add","/api/tracks/{id}/delete", "/api/tracks/{id}/update","/api/tracks/add","/api/tracks/{id}/delete").hasAnyAuthority(Role.ROLE_ADMINISTRATOR, Role.ROLE_MODERATOR)
+                .antMatchers("/tracks/{id}/update","/tracks/add","/tracks/{id}/delete", "/api/tracks/{id}/update","/api/tracks/add","/api/tracks/{id}/delete").hasAnyAuthority(Role.ROLE_ADMINISTRATOR, Role.ROLE_MODERATOR)
                 .antMatchers("/signUp/**").permitAll()
                 .antMatchers("/").permitAll()
                 .antMatchers("/setAdmin").permitAll()

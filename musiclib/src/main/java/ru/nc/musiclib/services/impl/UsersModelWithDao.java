@@ -21,7 +21,7 @@ import java.util.Optional;
 import static ru.nc.musiclib.utils.FindProperty.getProperty;
 
 
-@Service
+
 public class UsersModelWithDao  implements UserModel {
     @Autowired
     private UsersDao usersDao;
