@@ -15,7 +15,6 @@ import java.util.Optional;
 import static ru.nc.musiclib.utils.XMLUtils.loadFromXml;
 import static ru.nc.musiclib.utils.XMLUtils.saveToXML;
 
-@Service
 public class MusicModelWithDao implements Model {
     @Autowired
     private TrackDao trackDao;

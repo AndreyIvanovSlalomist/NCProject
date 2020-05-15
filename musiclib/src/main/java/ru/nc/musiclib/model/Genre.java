@@ -15,11 +15,11 @@ import java.io.Serializable;
 @Table(name = "lib_genre")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Genre implements Serializable {
-    @XmlElement(name = "genreName")
-    private String genreName;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @XmlElement(name = "genreName")
+    private String genreName;
 
     public Genre(Integer id, String genreName) {
         this.genreName = genreName;
