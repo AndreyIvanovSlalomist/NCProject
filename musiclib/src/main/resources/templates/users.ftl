@@ -3,7 +3,7 @@
        <html>
        <head>
            <title>Пользователи</title>
-           <link href="/css/styles.css" rel="stylesheet" type="text/css">
+           <link href="${contextPath}/css/styles.css" rel="stylesheet" type="text/css">
            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
        </head>
        <body>
@@ -50,7 +50,7 @@
        </div>
 
        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-       <script src="/js/bootstrap.min.js"></script>
+       <script src="${contextPath}/js/bootstrap.min.js"></script>
        <script>
          $('#confirmation').on('show.bs.modal', function (event) {
            var button = $(event.relatedTarget);

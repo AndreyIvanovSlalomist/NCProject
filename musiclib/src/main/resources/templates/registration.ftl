@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Регистрация</title>
-    <link href="/css/styles.css" rel="stylesheet" type="text/css">
+    <link href="${contextPath}/css/styles.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
 <body class= "login-page">

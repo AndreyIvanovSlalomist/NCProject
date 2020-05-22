@@ -3,7 +3,7 @@
 <head>
     <title>Авторизация</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link href="/css/styles.css" rel="stylesheet" type="text/css">
+    <link href="./css/styles.css" rel="stylesheet" type="text/css">
 </head>
 <body class= "login-page">
 <#if error??>

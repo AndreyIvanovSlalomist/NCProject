@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.nc.musiclib.forms.UserForm;
+import ru.nc.musiclib.model.Genre;
 import ru.nc.musiclib.model.Role;
 import ru.nc.musiclib.model.Track;
 import ru.nc.musiclib.model.User;
@@ -44,18 +45,22 @@ public class TracksRestController {
         return trackModel.find(id).map(TrackDto::from).orElseThrow(() -> new TrackNotFoundException(id));
     }
     //Редактирование
-    @GetMapping("/api/tracks/{id}/update")
+    @PostMapping("/api/tracks/{id}/update")
     public Boolean updateTrack(@RequestBody TrackDto newTrack, @PathVariable Integer id){
         Optional<Track> track = trackModel.find(id);
         return track.filter(value -> trackModel.update(value, newTrack.getName(), newTrack.getSinger(), newTrack.getAlbum(), newTrack.getLength(), newTrack.getGenre().getGenreName())).isPresent();
 
     }
 
+    @PostMapping("/api/tracks/add")
+    public void addTrack(@RequestBody TrackDto track){
+        trackModel.add(track.getName(),track.getSinger(),track.getAlbum(),track.getLength(),track.getGenre().getGenreName(),false);
+    }
+
     @GetMapping(value = "/api/tracks/{id}/delete")
     public Integer deleteTrack(@PathVariable Integer id) {
 
         trackModel.delete(id);
-
         return 0;
     }
 
