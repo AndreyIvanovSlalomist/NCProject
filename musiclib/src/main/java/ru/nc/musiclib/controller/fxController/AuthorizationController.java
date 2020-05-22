@@ -87,17 +87,13 @@ public class AuthorizationController {
     }
 
     private void signUpUser(String login, String password) {
-        Object object = ClientUtils.signUpUser(clientSocket, login, PasswordUtils.hashPassword(password));
-        if (object instanceof String) {
-            String answer = (String) object;
-            if (answer.equals("OK")) {
-                ClientUtils.alertSelectedItem(null, "Музыкальная библиотека", "Регистрация прошла успешно!\nЧтобы продолжить авторизуйтесь.");
-                this.login.clear();
-                this.password.clear();
-            } else {
-                loginErrorLabel.setText("Этот логин уже занят");
-                setBorder(this.login);
-            }
+        if(ClientUtils.signUpUser(clientSocket, login, PasswordUtils.hashPassword(password))){
+            ClientUtils.alertSelectedItem(null, "Музыкальная библиотека", "Регистрация прошла успешно!\nЧтобы продолжить авторизуйтесь.");
+            this.login.clear();
+            this.password.clear();
+        }else{
+            loginErrorLabel.setText("Этот логин уже занят");
+            setBorder(this.login);
         }
     }
 

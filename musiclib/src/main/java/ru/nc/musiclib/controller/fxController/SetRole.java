@@ -8,8 +8,7 @@ import javafx.scene.control.Label;
 import ru.nc.musiclib.net.client.ClientSocket;
 import ru.nc.musiclib.model.Role;
 
-import static ru.nc.musiclib.utils.ClientUtils.alertSelectedItem;
-import static ru.nc.musiclib.utils.ClientUtils.setRole;
+import static ru.nc.musiclib.utils.ClientUtils.*;
 
 public class SetRole {
 
@@ -56,11 +55,11 @@ public class SetRole {
         newRole = null;
         if (checkBox.isSelected()) {
             if (userRole.equals(checkBox))
-                newRole = new Role(Role.ROLE_USER);
+                newRole = new Role(Role.ROLE_USER,3);
             else if (moderatorRole.equals(checkBox))
-                newRole = new Role(Role.ROLE_MODERATOR);
+                newRole = new Role(Role.ROLE_MODERATOR,2);
             else if (administratorRole.equals(checkBox))
-                newRole = new Role(Role.ROLE_ADMINISTRATOR);
+                newRole = new Role(Role.ROLE_ADMINISTRATOR,1);
 
             userRole.setSelected(userRole.equals(checkBox));
             moderatorRole.setSelected(moderatorRole.equals(checkBox));

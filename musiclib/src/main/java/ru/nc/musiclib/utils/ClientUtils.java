@@ -16,6 +16,7 @@ import ru.nc.musiclib.model.User;
 import ru.nc.musiclib.net.client.ClientSocket;
 import ru.nc.musiclib.transfer.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
@@ -65,7 +66,7 @@ public class ClientUtils {
 
     public static boolean signInUser(ClientSocket clientSocket, String login, String password) {
         try {
-            HttpURLConnection con = getHttpURLConnection(clientSocket, "POST", getBaseUrl(clientSocket) + "/login","");
+            HttpURLConnection con = getHttpURLConnection(clientSocket, "POST", getBaseUrl(clientSocket) + "/login");
             jsonToConnection(con, "{\"userName\": \"" + login + "\", \"password\": \"" + password + "\"}");
 
             TokenDto tokenDto = (TokenDto) getObjectFromJSON(getJSONFromHttpURLConnection(con), TokenDto.class);
@@ -82,22 +83,7 @@ public class ClientUtils {
         }
     }
 
-    public static boolean checkPassword(ClientSocket clientSocket, String login, String password) {
-/*        try {
-            clientSocket.getOos().writeObject(ConstProtocol.checkPassword);
-            clientSocket.getOos().writeObject(login);
-            clientSocket.getOos().writeObject(password);
-            clientSocket.getOos().flush();
-            return clientSocket.getOis().readBoolean();
-        } catch (IOException e) {
-            logger.error("Ошибка чтения из потока! " + e.toString());
-        }*/
-        return false;
-    }
-
-
-
-    private static HttpURLConnection getHttpURLConnection(ClientSocket clientSocket, String requestMethod, String urlString, String requestBody) throws IOException {
+    private static HttpURLConnection getHttpURLConnection(ClientSocket clientSocket, String requestMethod, String urlString) throws IOException {
         URL url = new URL(urlString);
         HttpURLConnection con = null;
         con = (HttpURLConnection) url.openConnection();
@@ -105,12 +91,6 @@ public class ClientUtils {
         con.setRequestProperty("Content-Type", "application/json; utf-8");
         con.setRequestProperty("Accept", "application/json");
         con.setDoOutput(true);
-        if(!requestBody.isEmpty()){
-            try(OutputStreamWriter writer = new OutputStreamWriter(con.getOutputStream())){
-                writer.write(requestBody);
-                writer.flush();
-            }
-        }
         return con;
     }
 
@@ -153,7 +133,7 @@ public class ClientUtils {
     private static Object getObjectFromUrl(ClientSocket clientSocket, String requestMethod, String addUrl, Class aClass) {
         try {
             String param = "token=" + clientSocket.getToken();
-            HttpURLConnection con = getHttpURLConnection(clientSocket, requestMethod, getBaseUrl(clientSocket) + addUrl + "?" + param, "");
+            HttpURLConnection con = getHttpURLConnection(clientSocket, requestMethod, getBaseUrl(clientSocket) + addUrl + "?" + param);
 
             return getObjectFromJSON(getJSONFromHttpURLConnection(con), aClass);
         } catch (IOException e) {
@@ -174,9 +154,10 @@ public class ClientUtils {
         track.getGenre().setGenreName(genre);
         String JSON = getJsonFromObject(TrackDto.from(track));
         String param = "token=" + clientSocket.getToken();
-        HttpURLConnection con = null;
+        HttpURLConnection con;
         try {
-            con = getHttpURLConnection(clientSocket,"POST",getBaseUrl(clientSocket)+"/tracks/"+track.getId()+"/update?"+param,JSON);
+            con = getHttpURLConnection(clientSocket,"POST",getBaseUrl(clientSocket)+"/tracks/"+track.getId()+"/update?"+param);
+            jsonToConnection(con,JSON);
 
             if (con.getResponseCode() != 200) {
                 logger.error("Connection failed");
@@ -191,9 +172,10 @@ public class ClientUtils {
         Track track = new Track(name,singer,album,lengthInt,new Genre(genre));
         String JSON = getJsonFromObject(TrackDto.from(track));
         String param = "token=" + clientSocket.getToken();
-        HttpURLConnection con = null;
+        HttpURLConnection con;
         try {
-             con = getHttpURLConnection(clientSocket,"POST",getBaseUrl(clientSocket)+"/tracks/add?"+param,JSON);
+             con = getHttpURLConnection(clientSocket,"POST",getBaseUrl(clientSocket)+"/tracks/add?"+param);
+             jsonToConnection(con,JSON);
 
             if (con.getResponseCode() != 200) {
                 logger.error("Connection failed");
@@ -204,19 +186,15 @@ public class ClientUtils {
         }
     }
 
-    public static Object signUpUser(ClientSocket clientSocket, String login, String password) {
-/*        try {
-            clientSocket.getOos().writeObject(ConstProtocol.addUser);
-            clientSocket.getOos().writeObject(login);
-            clientSocket.getOos().writeObject(password);
-            clientSocket.getOos().flush();
-            return clientSocket.getOis().readObject();
+    public static Boolean signUpUser(ClientSocket clientSocket, String login, String password) {
+        try {
+            HttpURLConnection con = getHttpURLConnection(clientSocket, "POST", getBaseUrl(clientSocket) + "/signUp");
+            jsonToConnection(con, "{\"userName\": \"" + login + "\", \"password\": \"" + password + "\"}");
+            return (Boolean) getObjectFromJSON(getJSONFromHttpURLConnection(con), Boolean.class);
         } catch (IOException e) {
-            logger.error("Ошибка чтения из потока!. " + e.toString());
-        } catch (ClassNotFoundException e) {
-            logger.error("Ошибка класс не найден!. " + e.toString());
-        }*/
-        return null;
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public static void deleteTrack(ClientSocket clientSocket, Track track) {
@@ -234,36 +212,41 @@ public class ClientUtils {
     }
 
     public static List<User> getAllUser(ClientSocket clientSocket) {
-
-        String param = "token=" + clientSocket.getToken();
-
         UserDto[] userDtos = (UserDto[]) getObjectFromUrl(clientSocket, "GET", "/users", UserDto[].class);
         if (userDtos != null) {
             return Arrays.stream(userDtos).map(UserDto::fromUserDto).collect(Collectors.toList());
         } else {
             return new ArrayList<>();
         }
-
     }
 
     public static void setRole(ClientSocket clientSocket, String name, Role role) {
-/*        try {
-            clientSocket.getOos().writeObject(ConstProtocol.setRole);
-            clientSocket.getOos().writeObject(name);
-            clientSocket.getOos().writeObject(role);
-            clientSocket.getOos().flush();
+        String JSON = getJsonFromObject(RoleDto.fromRole(role));
+        String param = "token=" + clientSocket.getToken();
+        HttpURLConnection con;
+        try {
+            con = getHttpURLConnection(clientSocket,"POST",getBaseUrl(clientSocket)+"/user/"+name+"/setRole?"+param);
+            jsonToConnection(con,JSON);
+
+            if (con.getResponseCode() != 200) {
+                logger.error("Connection failed");
+            }
+
         } catch (IOException e) {
-            logger.error("Ошибка записи в поток. " + e.toString());
-        }*/
+            e.printStackTrace();
+        }
     }
 
     public static void deleteUser(ClientSocket clientSocket, String name) {
-/*        try {
-            clientSocket.getOos().writeObject(ConstProtocol.deleteUser);
-            clientSocket.getOos().writeObject(name);
-            clientSocket.getOos().flush();
+        String param = "token=" + clientSocket.getToken();
+        HttpURLConnection con;
+        try {
+            con = getHttpURLConnection(clientSocket,"POST",getBaseUrl(clientSocket)+"/user/"+name+"/delete?"+param);
+            if (con.getResponseCode() != 200) {
+                logger.error("Connection failed");
+            }
         } catch (IOException e) {
-            logger.error("Ошибка записи в поток. " + e.toString());
-        }*/
+            e.printStackTrace();
+        }
     }
 }

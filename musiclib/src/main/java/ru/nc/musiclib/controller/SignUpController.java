@@ -37,7 +37,7 @@ public class SignUpController {
         }else {
 
             model.addAttribute("error", true);
-            return "signUp";
+            return "registration";
         }
 
     }

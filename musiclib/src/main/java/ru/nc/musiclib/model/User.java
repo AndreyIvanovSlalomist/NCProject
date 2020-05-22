@@ -30,8 +30,8 @@ public class User implements Serializable {
     private String userName;
     @XmlElement()
     private String password;
-/*    @OneToMany(mappedBy = "user")
-    List<Token> tokens;*/
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Token> tokens;
     @XmlElement()
     @ManyToOne
     @JoinColumn(name = "id_role")

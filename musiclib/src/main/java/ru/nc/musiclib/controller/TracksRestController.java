@@ -13,6 +13,7 @@ import ru.nc.musiclib.model.Track;
 import ru.nc.musiclib.model.User;
 import ru.nc.musiclib.services.LoginService;
 import ru.nc.musiclib.services.Model;
+import ru.nc.musiclib.services.SignUpService;
 import ru.nc.musiclib.services.UserModel;
 import ru.nc.musiclib.transfer.*;
 import ru.nc.musiclib.utils.exceptions.TrackNotFoundException;
@@ -49,7 +50,6 @@ public class TracksRestController {
     public Boolean updateTrack(@RequestBody TrackDto newTrack, @PathVariable Integer id){
         Optional<Track> track = trackModel.find(id);
         return track.filter(value -> trackModel.update(value, newTrack.getName(), newTrack.getSinger(), newTrack.getAlbum(), newTrack.getLength(), newTrack.getGenre().getGenreName())).isPresent();
-
     }
 
     @PostMapping("/api/tracks/add")
@@ -66,12 +66,18 @@ public class TracksRestController {
 
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private SignUpService service;
 
     @PostMapping("/api/login")
     public ResponseEntity<TokenDto> login(@RequestBody UserForm userForm) {
         return ResponseEntity.ok(loginService.login(userForm));
     }
 
+    @PostMapping("/api/signUp")
+    public Boolean signUp(@RequestBody UserForm userForm){
+        return service.signUp(userForm);
+    }
 
     @GetMapping("/api/getRole/{userName}")
     @ResponseBody
@@ -83,6 +89,17 @@ public class TracksRestController {
     @ResponseBody
     public UserDto[] getAllUsers() {
         return userModel.getAllUser().stream().map(UserDto::fromUser).toArray(UserDto[]::new);
+    }
+
+    @PostMapping (value="api/user/{username}/delete")
+    public void deleteUser(@PathVariable String username){
+        userModel.delete(username);
+    }
+    @PostMapping(value="api/user/{username}/setRole")
+    public void setRole(@PathVariable String username, @RequestBody RoleDto roleDto){
+        if(userModel.findUser(username)!=null){
+            userModel.setRole(username,RoleDto.fromRoleDto(roleDto));
+        }
     }
 
 }
