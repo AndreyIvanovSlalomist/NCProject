@@ -18,6 +18,9 @@ import ru.nc.musiclib.services.UserModel;
 import ru.nc.musiclib.transfer.*;
 import ru.nc.musiclib.utils.exceptions.TrackNotFoundException;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -31,8 +34,28 @@ public class TracksRestController {
 
     @GetMapping("/api/tracks")
     @ResponseBody
-    public TrackListDto getAllTracks() {
-        return TrackListDto.from(trackModel.getAll());
+    public TrackListDto getAllTracks(@RequestParam(name = "name", required = false, defaultValue = "") String name,
+                                     @RequestParam(name = "singer", required = false, defaultValue = "") String singer,
+                                     @RequestParam(name = "album", required = false, defaultValue = "") String album,
+                                     @RequestParam(name = "genreName", required = false, defaultValue = "") String genreName) {
+        List<Track> tracks;
+        try {
+            name = URLDecoder.decode(name, StandardCharsets.UTF_8.toString());
+            singer = URLDecoder.decode(singer, StandardCharsets.UTF_8.toString());
+            album = URLDecoder.decode(album, StandardCharsets.UTF_8.toString());
+            genreName = URLDecoder.decode(genreName, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if (!(name.isEmpty() && singer.isEmpty() && album.isEmpty() && genreName.isEmpty())) {
+            tracks = trackModel.filter(name.replaceAll("\\+", " "),
+                    singer.replaceAll("\\+", " "),
+                    album.replaceAll("\\+", " "),
+                    genreName.replaceAll("\\+", " "));
+        } else {
+            tracks = trackModel.getAll();
+        }
+        return TrackListDto.from(tracks);
     }
 
     @PostMapping("/api/tracks")

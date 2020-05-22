@@ -142,6 +142,8 @@ public class ClientUtils {
         }
     }
 
+
+
     public static Role getRole(ClientSocket clientSocket, String login) {
         return RoleDto.fromRoleDto((RoleDto) getObjectFromUrl(clientSocket, "GET", "/getRole/" + login, RoleDto.class));
     }
@@ -203,7 +205,23 @@ public class ClientUtils {
 
     public static List<Track> getAllTrack(ClientSocket clientSocket, String name, String singer, String album, String genre) {
         String param = "token=" + clientSocket.getToken();
-        TrackListDto tracks = (TrackListDto) getObjectFromUrl(clientSocket, "GET", "/tracks", TrackListDto.class);
+        String param1 = "name=" + name;
+        String param2 = "singer=" + singer;
+        String param3 = "album=" + album;
+        String param4 = "genreName=" + genre;
+
+        String params = String.format("%s&%s&%s&%s&%s",param,param1,param2,param3,param4);
+
+        HttpURLConnection con = null;
+        try {
+            con = getHttpURLConnection(clientSocket, "GET", getBaseUrl(clientSocket) + "/tracks?"+params);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        TrackListDto tracks = (TrackListDto) getObjectFromJSON(getJSONFromHttpURLConnection(con), TrackListDto.class);
+
         if (tracks != null) {
             return TrackListDto.getTrackList(tracks);
         } else {
