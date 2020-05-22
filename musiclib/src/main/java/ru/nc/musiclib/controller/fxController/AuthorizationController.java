@@ -87,7 +87,7 @@ public class AuthorizationController {
     }
 
     private void signUpUser(String login, String password) {
-        if(ClientUtils.signUpUser(clientSocket, login, PasswordUtils.hashPassword(password))){
+        if(ClientUtils.signUpUser(clientSocket, login, password)){
             ClientUtils.alertSelectedItem(null, "Музыкальная библиотека", "Регистрация прошла успешно!\nЧтобы продолжить авторизуйтесь.");
             this.login.clear();
             this.password.clear();
